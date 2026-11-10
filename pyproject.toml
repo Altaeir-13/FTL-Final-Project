@@ -1,0 +1,33 @@
+[project]
+name = "aquaclima"
+version = "0.1.0"
+description = "Pipeline científico local para observações espectrais de pivôs centrais"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = "MIT"
+dependencies = [
+    "geopandas",
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "pyogrio",
+    "pyproj",
+    "rasterio>=1.4",
+    "requests",
+    "shapely>=2.1",
+    "urllib3>=2.2",
+]
+
+[project.scripts]
+aquaclima = "aquaclima.cli:main"
+
+[dependency-groups]
+dev = ["pytest"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

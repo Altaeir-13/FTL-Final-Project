@@ -1,0 +1,12 @@
+[study]
+pivot_count = 5
+start = 2025-06-01
+end = 2025-08-31
+max_scene_cloud_pct = 35
+max_scenes = 3
+min_valid_fraction = 0.70
+
+[limits]
+max_transfer_bytes = 2000000000
+max_storage_bytes = 2000000000
+max_downloads = 2500

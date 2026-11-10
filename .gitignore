@@ -1,0 +1,17 @@
+/.venv/
+/.python/
+/.uv-cache/
+/.local-review/
+/data/
+/build/
+/dist/
+*.egg-info/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.env
+.env.*
+*.tif
+*.tiff
+*.gpkg
+*.part
