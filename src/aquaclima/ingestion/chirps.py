@@ -18,6 +18,10 @@ from shapely.geometry import shape
 from aquaclima.storage.http import AcquisitionError, HttpClient, checksum, write_atomic, write_json
 
 BASE_URL = "https://data.chc.ucsb.edu/products/CHIRPS/v3.0/monthly"
+USGS_BASE_URL = (
+    "https://edcintl.cr.usgs.gov/downloads/sciweb1/shared/fews/web/global/"
+    "monthly/chirps/final/downloads/monthly"
+)
 PRODUCT = "CHIRPS v3.0 Final monthly"
 UNIT_SOURCE = "https://doi.org/10.1038/s41597-026-07096-4"
 NODATA_SOURCE = "https://wiki.chc.ucsb.edu/CHIRPS3_FAQ"
@@ -45,6 +49,12 @@ def chirps_url(month: str, *, domain: str = "latam") -> str:
         raise ValueError(f"Unknown CHIRPS domain: {domain}")
     stamp = month.replace("-", ".")
     return f"{BASE_URL}/{domain}/tifs/chirps-v3.0.{stamp}.tif"
+
+
+def usgs_url(month: str) -> str:
+    """Return the official USGS FEWS NET mirror of the v3 Final monthly product."""
+    filename = chirps_url(month).rsplit("/", 1)[-1]
+    return f"{USGS_BASE_URL}/{filename}"
 
 
 def _metadata(dataset: rasterio.DatasetReader) -> dict:
@@ -87,6 +97,9 @@ def _metadata(dataset: rasterio.DatasetReader) -> dict:
         "units": "mm",
         "accumulation": "calendar month",
         "unit_reference": UNIT_SOURCE,
+        "document_name": tags.get("tifftag_documentname"),
+        "tiff_software": tags.get("tifftag_software"),
+        "tiff_datetime": tags.get("tifftag_datetime"),
     }
 
 
@@ -123,7 +136,7 @@ def _read_manifest(path: Path, data_dir: Path) -> dict:
     ):
         raise ValueError(f"Invalid CHIRPS manifest schema: {path}")
     for month, entry in manifest["months"].items():
-        sources = {chirps_url(month, domain=domain) for domain in ("latam", "global")}
+        sources = {chirps_url(month, domain=domain) for domain in ("latam", "global")} | {usgs_url(month)}
         if (
             not isinstance(entry, dict) or not isinstance(entry.get("status"), str)
             or not entry["status"] or not isinstance(entry.get("source"), str)
@@ -146,7 +159,11 @@ def _read_manifest(path: Path, data_dir: Path) -> dict:
 
 def _entry_path(data_dir: Path, entry: dict) -> Path:
     path = data_dir / entry["path"]
-    _, domain, _, filename = entry["source"].rsplit("/", 3)
+    filename = entry["source"].rsplit("/", 1)[-1]
+    if entry["source"].startswith(f"{USGS_BASE_URL}/"):
+        domain = "usgs"
+    else:
+        _, domain, _, _ = entry["source"].rsplit("/", 3)
     expected = data_dir / "raw" / "chirps" / domain / filename
     if path.resolve() != expected.resolve():
         raise ValueError(f"Unexpected path for CHIRPS: {path}")
@@ -163,13 +180,18 @@ def _matches_entry(data_dir: Path, entry: dict) -> bool:
 
 def download_precip(
     http: HttpClient, data_dir: Path, months: Iterable[str], manifest_path: Path | None = None,
+    *, provider: str = "ucsb",
 ) -> Path:
     """Merge monthly checkpoints while sharing raw files across manifests.
 
     `manifest_path` defaults to the pilot manifest. Existing available records
     keep their origin metadata when the local file matches their recorded hash.
     Each completed or failed month is saved atomically before the next request.
+    Explicit `provider="usgs"` acquires pending months from the official global
+    mirror, preserving prior UCSB files and failed source-attempt provenance.
     """
+    if provider not in {"ucsb", "usgs"}:
+        raise ValueError(f"Unknown CHIRPS provider: {provider}")
     directory = data_dir / "raw" / "chirps"
     manifest = manifest_path if manifest_path is not None else directory / "manifest.json"
     document = _read_manifest(manifest, data_dir) if manifest.is_file() else {"product": PRODUCT, "months": {}}
@@ -177,21 +199,23 @@ def download_precip(
     requested = _months(months)
     paused = None
     for month in requested:
-        domains = ["latam", "global"]
+        sources = (
+            [("usgs", usgs_url(month))] if provider == "usgs"
+            else [(domain, chirps_url(month, domain=domain)) for domain in ("latam", "global")]
+        )
         previous = entries.get(month, {})
         if previous.get("sha256") and _matches_entry(data_dir, previous):
             if previous["status"] != "available":
                 entries[month] = previous | {"status": "available"}
                 write_json(manifest, document)
             continue
-        if previous.get("source") == chirps_url(month, domain="global"):
-            domains.reverse()
+        if provider == "ucsb" and previous.get("source") == chirps_url(month, domain="global"):
+            sources.reverse()
         failures = []
         acquired = None
         failure_status = paused or "not_published"
-        failed_source = previous.get("source", chirps_url(month))
-        for domain in domains:
-            url = chirps_url(month, domain=domain)
+        failed_source = sources[0][1]
+        for domain, url in sources:
             target = directory / domain / url.rsplit("/", 1)[-1]
             headers = None
             try:
@@ -211,6 +235,10 @@ def download_precip(
                     "size_bytes": target.stat().st_size,
                     "sha256": checksum(target),
                     "metadata": metadata,
+                    "provider": "usgs" if domain == "usgs" else "ucsb",
+                    "publisher": "USGS EROS / FEWS NET" if domain == "usgs" else "UCSB Climate Hazards Center",
+                    "producer": "Climate Hazards Center, UC Santa Barbara",
+                    "product_stage": "Final",
                 }
                 if headers is not None:
                     values = {key.lower(): value for key, value in headers.items()}
@@ -252,6 +280,12 @@ def download_precip(
             }
             if paused and not failures:
                 entries[month]["request_skipped"] = True
+        if previous:
+            history = list(previous.get("source_attempt_history", []))
+            snapshot = {key: value for key, value in previous.items() if key != "source_attempt_history"}
+            if not history or history[-1] != snapshot:
+                history.append(snapshot)
+            entries[month]["source_attempt_history"] = history
         write_json(manifest, document)
     if not requested:
         write_json(manifest, document)

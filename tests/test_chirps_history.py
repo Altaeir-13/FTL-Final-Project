@@ -5,7 +5,7 @@ import json
 
 import pytest
 
-from aquaclima.ingestion.chirps import PRODUCT, chirps_url, download_precip, extract_precip
+from aquaclima.ingestion.chirps import PRODUCT, chirps_url, download_precip, extract_precip, usgs_url
 from aquaclima.storage.http import AcquisitionError, BudgetError, write_json
 from test_chirps import FixtureHttp, _pivots, _raster
 
@@ -166,3 +166,82 @@ def test_all_month_arguments_are_validated_before_acquisition(tmp_path):
         download_precip(http, tmp_path, ["2025-07", "2025-13"])
     assert not http.calls
     assert not (tmp_path / "raw" / "chirps" / "manifest.json").exists()
+
+
+def test_explicit_usgs_mode_preserves_ucsb_files_and_failed_attempts(tmp_path):
+    raster = _raster(tmp_path / "fixture.tif")
+    http = FixtureHttp({
+        chirps_url("2022-01"): raster,
+        usgs_url("2022-04"): raster,
+        usgs_url("2022-05"): raster,
+    })
+    manifest = download_precip(http, tmp_path, ["2022-01"])
+    original = json.loads(manifest.read_bytes())
+    available = original["months"]["2022-01"]
+    failed = {
+        "status": "rate_limited", "source": chirps_url("2022-04"),
+        "failures": [{"source": chirps_url("2022-04"), "http_status": 429, "error": "HTTP 429 after retries"}],
+    }
+    skipped = {"status": "rate_limited", "source": chirps_url("2022-05"), "failures": [], "request_skipped": True}
+    original["months"].update({"2022-04": failed, "2022-05": skipped})
+    write_json(manifest, original)
+    http.calls.clear()
+    download_precip(http, tmp_path, ["2022-01", "2022-04", "2022-05"], provider="usgs")
+    months = json.loads(manifest.read_bytes())["months"]
+    assert months["2022-01"] == available
+    assert months["2022-04"]["source_attempt_history"] == [failed]
+    assert months["2022-05"]["source_attempt_history"] == [skipped]
+    for month in ("2022-04", "2022-05"):
+        entry = months[month]
+        assert entry["status"] == "available"
+        assert entry["source"] == usgs_url(month)
+        assert entry["path"] == f"raw/chirps/usgs/chirps-v3.0.{month.replace('-', '.')}.tif"
+        assert entry["publisher"] == "USGS EROS / FEWS NET"
+        assert entry["provider"] == "usgs"
+        assert entry["product_stage"] == "Final"
+    assert http.calls == [
+        ("HEAD", usgs_url("2022-04")), ("GET", usgs_url("2022-04")),
+        ("HEAD", usgs_url("2022-05")), ("GET", usgs_url("2022-05")),
+    ]
+    expected = manifest.read_bytes()
+    http.calls.clear()
+    download_precip(http, tmp_path, ["2022-01", "2022-04", "2022-05"], provider="usgs")
+    assert manifest.read_bytes() == expected
+    assert not http.calls
+
+
+def test_usgs_file_supports_offline_extraction_and_exact_month_binding(tmp_path):
+    raster = _raster(tmp_path / "fixture.tif")
+    pivots = _pivots(tmp_path / "pivots.geojson")
+    http = FixtureHttp({usgs_url("2022-04"): raster})
+    manifest = download_precip(http, tmp_path, ["2022-04"], provider="usgs")
+    http.calls.clear()
+    output = extract_precip(pivots, manifest, tmp_path)
+    with output.open(encoding="utf-8", newline="") as stream:
+        rows = list(csv.DictReader(stream))
+    assert rows[0]["precip_mm"] == "15.25"
+    assert rows[0]["chirps_source"] == usgs_url("2022-04")
+    assert not http.calls
+    malformed = json.loads(manifest.read_bytes())
+    malformed["months"]["2022-04"]["path"] = "raw/chirps/usgs/chirps-v3.0.2022.05.tif"
+    write_json(manifest, malformed)
+    with pytest.raises(ValueError, match="Unexpected path"):
+        extract_precip(pivots, manifest, tmp_path)
+
+
+def test_default_ucsb_mode_does_not_implicitly_request_usgs(tmp_path):
+    http = FixtureHttp({usgs_url("2022-04"): _raster(tmp_path / "fixture.tif")})
+    manifest = download_precip(http, tmp_path, ["2022-04"])
+    assert json.loads(manifest.read_bytes())["months"]["2022-04"]["status"] == "not_published"
+    assert http.calls == [
+        ("HEAD", chirps_url("2022-04")),
+        ("HEAD", chirps_url("2022-04", domain="global")),
+    ]
+
+
+def test_invalid_provider_fails_before_any_requests_or_write(tmp_path):
+    http = FixtureHttp({})
+    with pytest.raises(ValueError, match="Unknown CHIRPS provider"):
+        download_precip(http, tmp_path, ["2022-04"], provider="unknown")
+    assert not http.calls
+    assert not (tmp_path / "raw/chirps/manifest.json").exists()

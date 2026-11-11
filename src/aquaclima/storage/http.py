@@ -176,7 +176,7 @@ class HttpClient:
             raise BudgetError("Limite de transferência desta execução atingido")
 
     def _throttle(self, url: str) -> None:
-        if urlsplit(url).hostname != "data.chc.ucsb.edu":
+        if urlsplit(url).hostname not in {"data.chc.ucsb.edu", "edcintl.cr.usgs.gov"}:
             return
         if self._last_chirps_request is not None:
             time.sleep(max(0.0, 1.1 - (time.monotonic() - self._last_chirps_request)))

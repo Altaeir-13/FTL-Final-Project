@@ -17,7 +17,7 @@ from urllib.parse import urlsplit
 import pandas as pd
 
 from aquaclima.features.integration import month_range
-from aquaclima.ingestion.chirps import chirps_url, download_precip, extract_precip
+from aquaclima.ingestion.chirps import chirps_url, download_precip, extract_precip, usgs_url
 from aquaclima.ingestion.sentinel import (
     COLLECTION, estimate_acquisition, search_scenes, screen_scenes, acquire_crops,
 )
@@ -53,6 +53,9 @@ def settings(args) -> tuple[dict, dict]:
         raise ValueError("Configure de uma a dez cenas por mês.")
     if not 0 <= policy["min_valid_fraction"] <= 1:
         raise ValueError("A validade mínima precisa estar entre zero e um.")
+    policy.setdefault("chirps_provider", "ucsb")
+    if policy["chirps_provider"] not in {"ucsb", "usgs"}:
+        raise ValueError("Fornecedor CHIRPS precisa ser ucsb ou usgs.")
     limits = config["limits"]
     if any(type(limits[key]) is not int or limits[key] <= 0 for key in (
         "max_transfer_bytes", "max_storage_bytes", "max_downloads",
@@ -83,7 +86,9 @@ def _dates(month: str) -> tuple[date, date]:
 
 
 def _plan_path(root: Path, policy: dict, key: str) -> Path:
-    return root / "history/plans" / f"{policy['start']}_{policy['end']}_{key}.json"
+    provider = policy.get("chirps_provider", "ucsb")
+    suffix = "" if provider == "ucsb" else f"_{provider}"
+    return root / "history/plans" / f"{policy['start']}_{policy['end']}_{key}{suffix}.json"
 
 
 def _save(http, path, document, source):
@@ -112,6 +117,7 @@ def make_plan(http: HttpClient, root: Path, policy: dict, limits: dict, pivots: 
     months = month_range(policy["start"], policy["end"])
     entries = []
     climate_paused = None
+    provider = policy.get("chirps_provider", "ucsb")
     for month in months:
         LOGGER.info("Inventário e estimativa %s", month)
         paths = _paths(root, key, month)
@@ -123,10 +129,15 @@ def make_plan(http: HttpClient, root: Path, policy: dict, limits: dict, pivots: 
         estimate = estimate_acquisition(
             pivots, catalog, root, max_scenes=policy["max_scenes_per_month"],
         )
-        climate = root / "raw/chirps/latam" / chirps_url(month).rsplit("/", 1)[1]
-        header_path = root / "history/planning/chirps" / f"{month}.json"
-        source = chirps_url(month)
-        if http.is_verified(climate, source=source):
+        source = usgs_url(month) if provider == "usgs" else chirps_url(month)
+        domain = "usgs" if provider == "usgs" else "latam"
+        climate = root / "raw/chirps" / domain / source.rsplit("/", 1)[1]
+        header_path = root / "history/planning/chirps" / domain / f"{month}.json"
+        if _climate_cached(root, month):
+            previous = _json(root / "history/chirps.json")["months"][month]
+            rain = {"source": previous["source"], "bytes": previous["size_bytes"],
+                    "cached": True, "status": "available"}
+        elif http.is_verified(climate, source=source):
             rain = {"source": source, "bytes": climate.stat().st_size, "cached": True, "status": "available"}
         elif header_path.is_file() and _json(header_path).get("source") == source:
             rain = _json(header_path) | {"cached": False}
@@ -160,6 +171,7 @@ def make_plan(http: HttpClient, root: Path, policy: dict, limits: dict, pivots: 
         "start": str(policy["start"]), "end": str(policy["end"]),
         "max_scenes_per_month": policy["max_scenes_per_month"],
         "min_valid_fraction": policy["min_valid_fraction"], "months": entries,
+        "chirps_provider": provider,
         "estimated_transfer_bytes": sum(entry["estimated_transfer_bytes"] for entry in entries),
         "estimated_storage_bytes": sum(entry["estimated_transfer_bytes"] for entry in entries),
         "storage_estimate_rule": "conservative storage upper estimate equal to estimated payload",
@@ -182,7 +194,8 @@ def _load_plan(root, policy, pivots):
             or plan["start"] != str(policy["start"]) or plan["end"] != str(policy["end"])):
         raise ValueError("Plano incompatível com a configuração histórica atual.")
     if (plan["max_scenes_per_month"] != policy["max_scenes_per_month"]
-            or plan["min_valid_fraction"] != policy["min_valid_fraction"]):
+            or plan["min_valid_fraction"] != policy["min_valid_fraction"]
+            or plan.get("chirps_provider", "ucsb") != policy.get("chirps_provider", "ucsb")):
         raise ValueError("Parâmetros científicos do plano diferem da configuração.")
     expected = month_range(policy["start"], policy["end"])
     if [entry["month"] for entry in plan["months"]] != expected:
@@ -337,6 +350,10 @@ def _report(root, output, started, ledger_start, failures, policy, key, *, offli
             month: climate_entries.get(month, {}).get("status", "not_acquired")
             for month in month_range(policy["start"], policy["end"])
         },
+        "climate_month_sources": {
+            month: climate_entries.get(month, {}).get("source")
+            for month in month_range(policy["start"], policy["end"])
+        },
         "requests": len(requests), "payload_bytes": sum(row["bytes"] for row in requests),
         "history_requests": len(historical_requests),
         "history_payload_bytes": sum(row["bytes"] for row in historical_requests),
@@ -427,7 +444,10 @@ def execute(args) -> int:
                         failures.append(f"{month}: {exc}")
                 if not exhausted:
                     try:
-                        download_precip(http, root, months, manifest_path=root / "history/chirps.json")
+                        download_precip(
+                            http, root, months, manifest_path=root / "history/chirps.json",
+                            provider=policy.get("chirps_provider", "ucsb"),
+                        )
                     except (AcquisitionError, BudgetError, ValueError, OSError) as exc:
                         failures.append(f"CHIRPS: {exc}")
     report = _report(root, output, started, baseline, failures, policy, key, offline=args.offline)

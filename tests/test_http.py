@@ -118,3 +118,16 @@ def test_restart_with_partial_ledger_record(tmp_path):
     client = HttpClient(ledger=path, session=Session(Response(b"abc")))
     assert client.get_bytes(URL) == b"abc"
     assert [e["status"] for e in read_ledger(path)] == [503, 200]
+
+
+@pytest.mark.parametrize("host", ["data.chc.ucsb.edu", "edcintl.cr.usgs.gov"])
+def test_climate_providers_are_paced(tmp_path, monkeypatch, host):
+    from aquaclima.storage import http
+
+    pauses = []
+    monkeypatch.setattr(http.time, "sleep", pauses.append)
+    monkeypatch.setattr(http.time, "monotonic", lambda: 10.0)
+    client = HttpClient(ledger=tmp_path / "ledger.jsonl", session=Session(Response(), Response()))
+    client.head(f"https://{host}/first")
+    client.head(f"https://{host}/second")
+    assert pauses == [1.1]

@@ -11,7 +11,7 @@ from shapely.geometry import box, mapping
 
 from aquaclima import history
 from aquaclima.cli import main
-from aquaclima.ingestion.chirps import chirps_url
+from aquaclima.ingestion.chirps import chirps_url, usgs_url
 from aquaclima.storage.http import AcquisitionError, BudgetError, HttpClient, checksum, write_atomic, write_json
 from test_chirps import _raster
 
@@ -247,8 +247,8 @@ def test_climate_failure_returns_incomplete_after_successful_spectral_batches(wo
     assert workflow.command("history-plan") == 0
     real_download = history.download_precip
 
-    def incomplete(http, root, months, *, manifest_path):
-        first = real_download(http, root, [months[0]], manifest_path=manifest_path)
+    def incomplete(http, root, months, *, manifest_path, provider="ucsb"):
+        first = real_download(http, root, [months[0]], manifest_path=manifest_path, provider=provider)
         return first
 
     monkeypatch.setattr(history, "download_precip", incomplete)
@@ -370,3 +370,50 @@ def test_dry_run_applies_same_existing_plan_validation_without_writes(workflow):
     after = {path.relative_to(workflow.root): path.read_bytes() for path in workflow.root.rglob("*") if path.is_file()}
     assert after == before
     assert workflow.state.head == heads
+
+
+def test_explicit_usgs_provider_reuses_spectral_batches_and_prior_ucsb_climate(workflow, monkeypatch):
+    assert workflow.command("history-plan") == 0
+    policy = workflow.policy()
+    key = history.policy_key(policy, workflow.pivots)
+    primary_plan = history._plan_path(workflow.root, policy, key)
+    primary_plan_bytes = primary_plan.read_bytes()
+    real_download = history.download_precip
+
+    def first_month(http, root, months, *, manifest_path, provider="ucsb"):
+        return real_download(http, root, [months[0]], manifest_path=manifest_path, provider=provider)
+
+    monkeypatch.setattr(history, "download_precip", first_month)
+    assert workflow.command("history-run") == 1
+    original = json.loads((workflow.root / "history/chirps.json").read_bytes())["months"]["2022-01"]
+    prior_screen_calls = list(workflow.state.screens)
+    workflow.config.write_text(
+        workflow.config.read_text(encoding="utf-8").replace(
+            "max_scenes_per_month = 2", 'max_scenes_per_month = 2\nchirps_provider = "usgs"',
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(history, "download_precip", real_download)
+    workflow.state.head.clear()
+    assert workflow.command("history-plan") == 0
+    mirror_plan = history._plan_path(workflow.root, policy | {"chirps_provider": "usgs"}, key)
+    assert mirror_plan != primary_plan and mirror_plan.name.endswith("_usgs.json")
+    assert primary_plan.read_bytes() == primary_plan_bytes
+    mirror_document = json.loads(mirror_plan.read_bytes())
+    write_json(mirror_plan, mirror_document | {"chirps_provider": "ucsb"})
+    heads_before_rejection = list(workflow.state.head)
+    assert workflow.command("history-run") == 1
+    assert workflow.state.head == heads_before_rejection
+    write_json(mirror_plan, mirror_document)
+    assert workflow.command("history-run") == 0
+    manifest = json.loads((workflow.root / "history/chirps.json").read_bytes())
+    assert manifest["months"]["2022-01"] == original
+    assert manifest["months"]["2022-02"]["source"] == usgs_url("2022-02")
+    assert manifest["months"]["2022-03"]["source"] == usgs_url("2022-03")
+    assert all(url.startswith("https://edcintl.cr.usgs.gov/") for url in workflow.state.head)
+    assert workflow.state.screens == prior_screen_calls
+    output = next((workflow.root / "history/curated").glob("*/monthly.csv")).parent
+    datasets = {name: (output / name).read_bytes() for name in ("monthly.csv", "observations.csv", "attempts.csv")}
+    workflow.state.offline = True
+    assert workflow.command("history-run", "--offline") == 0
+    assert datasets == {name: (output / name).read_bytes() for name in datasets}

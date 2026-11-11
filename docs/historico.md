@@ -46,3 +46,13 @@ uv run --no-sync aquaclima history-baseline --start 2022-01-01 --end 2024-12-31 
 ```
 
 Os relatórios separam transferência da invocação atual, transferência acumulada desde a primeira operação histórica, meses processados e qualidade efetivamente observada. Os modelos só poderão ser avaliados nos meses que satisfizerem os critérios de treinamento e referência, e os relatórios registram insuficiência quando esses critérios falham.
+
+A execução encontrou HTTP 429 persistente na origem UCSB ao iniciar abril de 2022. O downloader encerrou os pedidos a esse servidor e marcou os meses seguintes como pendentes. O espelho oficial USGS FEWS NET disponibiliza o CHIRPS v3 final mensal em GeoTIFF global. A conferência de uma janela de 5 × 5 células em março de 2022 encontrou igualdade exata com o arquivo regional UCSB, além de confirmar CRS, resolução, tipo, escala, offset e identificação do produto no TIFF. O arquivo global possui outra origem de grade, portanto seus índices de linha e coluna diferem dos regionais, enquanto a localização da célula é registrada no CSV. [Espelho USGS do produto final](https://edcintl.cr.usgs.gov/downloads/sciweb1/shared/fews/web/global/monthly/chirps/final/downloads/monthly/) · [Orientação do produtor para HTTP 429](https://github.com/chc-ucsb/chc-data-download#downloading-politely)
+
+A configuração `history-usgs.toml` seleciona explicitamente esse espelho para meses pendentes, com os mesmos limites de 2 GB. Ela conserva arquivos UCSB já válidos, as falhas anteriores e os planos de cada origem. O planejamento estima os arquivos globais antes da recuperação. A aquisição por arquivo completo permite validar todos os blocos e o SHA-256, com volume maior que o produto regional. As requisições aos dois servidores são espaçadas pelo cliente.
+
+```powershell
+uv run --no-sync aquaclima history-plan --config configs/history-usgs.toml --allow-bulk
+uv run --no-sync aquaclima history-run --config configs/history-usgs.toml --allow-bulk
+uv run --no-sync aquaclima history-run --config configs/history-usgs.toml --allow-bulk --offline --output-dir data/history/reproduzido/2022_2024
+```
