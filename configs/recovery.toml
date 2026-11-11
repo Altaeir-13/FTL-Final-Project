@@ -1,0 +1,13 @@
+[recovery]
+months = ["2022-01", "2022-07"]
+max_scenes_per_month = 2
+min_valid_fraction = 0.70
+original_dataset = "history/curated/2022-01-01_2024-12-31_a48cba82f744"
+c1_policy_key = "a48cba82f744"
+compatibility_audit = "recovery/diagnostic/radiometry/compatibility.json"
+dataset_version = "2022_2024_recovery_diagnostic"
+
+[limits]
+max_transfer_bytes = 250000000
+max_storage_bytes = 250000000
+max_downloads = 2500

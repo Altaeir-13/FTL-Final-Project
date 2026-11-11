@@ -35,6 +35,12 @@ COMMANDS = {
     "history-consolidate": "consolida os lotes históricos locais",
     "history-explore": "gera análise exploratória do histórico local",
     "history-baseline": "ajusta e valida os baselines em períodos cronológicos",
+    "catalog-diagnostic": "compara os quatro catálogos em janeiro e julho de 2022",
+    "recovery-plan": "planeja recortes alternativos de 2022 sem adquirir imagens",
+    "recovery-run": "recupera 2022 após auditoria radiométrica ou reproduz offline",
+    "recovery-consolidate": "consolida a nova versão preservando o dataset C1",
+    "naive-benchmark": "avalia pares retrospectivos de meses 2023 e 2024",
+    "export-contracts": "exporta os contratos locais versionados do WebGIS",
 }
 REMOTE = {"check-sources", "acquire-pivots", "search-scenes", "acquire-crops", "download-precip"}
 
@@ -66,6 +72,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--dry-run", action="store_true", help="exibe o plano local e não usa rede nem grava arquivos")
     parser.add_argument("--offline", action="store_true", help="reprocessa os dados brutos já adquiridos localmente")
     parser.add_argument("--allow-bulk", action="store_true", help="autoriza ampliar o tamanho do piloto")
+    parser.add_argument("--dataset-dir", type=Path, help="dataset de entrada para benchmark e contratos")
     return parser
 
 
@@ -253,7 +260,46 @@ def main(argv=None) -> int:
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s %(message)s")
     args.data_dir = args.data_dir.resolve()
-    args.config = args.config or Path("configs/history.toml" if args.command.startswith("history-") else "configs/pilot.toml")
+    args.config = args.config or Path("configs/recovery.toml" if args.command.startswith("recovery-") or args.command == "catalog-diagnostic"
+        else "configs/history.toml" if args.command.startswith("history-") else "configs/pilot.toml")
+    if args.command in {"naive-benchmark", "export-contracts", "catalog-diagnostic"}:
+        try:
+            if args.dry_run:
+                print(json.dumps({"command": args.command, "offline": args.offline, "dataset_dir": str(args.dataset_dir)}, indent=2))
+                return 0
+            with _data_lock(args.data_dir):
+                if args.command == "catalog-diagnostic":
+                    from aquaclima.ingestion.catalog_diagnostic import run_catalog_diagnostic
+                    limits = tomllib.loads(args.config.read_text(encoding="utf-8"))["limits"]
+                    # This client is only a local integrity/cache reader in offline mode.
+                    with HttpClient(ledger=args.data_dir / "recovery/diagnostic/http.jsonl", **limits) as http:
+                        print(run_catalog_diagnostic(http, args.data_dir / "processed/pivots.geojson",
+                            args.output_dir or args.data_dir / "recovery/diagnostic", offline=args.offline))
+                else:
+                    if args.dataset_dir is None:
+                        raise ValueError("Informe --dataset-dir para selecionar explicitamente a versão de entrada.")
+                    if args.command == "naive-benchmark":
+                        from aquaclima.modeling.naive_seasonal import run_naive_benchmark
+                        print(run_naive_benchmark(args.dataset_dir / "monthly.csv", args.output_dir or args.dataset_dir / "naive"))
+                    else:
+                        from aquaclima.reporting.contracts import export_contracts
+                        print(export_contracts(args.data_dir / "processed/pivots.geojson", args.dataset_dir,
+                            args.output_dir or args.dataset_dir / "webgis", model_dir=args.dataset_dir / "baseline",
+                            benchmark_dir=args.dataset_dir / "naive"))
+            return 0
+        except (AcquisitionError, BudgetError, OSError, ValueError, KeyError) as exc:
+            LOGGER.error("%s", exc)
+            return 1
+    if args.command.startswith("recovery-"):
+        from aquaclima.recovery import execute
+        try:
+            if args.dry_run:
+                return execute(args)
+            with _data_lock(args.data_dir):
+                return execute(args)
+        except (AcquisitionError, BudgetError, OSError, ValueError, KeyError) as exc:
+            LOGGER.error("%s", exc)
+            return 1
     if args.command.startswith("history-"):
         from aquaclima.history import execute
 

@@ -68,3 +68,17 @@ uv run --no-sync aquaclima history-plan
 uv run --no-sync aquaclima history-run
 uv run --no-sync aquaclima history-run --offline --output-dir data/history/reproduzido/q1
 ```
+
+A [recuperação de 2022](docs/recuperacao-2022.md) compara quatro catálogos e integra somente recortes Planetary Computer PB 05.10 aprovados pela [auditoria radiométrica](docs/radiometria.md). A nova versão tem 256 observações, 57 cenas e cobertura mensal de 78,3% em 2022–2024. A base C1 anterior e o piloto continuam verificáveis por seus hashes.
+
+Os [resultados dos baselines](docs/modelagem-recuperada.md) registram mediana sazonal elegível nos cinco pivôs e Ridge em dois, com os critérios originais. Os [contratos WebGIS](docs/contratos-webgis.md) disponibilizam arquivos locais versionados, sem frontend nesta fase.
+
+```powershell
+uv run --no-sync aquaclima recovery-plan
+uv run --no-sync aquaclima recovery-run
+uv run --no-sync aquaclima recovery-plan --config configs/recovery-2022.toml --allow-bulk
+uv run --no-sync aquaclima recovery-run --config configs/recovery-2022.toml --allow-bulk
+uv run --no-sync python scripts/verify_recovery_offline.py
+```
+
+Uma instalação nova também precisa dos catálogos e evidências da auditoria: os dados adquiridos não são distribuídos no Git. Consulte os procedimentos completos de diagnóstico e aquisição em [recuperacao-2022.md](docs/recuperacao-2022.md).
