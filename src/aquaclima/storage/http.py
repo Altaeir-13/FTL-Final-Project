@@ -11,13 +11,32 @@ import time
 from datetime import UTC, datetime
 from email.utils import parsedate_to_datetime
 from pathlib import Path
-from urllib.parse import urlsplit
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 import requests
 from urllib3.exceptions import HTTPError as TransportError
 
 LOGGER = logging.getLogger(__name__)
 CHUNK = 64 * 1024
+SECRET_QUERY_KEYS = {
+    "sig", "se", "st", "sp", "sv", "spr", "sr", "sip", "si", "skoid", "sktid",
+    "skt", "ske", "sks", "skv", "rscc", "rscd", "rsce", "rscl", "rsct",
+    "token", "access_token", "api_key", "apikey", "key", "sas",
+}
+
+
+def public_url(url: str) -> str:
+    """Keep public resource identity while excluding temporary access credentials."""
+    parts = urlsplit(url)
+    parameters = parse_qsl(parts.query, keep_blank_values=True)
+    visible = [(key, value) for key, value in parameters if key.lower() not in SECRET_QUERY_KEYS]
+    if len(visible) == len(parameters):
+        return url
+    return urlunsplit(parts._replace(query=urlencode(visible)))
+
+
+def public_text(value: str) -> str:
+    return re.sub(r'https?://[^\s\x27"<>]+', lambda match: public_url(match.group()), value)
 
 
 class AcquisitionError(RuntimeError):
@@ -139,6 +158,7 @@ class HttpClient:
         self.session.close()
 
     def _log(self, event: str, **fields) -> None:
+        fields = {key: public_text(value) if isinstance(value, str) else value for key, value in fields.items()}
         entry = {"event": event, "at_utc": datetime.now(UTC).isoformat(), **fields}
         with self.ledger.open("a", encoding="utf-8") as stream:
             stream.write(json.dumps(entry, ensure_ascii=False) + "\n")
@@ -153,6 +173,7 @@ class HttpClient:
         return Path(os.path.relpath(path.resolve(), self.ledger.parent)).as_posix()
 
     def is_verified(self, path: Path, *, source: str | None = None) -> bool:
+        source = public_text(source) if source is not None else None
         entry = self.files.get(self._path_key(path))
         return bool(
             entry and (source is None or source == entry["source"]) and path.is_file()
@@ -160,6 +181,7 @@ class HttpClient:
         )
 
     def record_file(self, path: Path, *, source: str) -> dict:
+        source = public_text(source)
         key = self._path_key(path)
         if self.is_verified(path, source=source):
             return self.files[key]
@@ -183,6 +205,7 @@ class HttpClient:
         self._last_chirps_request = time.monotonic()
 
     def _request(self, method, url, consume, *, params=None, payload=None, headers=None):
+        visible_url = public_url(url)
         for attempt in range(self.attempts):
             if self.downloads >= self.max_downloads:
                 raise BudgetError("Limite de requisições desta execução atingido")
@@ -202,20 +225,23 @@ class HttpClient:
                     requested_url = response.url or url
                     if status == 429 or 500 <= status < 600:
                         raise _Retryable(
-                            f"HTTP {status} em {url}", status_code=status,
+                            f"HTTP {status} em {visible_url}", status_code=status,
                             retry_after=response.headers.get("Retry-After"),
                         )
                     if status >= 400:
-                        raise AcquisitionError(f"HTTP {status} em {url}", status_code=status)
+                        raise AcquisitionError(f"HTTP {status} em {visible_url}", status_code=status)
                     return consume(response)
             except (requests.RequestException, TransportError) as exc:
-                error = _Retryable(f"{url}: {type(exc).__name__}: {exc}")
+                error = _Retryable(f"{visible_url}: {type(exc).__name__}")
             except _Retryable as exc:
                 error = exc
             except (AcquisitionError, BudgetError) as exc:
-                error = exc
-                self.failures.append(str(exc))
-                raise
+                message = public_text(str(exc))
+                error = BudgetError(message) if isinstance(exc, BudgetError) else AcquisitionError(
+                    message, status_code=exc.status_code,
+                )
+                self.failures.append(message)
+                raise error from None
             finally:
                 self._log(
                     "http", method=method, url=requested_url, status=status,
@@ -273,9 +299,9 @@ class HttpClient:
     def _identity(url, params, payload) -> str:
         request = requests.Request("GET", url, params=params).prepare()
         if payload is None:
-            return request.url
+            return public_url(request.url)
         encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
-        return f"{request.url} [corpo sha256={hashlib.sha256(encoded).hexdigest()}]"
+        return f"{public_url(request.url)} [corpo sha256={hashlib.sha256(encoded).hexdigest()}]"
 
     def _save(self, path, data, source):
         self.ensure_storage(len(data))

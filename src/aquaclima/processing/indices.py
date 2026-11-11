@@ -107,7 +107,7 @@ def _scene_rows(scene: dict, pivots, data_dir: Path, min_valid_fraction: float):
     footprint = shape(scene["footprint"])
     scene_fields = {"scene_id": scene["id"], "date": scene["date"], "scene_cloud_pct": scene["cloud_cover"],
                     "processing_baseline": scene["processing_baseline"],
-                    "sentinel_source": f"Element 84 Earth Search / {COLLECTION}"}
+                    "sentinel_source": scene.get("source_item_url", f"Element 84 Earth Search / {COLLECTION}")}
     with ExitStack() as stack:
         datasets, arrays = {}, {}
         if scene["status"] == "ok":
@@ -139,12 +139,13 @@ def _scene_rows(scene: dict, pivots, data_dir: Path, min_valid_fraction: float):
 
 
 def process_indices(pivots_path: Path, crop_manifest_path: Path, data_dir: Path,
-                    *, min_valid_fraction: float, output_path: Path | None = None) -> Path:
+                    *, min_valid_fraction: float, output_path: Path | None = None,
+                    expected_collection: str = COLLECTION) -> Path:
     if not math.isfinite(min_valid_fraction) or not 0 <= min_valid_fraction <= 1:
         raise ValueError("A fração mínima de pixels válidos deve estar entre 0 e 1.")
     pivots = read_pivots(pivots_path)
     manifest = json.loads(crop_manifest_path.read_text(encoding="utf-8"))
-    if manifest["collection"] != COLLECTION or manifest["pivots_sha256"] != checksum(pivots_path):
+    if manifest["collection"] != expected_collection or manifest["pivots_sha256"] != checksum(pivots_path):
         raise ValueError("O manifesto Sentinel-2 não corresponde à coleção e ao arquivo de pivôs atuais.")
     destination = output_path if output_path is not None else data_dir / "processed" / "indices.csv"
     destination.parent.mkdir(parents=True, exist_ok=True)
