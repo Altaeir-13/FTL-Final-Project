@@ -58,3 +58,11 @@ uv run --no-sync aquaclima report
 | `tests` | Verificações matemáticas e de falhas, com pequenas entradas controladas |
 
 A documentação explica [metodologia, fontes e limitações](docs/metodologia.md) e registra os [resultados da aquisição piloto](docs/resultado-piloto.md). Os arquivos raster, dados locais, caches e ambientes virtuais ficam fora do Git. O código usa licença MIT. Os dados de terceiros conservam as condições de suas fontes.
+
+A [fase histórica](docs/historico.md) acrescenta lotes mensais retomáveis, seleção pela qualidade dentro dos pivôs, dataset mensal, exploração e baselines cronológicos. A configuração inicial usa janeiro a março de 2022. Gere a estimativa antes da aquisição e use o mesmo comando com `--offline` para reproduzir os arquivos locais.
+
+```powershell
+uv run --no-sync aquaclima history-plan
+uv run --no-sync aquaclima history-run
+uv run --no-sync aquaclima history-run --offline --output-dir data/history/reproduzido/q1
+```

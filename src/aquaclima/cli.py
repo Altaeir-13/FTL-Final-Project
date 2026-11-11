@@ -30,6 +30,11 @@ COMMANDS = {
     "integrate": "integra os índices à precipitação com arquivos locais",
     "report": "gera gráfico e relatório de aquisição",
     "run": "executa o fluxo completo com aquisição ou em modo offline",
+    "history-plan": "consulta inventários mensais e estima a expansão histórica",
+    "history-run": "adquire lotes históricos ou reprocessa os lotes offline",
+    "history-consolidate": "consolida os lotes históricos locais",
+    "history-explore": "gera análise exploratória do histórico local",
+    "history-baseline": "ajusta e valida os baselines em períodos cronológicos",
 }
 REMOTE = {"check-sources", "acquire-pivots", "search-scenes", "acquire-crops", "download-precip"}
 
@@ -53,7 +58,7 @@ def _data_lock(root: Path):
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="aquaclima", description="Piloto científico AquaClima")
     parser.add_argument("command", choices=COMMANDS, help="; ".join(f"{k}: {v}" for k, v in COMMANDS.items()))
-    parser.add_argument("--config", type=Path, default=Path("configs/pilot.toml"))
+    parser.add_argument("--config", type=Path)
     parser.add_argument("--data-dir", type=Path, default=Path("data"))
     parser.add_argument("--output-dir", type=Path, help="diretório de CSV, gráfico e relatório (padrão: data/curated)")
     parser.add_argument("--start", type=date.fromisoformat)
@@ -181,7 +186,7 @@ def _run(args, http, study, months, paths) -> int:
             raise ValueError(f"Arquivos locais obrigatórios ausentes: {', '.join(map(str, missing))}")
         if not _plan_matches(_read(scenes), study, pivots) or _read(crops)["plan_sha256"] != checksum(scenes):
             raise ValueError("O inventário local Sentinel-2 não corresponde aos pivôs ou à configuração informada.")
-        if sorted(_read(rain)["months"]) != months:
+        if not set(months).issubset(_read(rain)["months"]):
             raise ValueError("O inventário local CHIRPS não corresponde ao intervalo informado.")
         acquired_pivots, selected, cropped, downloaded = pivots, scenes, crops, rain
     else:
@@ -193,7 +198,9 @@ def _run(args, http, study, months, paths) -> int:
     computed = stage("Índices espectrais", lambda: process_indices(
         acquired_pivots, cropped, data_dir, min_valid_fraction=study["min_valid_fraction"],
     )) if cropped else None
-    sampled = stage("Amostragem CHIRPS", lambda: extract_precip(acquired_pivots, downloaded, data_dir)) if acquired_pivots and downloaded else None
+    sampled = stage("Amostragem CHIRPS", lambda: extract_precip(
+        acquired_pivots, downloaded, data_dir, months=months,
+    )) if acquired_pivots and downloaded else None
     table = stage("Integração", lambda: integrate(acquired_pivots, computed, sampled, months, output)) if acquired_pivots else None
     if table:
         stage("Gráfico temporal", lambda: plot_timeseries(table, output))
@@ -234,7 +241,7 @@ def _dispatch(args, http, study, months, paths):
         "download-precip": lambda: download_precip(http, data_dir, months),
         "process-indices": lambda: process_indices(pivots, crops, data_dir, min_valid_fraction=study["min_valid_fraction"]),
         "integrate": lambda: integrate(
-            pivots, indices, extract_precip(pivots, rain, data_dir), months, output,
+            pivots, indices, extract_precip(pivots, rain, data_dir, months=months), months, output,
         ),
     }
     print(operations[args.command]())
@@ -246,6 +253,18 @@ def main(argv=None) -> int:
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s %(message)s")
     args.data_dir = args.data_dir.resolve()
+    args.config = args.config or Path("configs/history.toml" if args.command.startswith("history-") else "configs/pilot.toml")
+    if args.command.startswith("history-"):
+        from aquaclima.history import execute
+
+        try:
+            if args.dry_run:
+                return execute(args)
+            with _data_lock(args.data_dir):
+                return execute(args)
+        except (AcquisitionError, BudgetError, OSError, ValueError, KeyError) as exc:
+            LOGGER.error("%s", exc)
+            return 1
     args.output_dir = (args.output_dir or args.data_dir / "curated").resolve()
     root = args.data_dir
     paths = (
