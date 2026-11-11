@@ -172,14 +172,14 @@ def test_rate_limit_stops_new_requests_and_preserves_cached_month(tmp_path, monk
     assert http.calls == [("HEAD", chirps_url("2025-07"))]
 
 
-def test_changed_interval_retains_files_but_rebuilds_manifest(tmp_path):
+def test_changed_interval_retains_files_and_manifest(tmp_path):
     raster = _raster(tmp_path / "sample.tif")
     http = FixtureHttp({chirps_url(month): raster for month in ("2025-07", "2025-08")})
     manifest = download_precip(http, tmp_path, ["2025-07", "2025-08"])
     july = json.loads(manifest.read_bytes())["months"]["2025-07"]
     http.calls.clear()
     download_precip(http, tmp_path, ["2025-08"])
-    assert list(json.loads(manifest.read_bytes())["months"]) == ["2025-08"]
+    assert list(json.loads(manifest.read_bytes())["months"]) == ["2025-07", "2025-08"]
     assert (tmp_path / july["path"]).is_file()
     assert not http.calls
 

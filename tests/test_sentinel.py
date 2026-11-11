@@ -201,7 +201,7 @@ def test_cli_offline_uses_only_local_files(stac_case, tmp_path, monkeypatch):
 
     monkeypatch.setenv("MPLCONFIGDIR", str(tmp_path / "mpl"))
     from aquaclima import cli
-    from aquaclima.ingestion.chirps import PRODUCT, chirps_url
+    from aquaclima.ingestion.chirps import PRODUCT, _metadata, chirps_url
 
     http, fixture_pivots = stac_case
     data_dir = tmp_path / "data"
@@ -214,7 +214,7 @@ def test_cli_offline_uses_only_local_files(stac_case, tmp_path, monkeypatch):
                          max_cloud=60, max_scenes=2)
     acquire_crops(http, pivots, plan, data_dir)
 
-    rain = data_dir / "raw/chirps/2025-07.tif"
+    rain = data_dir / "raw/chirps/latam/chirps-v3.0.2025.07.tif"
     rain.parent.mkdir(parents=True)
     bounds = [shape(feature["geometry"]).bounds for feature in document["features"]]
     transform = from_origin(min(bound[0] for bound in bounds) - 0.05,
@@ -222,9 +222,11 @@ def test_cli_offline_uses_only_local_files(stac_case, tmp_path, monkeypatch):
     with rasterio.open(rain, "w", driver="GTiff", width=4, height=4, count=1, dtype="float32",
                        nodata=-9999, crs="EPSG:4326", transform=transform) as dataset:
         dataset.write(np.full((4, 4), 21.25, dtype="float32"), 1)
-    write_json(rain.with_name("manifest.json"), {"product": PRODUCT, "months": {"2025-07": {
+    with rasterio.open(rain) as dataset:
+        metadata = _metadata(dataset)
+    write_json(data_dir / "raw/chirps/manifest.json", {"product": PRODUCT, "months": {"2025-07": {
         "status": "available", "source": chirps_url("2025-07"), "path": rain.relative_to(data_dir).as_posix(),
-        "size_bytes": rain.stat().st_size, "sha256": checksum(rain),
+        "size_bytes": rain.stat().st_size, "sha256": checksum(rain), "metadata": metadata,
     }}})
     config = tmp_path / "pilot.toml"
     config.write_text("""[study]
