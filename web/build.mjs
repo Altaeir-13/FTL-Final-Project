@@ -1,0 +1,10 @@
+import { build } from 'vite';
+import { cp, writeFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import { validatePackage } from './scripts/validate-data.mjs';
+process.chdir(fileURLToPath(new URL('.', import.meta.url)));
+await validatePackage('data', { publicOnly: true });
+await build();
+await cp('data', 'dist/data', { recursive: true });
+await writeFile('dist/.nojekyll', '');
+console.log('AquaClima: pacote íntegro e aplicação estática compilada em web/dist.');
