@@ -11,24 +11,36 @@ for (const name of ['monthly', 'observations', 'precipitation', 'quality', 'even
 const ids = ['8087', '16708', '17373', '17382', '19997'];
 const failures = new WeakMap();
 const format = value => Number(value).toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+const productionDependency = url => /\/(?:@vite|@react-refresh|@id|@fs|src|node_modules)(?:\/|$)|(?:__vite_ping|__webpack_hmr|sockjs)/i.test(url.pathname)
+  || /\/(?:tiles?|api)(?:\/|$)|\.(?:pbf|mvt)(?:$|\?)/i.test(url.pathname);
 
 test.beforeEach(async ({ page, baseURL }) => {
-  const result = { console: [], runtime: [], external: [], http: [] };
+  const result = { console: [], runtime: [], external: [], http: [], outsideBase: [], developmentOrTiles: [], insecure: [], sockets: [] };
   failures.set(page, result);
   const origin = new URL(baseURL).origin;
   page.on('console', message => { if (message.type() === 'error') result.console.push(message.text()); });
   page.on('pageerror', error => result.runtime.push(error.message));
   page.on('request', request => {
     const url = new URL(request.url());
-    if (/^https?:$/.test(url.protocol) && url.origin !== origin) result.external.push(request.url());
+    if (/^https?:$/.test(url.protocol)) {
+      if (url.origin !== origin) result.external.push(request.url());
+      if (!url.href.startsWith(baseURL)) result.outsideBase.push(request.url());
+      if (productionDependency(url)) result.developmentOrTiles.push(request.url());
+      if (new URL(baseURL).protocol === 'https:' && url.protocol !== 'https:') result.insecure.push(request.url());
+    }
   });
   page.on('response', response => { if (response.status() >= 400) result.http.push(`${response.status()} ${response.url()}`); });
+  page.on('websocket', socket => result.sockets.push(socket.url()));
 });
 
 test.afterEach(async ({ page }, testInfo) => {
   const result = failures.get(page);
   if (testInfo.status !== testInfo.expectedStatus) await testInfo.attach('browser-diagnostics', { body: JSON.stringify(result, null, 2), contentType: 'application/json' });
   expect(result.external, 'A demonstração não faz requisições HTTP externas.').toEqual([]);
+  expect(result.outsideBase, 'Documentos, assets e dados permanecem no caminho publicado do projeto.').toEqual([]);
+  expect(result.developmentOrTiles, 'O runtime não usa servidor de desenvolvimento, backend ou tiles.').toEqual([]);
+  expect(result.insecure, 'A demonstração pública carrega somente recursos HTTPS.').toEqual([]);
+  expect(result.sockets, 'O build estático não depende de HMR ou serviços WebSocket.').toEqual([]);
   expect(result.runtime, 'Nenhuma exceção JavaScript não tratada.').toEqual([]);
   if (!testInfo.annotations.some(annotation => annotation.type === 'expected-load-failure')) {
     expect(result.console, 'Nenhum erro no console.').toEqual([]);
@@ -217,6 +229,38 @@ test('project subpath assets, shareable filters and hash navigation survive relo
   const manifestResponse = await page.request.get('./data/manifest.json');
   expect(manifestResponse.ok()).toBe(true);
   expect((await manifestResponse.json()).package_sha256).toBe(manifest.package_sha256);
+});
+
+test('production runtime remains functional when localhost services, tiles and CDNs are unavailable', async ({ page, baseURL }) => {
+  const blocked = [];
+  // Block every runtime resource outside the exact deployment directory. In
+  // public mode this also makes any localhost or HTTP dependency fail closed.
+  await page.route('**/*', route => {
+    const url = new URL(route.request().url());
+    if (/^https?:$/.test(url.protocol) && (!url.href.startsWith(baseURL) || productionDependency(url))) {
+      blocked.push(url.href);
+      return route.abort('blockedbyclient');
+    }
+    return route.continue();
+  });
+  await open(page);
+  await page.locator('#pivot-select').selectOption('16708');
+  await page.getByRole('button', { name: 'NDMI', exact: true }).click();
+  await expectPoints(page, '16708', 'ndmi_median');
+  await page.getByRole('button', { name: 'Enquadrar todos os pivôs', exact: true }).click();
+  await expect(page.locator('#map path[role="button"]')).toHaveCount(5);
+  const assets = await page.evaluate(() => [
+    ...[...document.querySelectorAll('script[src]')].map(node => node.src),
+    ...[...document.querySelectorAll('link[rel="stylesheet"][href]')].map(node => node.href),
+  ]);
+  expect(assets.length).toBeGreaterThanOrEqual(2);
+  expect(assets.every(url => url.startsWith(`${baseURL}assets/`)), 'JavaScript e CSS são bundles locais dentro do projeto.').toBe(true);
+  expect(blocked, 'O aplicativo não tentou usar serviços locais, CDNs, backend ou tiles.').toEqual([]);
+  if (new URL(baseURL).protocol === 'https:') {
+    expect(new URL(page.url()).origin).toBe('https://altaeir-13.github.io');
+    expect(new URL(page.url()).pathname).toBe('/FTL-Final-Project/');
+    expect(assets.some(url => /localhost|127\.0\.0\.1|\[::1\]/i.test(url))).toBe(false);
+  }
 });
 
 test('390px mobile layout stays inside the viewport and all primary interactions work', async ({ page }) => {

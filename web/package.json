@@ -11,6 +11,7 @@
     "test": "node --test test/*.test.mjs",
     "test:browser": "playwright test",
     "build": "node build.mjs",
+    "verify:dist": "node scripts/verify-dist.mjs",
     "preview": "node serve.mjs"
   },
   "dependencies": { "leaflet": "1.9.4" },
