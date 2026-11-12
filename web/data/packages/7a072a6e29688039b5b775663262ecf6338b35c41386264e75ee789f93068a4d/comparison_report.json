@@ -1,0 +1,56 @@
+{
+  "experiment": "common_months_validation_2024",
+  "validation_year": 2024,
+  "monthly_input_sha256": "d78469f3dd13287d390aa75cceaa745e1dbf9ed83a1b4efbf18a17718e64fc7a",
+  "methods": [
+    "calendar_month_median",
+    "harmonic_ridge",
+    "previous_year_same_calendar_month"
+  ],
+  "comparisons": [
+    [
+      "calendar_month_median",
+      "harmonic_ridge",
+      "previous_year_same_calendar_month"
+    ],
+    [
+      "calendar_month_median",
+      "harmonic_ridge"
+    ],
+    [
+      "calendar_month_median",
+      "previous_year_same_calendar_month"
+    ],
+    [
+      "harmonic_ridge",
+      "previous_year_same_calendar_month"
+    ]
+  ],
+  "min_common_months_for_metrics": 6,
+  "eligible_metric_rows": 48,
+  "status": "comparisons_available",
+  "inputs": {
+    "monthly": {
+      "name": "monthly.csv",
+      "sha256": "d78469f3dd13287d390aa75cceaa745e1dbf9ed83a1b4efbf18a17718e64fc7a"
+    },
+    "baseline_report": {
+      "name": "baseline_report.json",
+      "sha256": "50e7dadaebdbd12aeb0cfb5f21b85a04179f33d5e69da8dac10996fb69c42712"
+    },
+    "baseline_predictions": {
+      "name": "validation_predictions.csv",
+      "sha256": "1c7e7f79c8cc500dcfca9815a469e2f0718d32768624c11b1e7e2e9fdd3ca4e8"
+    },
+    "naive_report": {
+      "name": "naive_report.json",
+      "sha256": "39386e3cae73905973d3277e1a0cfb796c3b3a7e6efd85ef8d25a37a0eaec87b"
+    },
+    "naive_predictions": {
+      "name": "naive_pairs.csv",
+      "sha256": "89809e1b209537aa80623d505583b258ec13539e4300a514fe270dc26c4b6e4a"
+    }
+  },
+  "policy": "No refitting. For each pivot/index/contrast, intersect months scored by every participating method; retain original six-month metric threshold.",
+  "limitations": "Observed spectral reconstruction. Calendar gaps, crop changes, source differences and dependencies among nearby pivots remain; results do not diagnose irrigation failures."
+}

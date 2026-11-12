@@ -1,0 +1,99 @@
+{
+  "public_export_version": "1.0.0",
+  "dataset_name": "2022_2024_recovery_v1",
+  "scientific_commit": "1440f3e5b28736d12ded226d6baa6b5ca9005262",
+  "source_package_sha256": "16094dc7ef7ae3e6881b86bc0cbb0ff7b146f0558fc0947957865026882360a3",
+  "source_manifest_sha256": "7c8f69ef0f73a8f6e932f15ebcc5d132e26b749bccd2a090f5ac06f2052a119f",
+  "export_policy": "Allowlisted contract files and frozen common-month comparisons only. Scientific file bytes are unchanged. No raw rasters, caches, credentials, environment paths or signed URLs.",
+  "original_files": {
+    "pivots": {
+      "sha256": "b7da39ab1b08f1ee7280b6fefe976685b699b9e09b43c0364852679f50991878",
+      "bytes": 60231
+    },
+    "observations": {
+      "sha256": "f1f49735587af9c8509326b5613954211d03d2a8b3585706ba76d600b45bd2bf",
+      "bytes": 307783
+    },
+    "monthly": {
+      "sha256": "ddffa80c402fc089f20d7c3cab52f678b3239335487ee9cdaea0c2c061832fb4",
+      "bytes": 205823
+    },
+    "precipitation": {
+      "sha256": "b9973b9a11f6bb3b832729c92ed080a13949a639542471928efe8a32f1160c54",
+      "bytes": 41646
+    },
+    "quality": {
+      "sha256": "6c1babab57b73c400ed3e8a0cd38260a265096606368305ff4eaa785aa9e1ef8",
+      "bytes": 78826
+    },
+    "models": {
+      "sha256": "d878e599e3d9afa9d686fd74b490d8aa82b5ca4e1991182d507012846796f282",
+      "bytes": 4871
+    },
+    "model_predictions": {
+      "sha256": "d765bdf4599f5962bbb7e92ba4ea3a0479a0862f85bd7601099dc3d073816dbc",
+      "bytes": 54625
+    },
+    "model_parameters": {
+      "sha256": "0d6fdf446dde2a6781e4e31472a62af2350f69d409af9c26c4364a958d03b021",
+      "bytes": 14690
+    },
+    "events": {
+      "sha256": "c704b5650a949b7bf0d0910be575e616eb6116a5c328ffb412449dd1c0468323",
+      "bytes": 15294
+    },
+    "provenance": {
+      "sha256": "3449709679c70b80a817a309aeb1863b9d8159f06c8006e846160ba092fe4cd5",
+      "bytes": 5644
+    },
+    "schemas": {
+      "sha256": "1fb29b98d832a3ed625f0fd2c514626c34edda2c17ecf69626aeed46ffbc3172",
+      "bytes": 12999
+    }
+  },
+  "comparison_files": {
+    "common_month_metrics": "797e0af9b7269f4a4ef517653e4a09e058322fcd9fb1ce286c246f090c071ba8",
+    "common_month_predictions": "148332efc4f15f8137a87ce43aa1ebec201640a254059d779f9835aa06de3785",
+    "comparison_report": "c1ca4634a5e0eff6a399ca590b4ba92152ec5b9de82a7d0435b2416a84b4dee6"
+  },
+  "extension_contract": {
+    "version": "1.0.0",
+    "source": "aquaclima.modeling.comparison frozen outputs",
+    "core_contract_version": "1.0.0",
+    "core_schemas_unchanged": true,
+    "common_month_metrics": {
+      "key": [
+        "comparison",
+        "pivot_id",
+        "target",
+        "method"
+      ],
+      "common_months": "JSON array of YYYY-MM strings; exact intersection of scored 2024 months",
+      "missing_values": "Empty CSV fields are null; metrics unavailable below six common months",
+      "units": {
+        "mae": "dimensionless",
+        "rmse": "dimensionless",
+        "bias_mean": "dimensionless"
+      }
+    },
+    "common_month_predictions": {
+      "key": [
+        "comparison",
+        "pivot_id",
+        "target",
+        "method",
+        "month"
+      ],
+      "residual": "observed minus predicted"
+    }
+  },
+  "privacy_review": {
+    "result": "passed",
+    "absolute_paths": 0,
+    "credential_patterns": 0,
+    "signed_or_parameterized_urls": 0,
+    "source_contract_fields_removed": [],
+    "relative_inventory_paths": "Retained as scientific artifact identifiers; these are not fetchable public assets.",
+    "note": "ANA public attributes and public source catalogue URLs are retained. Browser runtime does not request these remote URLs."
+  }
+}
