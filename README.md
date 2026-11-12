@@ -6,10 +6,10 @@ O AquaClima investiga se o histórico da vegetação e o contexto meteorológico
 
 A aplicação estática em `web/` permite selecionar os cinco polígonos ANA reais e explorar índices NDVI/NDMI, chuva regional, cobertura, mudanças espectrais e reconstrução por baselines. Consome exclusivamente o snapshot público validado de `2022_2024_recovery_v1`: 256 observações, 57 cenas e 141 de 180 espaços mensais observados (78,3%). Não executa aquisição ou ajuste de modelos. Mapa, gráficos e dependências são empacotados, sem CDNs ou tiles externos.
 
-Clone a branch de implementação para executar o frontend em uma máquina nova. O snapshot científico público acompanha o repositório; essa execução não exige Python, rasters, caches nem a pasta científica `data/` original. Node.js 22.12 ou posterior e npm são suficientes:
+Após a integração do PR, clone a `main` para executar o frontend em uma máquina nova. O snapshot científico público acompanha o repositório; essa execução não exige Python, rasters, caches nem a pasta científica `data/` original. Node.js 22.12 ou posterior e npm são suficientes:
 
 ```powershell
-git clone --branch codex/aquaclima-webgis --single-branch https://github.com/Altaeir-13/FTL-Final-Project.git
+git clone --branch main --single-branch https://github.com/Altaeir-13/FTL-Final-Project.git
 Set-Location FTL-Final-Project/web
 npm ci
 npm run data:validate
@@ -23,7 +23,7 @@ Abra `http://127.0.0.1:4173/FTL-Final-Project/`. A base de produção é explici
 
 Consulte [arquitetura, testes e publicação no GitHub Pages](docs/webgis.md) e o [roteiro de demonstração em três minutos](docs/roteiro-demonstracao.md). O workflow `.github/workflows/webgis.yml` valida ciência e frontend em todos os PRs e nos pushes da `main`. Publica somente `web/dist/`, exclusivamente a partir da `main`, após as verificações. A branch de implementação exige revisão humana de PR; não há merge automático.
 
-URL de produção esperada: [AquaClima no GitHub Pages](https://altaeir-13.github.io/FTL-Final-Project/). A publicação só deve ser considerada confirmada com deployment aprovado e testes nessa URL, registrados no [relatório de finalização da Fase 5](docs/finalizacao-webgis.md). O workflow presente no repositório, isoladamente, não comprova um site publicado.
+WebGIS de produção: [AquaClima no GitHub Pages](https://altaeir-13.github.io/FTL-Final-Project/). Confirme a versão publicada pelo deployment aprovado da `main` e pelos testes executados nessa URL. As evidências estão no [relatório de finalização da Fase 5](docs/finalizacao-webgis.md) e no [PR de integração #1](https://github.com/Altaeir-13/FTL-Final-Project/pull/1). O workflow presente no repositório, isoladamente, não comprova um site publicado.
 
 O [relatório de entrega da Fase 4](docs/entrega-webgis.md) é um registro histórico dos resultados locais e das permissões disponíveis em 11/11/2026. A Fase 5 atualiza a autenticação, a política de publicação e a verificação de um clone limpo, sem alterar os resultados científicos.
 

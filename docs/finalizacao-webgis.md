@@ -43,6 +43,21 @@ O [primeiro CI remoto](https://github.com/Altaeir-13/FTL-Final-Project/actions/r
 
 O clone Windows também revelou conversão CRLF no SVG da marca, mudando apenas os nomes/hash dos bundles. A regra `web/** text eol=lf`, com exceção posterior `web/data/** -text`, estabiliza os arquivos do frontend entre checkouts; os dados científicos continuam sem conversão. Uma nova reprodução limpa confirma o artefato após essa correção.
 
-Uma URL configurada não é, por si só, prova de deployment concluído. Os resultados finais do CI, merge e validação pública serão acrescentados após sua observação.
+O segundo clone remoto limpo foi feito em `acbdeed3b9f869a727d11fdaefe1bde2cf6a90b2`, depois das correções de runner e fins de linha. A instalação npm foi refeita a partir do lock. Não havia dados adquiridos ou ambientes copiados do workspace original. O clone manteve o Git limpo após a compilação e os testes; saídas e ambientes criados estão ignorados.
+
+| Verificação | Resultado observado |
+| --- | --- |
+| Ciência em ambiente Python novo no primeiro clone | 193 aprovados |
+| Frontend/dados no segundo clone | 31 aprovados |
+| Política de CI no segundo clone | 5 aprovados |
+| Navegação real no segundo clone, Edge/Chromium | 12 aprovados, 12,8 s |
+| Total dessas verificações | 241 aprovados |
+| Build e inspeção estática | 21 arquivos, 3 assets, base `/FTL-Final-Project/` |
+| SHA-256 do artefato completo | `ddb6fcbbfd4ed6dca637f1d24dfd514be4fe189b901508159340048d676a6065` |
+| Igualdade workspace/clone limpo | Artefatos com o mesmo digest; pacote público inalterado |
+| CI remoto corrigido | [Run 43148428969 aprovado](https://github.com/Altaeir-13/FTL-Final-Project/actions/runs/43148428969) |
+| Deployment no PR | Ignorado, conforme a política main-only |
+
+Uma URL configurada não é, por si só, prova de deployment concluído. O merge é controlado pelo usuário; não há auto-merge. As execuções da produção podem ser conferidas na [lista de runs da main](https://github.com/Altaeir-13/FTL-Final-Project/actions/workflows/webgis.yml?query=branch%3Amain) e no [environment github-pages](https://github.com/Altaeir-13/FTL-Final-Project/deployments/github-pages). A validação pública deve usar os mesmos 12 cenários com `PLAYWRIGHT_BASE_URL`, sem servidor local. O registro final de publicação também fica no [PR de integração](https://github.com/Altaeir-13/FTL-Final-Project/pull/1).
 
 O [roteiro técnico de três minutos](roteiro-demonstracao.md) utiliza exclusivamente os valores científicos congelados. A [documentação da aplicação](webgis.md) descreve execução, arquitetura, dados e diferenças entre preview local e GitHub Pages.
