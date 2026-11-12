@@ -35,6 +35,14 @@ O GitHub Pages já estava com `build_type=workflow`, fonte `main`, URL configura
 
 ## Reprodução, integração e publicação
 
-O restante deste registro será preenchido com o clone remoto limpo, os resultados observados dos testes, o PR, os SHAs e os runs de Actions. Uma URL configurada não é, por si só, prova de deployment concluído.
+A branch foi publicada e seu SHA remoto conferido. O [PR #1](https://github.com/Altaeir-13/FTL-Final-Project/pull/1) reúne a integração, sem auto-merge.
+
+O primeiro clone remoto independente, em `6372e0c46aab78052e7aed6508630a5619a9c172`, começou sem `data/`, `.venv` ou `web/node_modules`. `npm ci`, validação do pacote, 31 testes frontend/dados, build de produção e quatro testes iniciais de política passaram. Foi criado um ambiente Python novo com `uv sync --locked --python 3.12 --group dev`; os **193 testes científicos passaram em 20,98 s**. Nenhum arquivo adquirido foi copiado para esse clone.
+
+O [primeiro CI remoto](https://github.com/Altaeir-13/FTL-Final-Project/actions/runs/43148142235) aprovou ciência e build/testes do frontend, mas falhou na instalação de Chromium: `ubuntu-latest` passou a fornecer Ubuntu 26.04, que o Playwright 1.56.1 fixado não suporta. Os jobs foram fixados em `ubuntu-24.04`, com teste que impede o retorno involuntário a um runner variável. Os parâmetros e dependências científicos foram preservados.
+
+O clone Windows também revelou conversão CRLF no SVG da marca, mudando apenas os nomes/hash dos bundles. A regra `web/** text eol=lf`, com exceção posterior `web/data/** -text`, estabiliza os arquivos do frontend entre checkouts; os dados científicos continuam sem conversão. Uma nova reprodução limpa confirma o artefato após essa correção.
+
+Uma URL configurada não é, por si só, prova de deployment concluído. Os resultados finais do CI, merge e validação pública serão acrescentados após sua observação.
 
 O [roteiro técnico de três minutos](roteiro-demonstracao.md) utiliza exclusivamente os valores científicos congelados. A [documentação da aplicação](webgis.md) descreve execução, arquitetura, dados e diferenças entre preview local e GitHub Pages.

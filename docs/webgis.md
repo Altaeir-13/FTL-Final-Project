@@ -47,7 +47,7 @@ npx playwright install chromium
 npm run test:browser
 ```
 
-Os testes do navegador iniciam o servidor configurado pelo Playwright e exercitam o build. Execute `npm run build` antes, caso tenha alterado o frontend. No Linux da integração contínua, o workflow instala Chromium com `--with-deps`. Para usar o Edge instalado no Windows, sem alterar as dependências do projeto:
+Os testes do navegador iniciam o servidor configurado pelo Playwright e exercitam o build. Execute `npm run build` antes, caso tenha alterado o frontend. A integração contínua fixa o runner em `ubuntu-24.04`, compatível com o Playwright 1.56.1 do lock, e instala Chromium com `--with-deps`. A regra `web/** text eol=lf` estabiliza fontes e assets do frontend entre checkouts; `web/data/** -text` preserva os bytes científicos. Para usar o Edge instalado no Windows, sem alterar as dependências do projeto:
 
 ```powershell
 $env:PLAYWRIGHT_CHANNEL = 'msedge'

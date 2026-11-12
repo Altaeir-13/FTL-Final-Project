@@ -7,6 +7,12 @@ const workflow = (await readFile(new URL('../workflows/webgis.yml', import.meta.
 const frontend = workflow.split('\n  frontend:\n')[1]?.split('\n  deploy:\n')[0];
 const deployment = workflow.split('\n  deploy:\n')[1];
 
+test('CI keeps the pinned Playwright supported Ubuntu runner instead of a moving latest image', () => {
+  const runners = [...workflow.matchAll(/^    runs-on: (.+)$/gm)].map(match => match[1]);
+  assert.deepEqual(runners, ['ubuntu-24.04', 'ubuntu-24.04', 'ubuntu-24.04']);
+  assert.doesNotMatch(workflow, /ubuntu-latest|ubuntu-26\.04/);
+});
+
 test('CI runs on main pushes and every pull request without path filters', () => {
   const triggers = workflow.split('\non:\n')[1]?.split('\npermissions:\n')[0];
   assert.match(triggers, /push:\s*\n\s+branches: \[main\]/);

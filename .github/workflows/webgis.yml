@@ -16,7 +16,7 @@ concurrency:
 jobs:
   science:
     name: Frozen scientific suite
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
@@ -34,7 +34,7 @@ jobs:
 
   frontend:
     name: Validate, build and exercise WebGIS
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     defaults:
       run:
@@ -82,7 +82,7 @@ jobs:
     name: Publish GitHub Pages
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     needs: [science, frontend]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read
