@@ -118,3 +118,51 @@ def test_restart_with_partial_ledger_record(tmp_path):
     client = HttpClient(ledger=path, session=Session(Response(b"abc")))
     assert client.get_bytes(URL) == b"abc"
     assert [e["status"] for e in read_ledger(path)] == [503, 200]
+
+
+@pytest.mark.parametrize("host", ["data.chc.ucsb.edu", "edcintl.cr.usgs.gov"])
+def test_climate_providers_are_paced(tmp_path, monkeypatch, host):
+    from aquaclima.storage import http
+
+    pauses = []
+    monkeypatch.setattr(http.time, "sleep", pauses.append)
+    monkeypatch.setattr(http.time, "monotonic", lambda: 10.0)
+    client = HttpClient(ledger=tmp_path / "ledger.jsonl", session=Session(Response(), Response()))
+    client.head(f"https://{host}/first")
+    client.head(f"https://{host}/second")
+    assert pauses == [1.1]
+
+
+def test_signed_access_is_transient_and_redacted_from_failures_and_logs(tmp_path, monkeypatch):
+    from aquaclima.storage import http
+
+    signed = URL + "?sv=2026&se=2099&sig=SECRET_SIGNATURE&part=red"
+    forbidden = Response(status=403)
+    forbidden.url = signed
+    client = HttpClient(ledger=tmp_path / "ledger.jsonl", session=Session(forbidden))
+    with pytest.raises(AcquisitionError) as error:
+        client.get_bytes(signed)
+    assert "SECRET_SIGNATURE" not in str(error.value)
+    assert "SECRET_SIGNATURE" not in client.ledger.read_text()
+    assert "part=red" in client.ledger.read_text()
+    assert "sig=" not in client.ledger.read_text()
+    monkeypatch.setattr(http.time, "sleep", lambda _: None)
+    client = HttpClient(
+        ledger=tmp_path / "timeout.jsonl", attempts=1,
+        session=Session(requests.Timeout(f"Failure reading {signed}")),
+    )
+    with pytest.raises(AcquisitionError) as error:
+        client.get_bytes(signed)
+    assert "SECRET_SIGNATURE" not in str(error.value)
+    assert "SECRET_SIGNATURE" not in client.ledger.read_text()
+
+
+def test_signed_source_identity_excludes_ephemeral_query(tmp_path):
+    signed = URL + "?sig=SECRET_SIGNATURE&se=2099"
+    path = tmp_path / "metadata.json"
+    response = Response(b'{"value":42}')
+    response.url = signed
+    client = HttpClient(ledger=tmp_path / "ledger.jsonl", session=Session(response))
+    assert client.get_json(signed, path=path) == {"value": 42}
+    assert "SECRET_SIGNATURE" not in client.ledger.read_text()
+    assert client.is_verified(path, source=URL)

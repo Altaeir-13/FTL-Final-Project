@@ -1,0 +1,160 @@
+{
+  "contract_version": "1.0.0",
+  "dataset_name": "2022_2024_recovery_v1",
+  "source_files": {
+    "pivots": {
+      "name": "pivots.geojson",
+      "sha256": "b7da39ab1b08f1ee7280b6fefe976685b699b9e09b43c0364852679f50991878",
+      "bytes": 60231
+    },
+    "observations": {
+      "name": "observations.csv",
+      "sha256": "0b1341b57615a5503a68fc8e3e54983f96fd6129ab463c63a517dce6cf05a780",
+      "bytes": 307783
+    },
+    "monthly": {
+      "name": "monthly.csv",
+      "sha256": "d78469f3dd13287d390aa75cceaa745e1dbf9ed83a1b4efbf18a17718e64fc7a",
+      "bytes": 205823
+    },
+    "dataset_manifest": {
+      "name": "dataset_manifest.json",
+      "sha256": "c0a2e561b79b87156e3bcc9a2e42955ccde3cb0df755f0805080d0b6c699e0a7",
+      "bytes": 1853
+    },
+    "seasonal_original_metrics": {
+      "name": "validation_metrics.csv",
+      "sha256": "2a094c3a61d18c2f04242fca35d6c898bb1d23c219b1450b7737586548cb40c2",
+      "bytes": 2504
+    },
+    "seasonal_original_report": {
+      "name": "baseline_report.json",
+      "sha256": "50e7dadaebdbd12aeb0cfb5f21b85a04179f33d5e69da8dac10996fb69c42712",
+      "bytes": 584
+    },
+    "seasonal_original_parameters": {
+      "name": "model_parameters.json",
+      "sha256": "ea99877cb39c1a48cc9892d0231aaca597b0d6648a11cac260ffdb52d0bad5df",
+      "bytes": 13321
+    },
+    "seasonal_original_predictions": {
+      "name": "validation_predictions.csv",
+      "sha256": "1c7e7f79c8cc500dcfca9815a469e2f0718d32768624c11b1e7e2e9fdd3ca4e8",
+      "bytes": 28722
+    },
+    "naive_contingency_metrics": {
+      "name": "naive_metrics.csv",
+      "sha256": "c51846cc689c8f4a8451cf53136c6141fb0b3e09d0d9ab40f152e45b6304b6db",
+      "bytes": 2456
+    },
+    "naive_contingency_report": {
+      "name": "naive_report.json",
+      "sha256": "39386e3cae73905973d3277e1a0cfb796c3b3a7e6efd85ef8d25a37a0eaec87b",
+      "bytes": 1473
+    },
+    "naive_contingency_predictions": {
+      "name": "naive_pairs.csv",
+      "sha256": "89809e1b209537aa80623d505583b258ec13539e4300a514fe270dc26c4b6e4a",
+      "bytes": 22060
+    },
+    "events": {
+      "name": "pronounced_changes.csv",
+      "sha256": "10941b8a54c98594f060ed3eecd1ba7533f2280bda65f31166e7e38b8aa0c8ed",
+      "bytes": 12595
+    }
+  },
+  "months": [
+    "2022-01",
+    "2022-02",
+    "2022-03",
+    "2022-04",
+    "2022-05",
+    "2022-06",
+    "2022-07",
+    "2022-08",
+    "2022-09",
+    "2022-10",
+    "2022-11",
+    "2022-12",
+    "2023-01",
+    "2023-02",
+    "2023-03",
+    "2023-04",
+    "2023-05",
+    "2023-06",
+    "2023-07",
+    "2023-08",
+    "2023-09",
+    "2023-10",
+    "2023-11",
+    "2023-12",
+    "2024-01",
+    "2024-02",
+    "2024-03",
+    "2024-04",
+    "2024-05",
+    "2024-06",
+    "2024-07",
+    "2024-08",
+    "2024-09",
+    "2024-10",
+    "2024-11",
+    "2024-12"
+  ],
+  "experiment_availability": {
+    "seasonal_original": "validation_available",
+    "naive_contingency": "exploratory_pairs_available"
+  },
+  "experiment_reports": {
+    "seasonal_original": {
+      "status": "validation_available",
+      "monthly_input_sha256": "d78469f3dd13287d390aa75cceaa745e1dbf9ed83a1b4efbf18a17718e64fc7a",
+      "input_pivot_months": 180,
+      "eligible_pivot_months_2022_2024": 141,
+      "excluded_pivot_months_by_year": {},
+      "training_years": [
+        2022,
+        2023
+      ],
+      "validation_year": 2024,
+      "prediction_rows": 240,
+      "metrics_with_sufficient_validation": 14,
+      "numeric_reference": "Observed accepted monthly Sentinel-2 index aggregates",
+      "interpretation": "Chronological seasonal reconstruction of spectral indices; agronomic field labels unavailable."
+    },
+    "naive_contingency": {
+      "experiment": "retrospective_exploratory_2023_to_2024",
+      "method": "previous_year_same_calendar_month",
+      "status": "exploratory_pairs_available",
+      "monthly_input_sha256": "d78469f3dd13287d390aa75cceaa745e1dbf9ed83a1b4efbf18a17718e64fc7a",
+      "reference_year": 2023,
+      "evaluation_year": 2024,
+      "expected_months_per_pivot_index": 12,
+      "pivot_count": 5,
+      "input_pivot_months": 180,
+      "expected_pair_rows": 120,
+      "valid_pair_rows": 98,
+      "excluded_pivot_months_by_year": {
+        "2022": 60
+      },
+      "residual_convention": "observed_2024_minus_reference_2023",
+      "eligibility": "Both months observed, monthly_status=ok, batch_status=complete, query_complete=true",
+      "missing_data_policy": "No imputation. All 12 expected calendar-month slots retained per pivot/target; only paired accepted values enter metrics.",
+      "limitations": [
+        "Retrospective descriptive reconstruction, without independent agronomic or irrigation-failure labels.",
+        "Both years may have different crop stages, crops, management and acquisition dates within a month.",
+        "Cloud-related missingness can select a nonrepresentative subset of months.",
+        "Nearby pivots and successive months are dependent; metrics are reported separately by pivot and index.",
+        "The benchmark uses no precipitation or future evaluation-year values as predictors."
+      ],
+      "interpretation": "Retrospective exploratory agreement with monthly spectral aggregates. Crop stage and field labels unavailable."
+    }
+  },
+  "events_status": "available",
+  "quality_review_rule": {
+    "accepted_scene_count": 0,
+    "or_minimum_valid_pixel_pct_below": 80
+  },
+  "interpretation": "Exploratory spectral behavior with regional precipitation context; agronomic causes require independent evidence.",
+  "path_semantics": "Manifest paths are package-relative. Source batch_manifest fields identify artifacts in the acquisition inventory."
+}

@@ -1,0 +1,132 @@
+{
+  "contract_version": "1.0.0",
+  "package_sha256": "7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d",
+  "source_package_sha256": "16094dc7ef7ae3e6881b86bc0cbb0ff7b146f0558fc0947957865026882360a3",
+  "crs": "EPSG:4326",
+  "coordinate_order": [
+    "longitude",
+    "latitude"
+  ],
+  "files": {
+    "events": {
+      "path": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/events.csv",
+      "bytes": 15294,
+      "sha256": "c704b5650a949b7bf0d0910be575e616eb6116a5c328ffb412449dd1c0468323",
+      "format": "csv",
+      "rows": 96,
+      "record_schema": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/schemas.json#/$defs/events"
+    },
+    "model_parameters": {
+      "path": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/model_parameters.json",
+      "bytes": 14690,
+      "sha256": "0d6fdf446dde2a6781e4e31472a62af2350f69d409af9c26c4364a958d03b021",
+      "format": "json",
+      "rows": null,
+      "record_schema": null
+    },
+    "model_predictions": {
+      "path": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/model_predictions.csv",
+      "bytes": 54625,
+      "sha256": "d765bdf4599f5962bbb7e92ba4ea3a0479a0862f85bd7601099dc3d073816dbc",
+      "format": "csv",
+      "rows": 360,
+      "record_schema": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/schemas.json#/$defs/model_predictions"
+    },
+    "models": {
+      "path": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/models.csv",
+      "bytes": 4871,
+      "sha256": "d878e599e3d9afa9d686fd74b490d8aa82b5ca4e1991182d507012846796f282",
+      "format": "csv",
+      "rows": 30,
+      "record_schema": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/schemas.json#/$defs/models"
+    },
+    "monthly": {
+      "path": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/monthly.csv",
+      "bytes": 205823,
+      "sha256": "ddffa80c402fc089f20d7c3cab52f678b3239335487ee9cdaea0c2c061832fb4",
+      "format": "csv",
+      "rows": 180,
+      "record_schema": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/schemas.json#/$defs/monthly"
+    },
+    "observations": {
+      "path": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/observations.csv",
+      "bytes": 307783,
+      "sha256": "f1f49735587af9c8509326b5613954211d03d2a8b3585706ba76d600b45bd2bf",
+      "format": "csv",
+      "rows": 256,
+      "record_schema": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/schemas.json#/$defs/observations"
+    },
+    "pivots": {
+      "path": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/pivots.geojson",
+      "bytes": 60231,
+      "sha256": "b7da39ab1b08f1ee7280b6fefe976685b699b9e09b43c0364852679f50991878",
+      "format": "geojson",
+      "rows": 5,
+      "record_schema": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/schemas.json#/$defs/pivots"
+    },
+    "precipitation": {
+      "path": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/precipitation.csv",
+      "bytes": 41646,
+      "sha256": "b9973b9a11f6bb3b832729c92ed080a13949a639542471928efe8a32f1160c54",
+      "format": "csv",
+      "rows": 180,
+      "record_schema": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/schemas.json#/$defs/precipitation"
+    },
+    "provenance": {
+      "path": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/provenance.json",
+      "bytes": 5644,
+      "sha256": "3449709679c70b80a817a309aeb1863b9d8159f06c8006e846160ba092fe4cd5",
+      "format": "json",
+      "rows": null,
+      "record_schema": null
+    },
+    "quality": {
+      "path": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/quality.csv",
+      "bytes": 78826,
+      "sha256": "6c1babab57b73c400ed3e8a0cd38260a265096606368305ff4eaa785aa9e1ef8",
+      "format": "csv",
+      "rows": 180,
+      "record_schema": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/schemas.json#/$defs/quality"
+    },
+    "schemas": {
+      "path": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/schemas.json",
+      "bytes": 12999,
+      "sha256": "1fb29b98d832a3ed625f0fd2c514626c34edda2c17ecf69626aeed46ffbc3172",
+      "format": "json",
+      "rows": null,
+      "record_schema": null
+    },
+    "common_month_metrics": {
+      "bytes": 22736,
+      "sha256": "797e0af9b7269f4a4ef517653e4a09e058322fcd9fb1ce286c246f090c071ba8",
+      "format": "csv",
+      "rows": 90,
+      "record_schema": null,
+      "path": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/common_month_metrics.csv"
+    },
+    "common_month_predictions": {
+      "bytes": 61734,
+      "sha256": "148332efc4f15f8137a87ce43aa1ebec201640a254059d779f9835aa06de3785",
+      "format": "csv",
+      "rows": 360,
+      "record_schema": null,
+      "path": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/common_month_predictions.csv"
+    },
+    "comparison_report": {
+      "bytes": 1873,
+      "sha256": "c1ca4634a5e0eff6a399ca590b4ba92152ec5b9de82a7d0435b2416a84b4dee6",
+      "format": "json",
+      "rows": null,
+      "record_schema": null,
+      "path": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/comparison_report.json"
+    },
+    "publication": {
+      "bytes": 3627,
+      "sha256": "06fcfeb11e7f7009cd421ea7b0709c1d994ca3a3bb3dd812f593a5a36d29f1bc",
+      "format": "json",
+      "rows": null,
+      "record_schema": null,
+      "path": "packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/publication.json"
+    }
+  }
+}

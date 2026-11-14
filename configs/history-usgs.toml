@@ -1,0 +1,11 @@
+[history]
+start = 2022-01-01
+end = 2024-12-31
+max_scenes_per_month = 2
+min_valid_fraction = 0.70
+chirps_provider = "usgs"
+
+[limits]
+max_transfer_bytes = 2000000000
+max_storage_bytes = 2000000000
+max_downloads = 8000

@@ -16,12 +16,11 @@ from rasterio.features import geometry_mask, geometry_window
 from rasterio.warp import reproject, transform_geom
 from shapely.geometry import mapping, shape
 
-from aquaclima.ingestion.sentinel import ASSETS, COLLECTION, MAX_CROP_PIXELS, read_pivots
+from aquaclima.ingestion.sentinel import ASSETS, COLLECTION, MAX_CROP_PIXELS, VALID_SCL, read_pivots
 from aquaclima.storage.http import checksum
 
 # SCL classes vegetation (4) and bare/non-vegetated (5). Water, dark areas,
 # shadows, clouds, cirrus, snow, unclassified and missing pixels are excluded.
-VALID_SCL = (4, 5)
 INDEX_FIELDS = [
     "pivot_id", "date", "scene_id", "status", "ndvi_median", "ndmi_median", "valid_pixel_pct",
     "ndvi_valid_pixel_pct", "ndmi_valid_pixel_pct", "pivot_pixels", "joint_valid_pixels",
@@ -108,7 +107,7 @@ def _scene_rows(scene: dict, pivots, data_dir: Path, min_valid_fraction: float):
     footprint = shape(scene["footprint"])
     scene_fields = {"scene_id": scene["id"], "date": scene["date"], "scene_cloud_pct": scene["cloud_cover"],
                     "processing_baseline": scene["processing_baseline"],
-                    "sentinel_source": f"Element 84 Earth Search / {COLLECTION}"}
+                    "sentinel_source": scene.get("source_item_url", f"Element 84 Earth Search / {COLLECTION}")}
     with ExitStack() as stack:
         datasets, arrays = {}, {}
         if scene["status"] == "ok":
@@ -140,14 +139,15 @@ def _scene_rows(scene: dict, pivots, data_dir: Path, min_valid_fraction: float):
 
 
 def process_indices(pivots_path: Path, crop_manifest_path: Path, data_dir: Path,
-                    *, min_valid_fraction: float) -> Path:
+                    *, min_valid_fraction: float, output_path: Path | None = None,
+                    expected_collection: str = COLLECTION) -> Path:
     if not math.isfinite(min_valid_fraction) or not 0 <= min_valid_fraction <= 1:
         raise ValueError("A fração mínima de pixels válidos deve estar entre 0 e 1.")
     pivots = read_pivots(pivots_path)
     manifest = json.loads(crop_manifest_path.read_text(encoding="utf-8"))
-    if manifest["collection"] != COLLECTION or manifest["pivots_sha256"] != checksum(pivots_path):
+    if manifest["collection"] != expected_collection or manifest["pivots_sha256"] != checksum(pivots_path):
         raise ValueError("O manifesto Sentinel-2 não corresponde à coleção e ao arquivo de pivôs atuais.")
-    destination = data_dir / "processed" / "indices.csv"
+    destination = output_path if output_path is not None else data_dir / "processed" / "indices.csv"
     destination.parent.mkdir(parents=True, exist_ok=True)
     with NamedTemporaryFile(dir=destination.parent, delete=False) as stream:
         temporary = Path(stream.name)

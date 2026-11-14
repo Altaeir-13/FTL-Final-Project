@@ -2,32 +2,36 @@
 
 from __future__ import annotations
 
+import hashlib
 import io
 import json
 import logging
 import math
 import re
 from collections import OrderedDict
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
+from statistics import median
 from urllib.parse import urljoin, urlsplit
 
+import numpy as np
 import rasterio
 from rasterio.errors import WindowError
-from rasterio.features import geometry_window
+from rasterio.features import geometry_mask, geometry_window
 from rasterio.io import MemoryFile
 from rasterio.warp import transform_geom
 from shapely import union_all
 from shapely.geometry import mapping, shape
 from shapely.geometry.base import BaseGeometry
 
-from aquaclima.storage.http import AcquisitionError, HttpClient, checksum, write_atomic
+from aquaclima.storage.http import AcquisitionError, BudgetError, HttpClient, checksum, write_atomic
 
 STAC_ROOT = "https://earth-search.aws.element84.com/v1"
 COLLECTION = "sentinel-2-c1-l2a"
 ASSETS = {"red": ("B04", 10), "nir": ("B08", 10), "swir16": ("B11", 20), "scl": ("SCL", 20)}
 MAX_STAC_ITEMS = 500
 MAX_CROP_PIXELS = 4_000_000
+VALID_SCL = (4, 5)
 LOGGER = logging.getLogger(__name__)
 
 
@@ -61,29 +65,69 @@ def read_pivots(path: Path) -> list[tuple[str, BaseGeometry]]:
     return pivots
 
 
-def _stac_items(http: HttpClient, request: dict) -> list[dict]:
+class _StacLimit(ValueError):
+    """The current temporal slice needs to be subdivided."""
+
+
+def _stac_items(http: HttpClient, request: dict, *, cache_dir: Path | None = None,
+                subdivide: bool = False) -> list[dict]:
+    try:
+        return _stac_page_items(http, request, cache_dir=cache_dir)
+    except _StacLimit:
+        if not subdivide or "datetime" not in request:
+            raise
+    start, end = (datetime.fromisoformat(value) for value in request["datetime"].split("/"))
+    midpoint = start + (end - start) / 2
+    if midpoint <= start or midpoint >= end:
+        raise ValueError("A busca STAC excedeu o limite no menor intervalo temporal representável.")
+    intervals = ((start, midpoint), (midpoint + timedelta(microseconds=1), end))
+    items = {}
+    for first, last in intervals:
+        child_request = request | {"datetime": f"{first.isoformat()}/{last.isoformat()}"}
+        for item in _stac_items(http, child_request, cache_dir=cache_dir, subdivide=True):
+            previous = items.setdefault(item["id"], item)
+            if previous != item:
+                raise ValueError(f"Metadados divergentes para item duplicado {item['id']}.")
+    return list(items.values())
+
+
+def _stac_page_items(http: HttpClient, request: dict, *, cache_dir: Path | None) -> list[dict]:
     endpoint = f"{STAC_ROOT}/search"
     method, url, payload = "POST", endpoint, request
     seen_pages = set()
     items = {}
+    request_hash = hashlib.sha256(json.dumps(request, sort_keys=True).encode("utf-8")).hexdigest()[:16]
     while True:
         page_key = (method, url, json.dumps(payload, sort_keys=True))
         if page_key in seen_pages:
             raise ValueError("A paginação STAC repetiu uma página.")
         seen_pages.add(page_key)
-        page = http.get_json(url, method=method, payload=payload)
+        arguments = {"method": method, "payload": payload}
+        if cache_dir is not None:
+            arguments["path"] = cache_dir / request_hash / f"page-{len(seen_pages):04d}.json"
+        page = http.get_json(url, **arguments)
         if page.get("type") != "FeatureCollection":
             raise ValueError("A busca STAC não retornou uma FeatureCollection.")
         for item in page["features"]:
             if item.get("collection") != COLLECTION:
                 raise ValueError("Coleção inesperada na resposta STAC.")
+            if "datetime" in request:
+                first, last = (datetime.fromisoformat(value) for value in request["datetime"].split("/"))
+                observed = datetime.fromisoformat(item["properties"]["datetime"])
+                if not first <= observed <= last:
+                    raise ValueError(f"Item STAC fora do intervalo solicitado: {item['id']}.")
             existing = items.setdefault(item["id"], item)
             if existing != item:
                 raise ValueError(f"Metadados divergentes para item duplicado {item['id']}.")
         next_link = next((link for link in page["links"] if link["rel"] == "next"), None)
         if len(items) > MAX_STAC_ITEMS or (len(items) >= MAX_STAC_ITEMS and next_link):
-            raise ValueError(f"A busca alcançou {MAX_STAC_ITEMS} itens. Reduza o intervalo consultado.")
+            raise _StacLimit(f"A busca alcançou {MAX_STAC_ITEMS} itens. Reduza o intervalo consultado.")
         if next_link is None:
+            matched = page.get("numberMatched", page.get("context", {}).get("matched"))
+            if isinstance(matched, int) and matched > len(items):
+                raise _StacLimit(f"O catálogo declarou {matched} itens e encerrou a paginação após {len(items)}.")
+            if isinstance(matched, int) and matched < len(items):
+                raise ValueError("O total declarado pelo STAC é menor que a quantidade de itens recebida.")
             return list(items.values())
         url = urljoin(endpoint, next_link["href"])
         if urlsplit(url).netloc != urlsplit(STAC_ROOT).netloc or urlsplit(url).scheme != "https":
@@ -137,7 +181,8 @@ def _select_scenes(items: list[dict], pivots: list[tuple[str, BaseGeometry]], ma
 
 
 def search_scenes(http: HttpClient, pivots_path: Path, data_dir: Path, *, start: date, end: date,
-                  max_cloud: float, max_scenes: int) -> Path:
+                  max_cloud: float, max_scenes: int, plan_path: Path | None = None,
+                  allow_empty: bool = False) -> Path:
     if end < start or not 0 <= max_cloud <= 100 or max_scenes < 1:
         raise ValueError("Datas ou limites de busca Sentinel-2 inválidos.")
     pivots = read_pivots(pivots_path)
@@ -148,14 +193,19 @@ def search_scenes(http: HttpClient, pivots_path: Path, data_dir: Path, *, start:
         "limit": 50,
     }
     parameters = {"pivots_sha256": checksum(pivots_path), "max_cloud": max_cloud, "max_scenes": max_scenes}
-    path = data_dir / "raw" / "sentinel" / "scenes.json"
+    path = plan_path if plan_path is not None else data_dir / "raw" / "sentinel" / "scenes.json"
     source = f"{STAC_ROOT}/search"
     if http.is_verified(path, source=source):
         cache = json.loads(path.read_text(encoding="utf-8"))
         if (cache.get("request", {}).get("datetime") == request["datetime"]
-                and cache.get("parameters") == parameters and cache.get("selected")):
+                and cache.get("parameters") == parameters and (cache.get("selected") or allow_empty)):
             return path
-    items = _stac_items(http, request)
+        if plan_path is not None:
+            raise ValueError(f"O catálogo mensal existente não corresponde à configuração: {path}.")
+    elif plan_path is not None and path.exists():
+        raise ValueError(f"O catálogo mensal existente não passou pela verificação de integridade: {path}.")
+    page_cache = path.parent / f"{path.stem}-pages" if plan_path is not None else None
+    items = _stac_items(http, request, cache_dir=page_cache, subdivide=plan_path is not None)
     selected = _select_scenes(items, pivots, max_cloud, max_scenes)
     _cache_json(http, path, {
         "source": source, "collection": COLLECTION,
@@ -164,8 +214,9 @@ def search_scenes(http: HttpClient, pivots_path: Path, data_dir: Path, *, start:
         "selected_ids": [entry["id"] for entry in selected],
         "selection": [{key: value for key, value in entry.items() if key != "item"} for entry in selected],
         "selected": [entry["item"] for entry in selected],
+        "query_complete": True,
     }, source)
-    if not selected:
+    if not selected and not allow_empty:
         raise ValueError(f"Nenhuma cena com interseção e cobertura de nuvens compatíveis. Consulte {path}.")
     return path
 
@@ -258,6 +309,9 @@ def _asset_band(item: dict, name: str) -> dict:
     band = bands[0]
     if band.get("nodata") != 0 or band.get("spatial_resolution") != ASSETS[name][1]:
         raise ValueError(f"NoData ou resolução não esperados em {item['id']}/{name}.")
+    expected_type = "uint8" if name == "scl" else "uint16"
+    if band.get("data_type") != expected_type or not asset.get("href"):
+        raise ValueError(f"Tipo de pixel ou endereço ausente/inválido em {item['id']}/{name}.")
     if name != "scl":
         eo_names = [value.get("name") for value in asset.get("eo:bands", [])]
         if eo_names != [ASSETS[name][0]]:
@@ -350,54 +404,326 @@ def _crop_asset(http: HttpClient, item: dict, name: str, geometry: BaseGeometry,
         }
 
 
-def acquire_crops(http: HttpClient, pivots_path: Path, scenes_path: Path, data_dir: Path) -> Path:
+def _crop_path(data_dir: Path, pivots_hash: str, scene_id: str, name: str) -> Path:
+    if re.fullmatch(r"[A-Za-z0-9_-]+", scene_id) is None:
+        raise ValueError(f"Identificador de cena incompatível com o cache: {scene_id}.")
+    return data_dir / "raw" / "sentinel" / "windows" / pivots_hash[:16] / scene_id / f"{name}.tif"
+
+
+def _cached_crop(path: Path, item: dict, name: str) -> dict | None:
+    sidecar = path.with_suffix(".json")
+    if not path.is_file() or not sidecar.is_file():
+        return None
+    try:
+        stored = json.loads(sidecar.read_text(encoding="utf-8"))
+        if (stored["url"] == item["assets"][name]["href"] and stored["raster_band"] == _asset_band(item, name)
+                and stored["bytes"] == path.stat().st_size and stored["sha256"] == checksum(path)):
+            return stored
+    except (KeyError, OSError, ValueError):
+        LOGGER.warning("Ignorando recorte Sentinel-2 incompatível em %s", path)
+    return None
+
+
+def _obtain_crop(http: HttpClient, item: dict, name: str, geometry: BaseGeometry,
+                 data_dir: Path, pivots_hash: str) -> dict:
+    path = _crop_path(data_dir, pivots_hash, item["id"], name)
+    metadata = _cached_crop(path, item, name)
+    if metadata is None:
+        metadata = _crop_asset(http, item, name, geometry, path)
+        _cache_json(http, path.with_suffix(".json"), metadata, metadata["url"])
+    return metadata | {"status": "ok", "path": path.relative_to(data_dir).as_posix()}
+
+
+def acquire_crops(http: HttpClient, pivots_path: Path, scenes_path: Path, data_dir: Path,
+                  *, manifest_path: Path | None = None) -> Path:
     pivots = read_pivots(pivots_path)
     pivots_hash = checksum(pivots_path)
     plan = json.loads(scenes_path.read_text(encoding="utf-8"))
     if plan["collection"] != COLLECTION or plan["parameters"]["pivots_sha256"] != pivots_hash:
         raise ValueError("O plano STAC não corresponde à coleção e ao arquivo de pivôs atuais.")
-    directory = data_dir / "raw" / "sentinel"
-    manifest_path = directory / "crops.json"
+    checkpointed = manifest_path is not None
+    destination = manifest_path if checkpointed else data_dir / "raw" / "sentinel" / "crops.json"
     manifest = {"collection": COLLECTION, "pivots_sha256": pivots_hash,
                 "plan_sha256": checksum(scenes_path), "scenes": []}
+    source = f"{STAC_ROOT}/search"
+    if checkpointed:
+        selection_identity = {"catalog_sha256": plan.get("catalog_sha256"), "screening_policy": plan.get("screening_policy")}
+        manifest.update(state="incomplete", selected_ids=[item["id"] for item in plan["selected"]],
+                        selection_identity=selection_identity, attempt_history=[])
+        if destination.exists():
+            if not http.is_verified(destination, source=source):
+                raise ValueError(f"O checkpoint de recortes não passou pela verificação de integridade: {destination}.")
+            previous = json.loads(destination.read_text(encoding="utf-8"))
+            same_inputs = all(previous.get(key) == manifest[key] for key in ("collection", "pivots_sha256"))
+            same_plan = previous.get("plan_sha256") == manifest["plan_sha256"]
+            continuing_selection = (selection_identity["catalog_sha256"] is not None
+                                    and previous.get("selection_identity") == selection_identity)
+            if not same_inputs or not (same_plan or continuing_selection):
+                raise ValueError(f"O checkpoint de recortes pertence a outro plano: {destination}.")
+            if same_plan and previous.get("state") == "complete" and all(
+                _cached_crop(_crop_path(data_dir, pivots_hash, item["id"], name), item, name) is not None
+                for item in plan["selected"] for name in ASSETS
+            ):
+                return destination
+            manifest["attempt_history"] = previous.get("attempt_history", []) + [{
+                "manifest_sha256": checksum(destination), "scenes": previous["scenes"],
+                "plan_sha256": previous["plan_sha256"], "selected_ids": previous.get("selected_ids"),
+                "state": previous.get("state"), "recorded_at": datetime.now(timezone.utc).isoformat(),
+            }]
     for item in plan["selected"]:
         scene_id = item["id"]
-        if re.fullmatch(r"[A-Za-z0-9_-]+", scene_id) is None:
-            raise ValueError(f"Identificador de cena incompatível com o cache: {scene_id}.")
+        _crop_path(data_dir, pivots_hash, scene_id, "scl")
         footprint = shape(item["geometry"])
         geometries = [geometry for _, geometry in pivots if footprint.intersection(geometry).area > 0]
         scene = {"id": scene_id, "date": _item_date(item), "datetime": item["properties"]["datetime"],
                  "cloud_cover": item["properties"].get("eo:cloud_cover"), "footprint": item["geometry"],
                  "processing_baseline": item["properties"].get("s2:processing_baseline"), "assets": {}}
+        scene["status"] = "pending"
         manifest["scenes"].append(scene)
         if not geometries:
             scene["status"] = "no_intersection"
+            if checkpointed:
+                _cache_json(http, destination, manifest, source)
             continue
         geometry = union_all(geometries)
         for name in ASSETS:
-            path = directory / "windows" / pivots_hash[:16] / scene_id / f"{name}.tif"
-            sidecar = path.with_suffix(".json")
-            metadata = None
-            if path.is_file() and sidecar.is_file():
-                try:
-                    stored = json.loads(sidecar.read_text(encoding="utf-8"))
-                    if (stored["url"] == item["assets"][name]["href"] and stored["raster_band"] == _asset_band(item, name)
-                            and stored["bytes"] == path.stat().st_size and stored["sha256"] == checksum(path)):
-                        metadata = stored
-                except (KeyError, OSError, ValueError):
-                    LOGGER.warning("Ignorando recorte Sentinel-2 incompatível em %s", path)
-            if metadata is None:
-                try:
-                    metadata = _crop_asset(http, item, name, geometry, path)
-                except (AcquisitionError, WindowError, OSError, ValueError, rasterio.errors.RasterioError) as error:
-                    LOGGER.warning("Falha no recorte %s/%s: %s", scene_id, name, error)
-                    scene["assets"][name] = {"status": "failed", "url": item["assets"][name]["href"],
-                                             "error": str(error)}
-                    continue
-                _cache_json(http, sidecar, metadata, metadata["url"])
-            scene["assets"][name] = metadata | {"status": "ok", "path": path.relative_to(data_dir).as_posix()}
+            try:
+                scene["assets"][name] = _obtain_crop(http, item, name, geometry, data_dir, pivots_hash)
+            except BudgetError as error:
+                if checkpointed:
+                    scene["status"] = "budget_interrupted"
+                    scene["assets"][name] = {"status": "budget_interrupted", "error": str(error)}
+                    _cache_json(http, destination, manifest, source)
+                raise
+            except (AcquisitionError, WindowError, OSError, ValueError, rasterio.errors.RasterioError) as error:
+                LOGGER.warning("Falha no recorte %s/%s: %s", scene_id, name, error)
+                scene["assets"][name] = {"status": "failed", "url": item["assets"][name]["href"], "error": str(error)}
+            if checkpointed:
+                _cache_json(http, destination, manifest, source)
         scene["status"] = "ok" if all(entry["status"] == "ok" for entry in scene["assets"].values()) else "missing_assets"
+        if checkpointed:
+            _cache_json(http, destination, manifest, source)
+    if checkpointed:
+        manifest["state"] = "complete" if all(scene["status"] in {"ok", "no_intersection"} for scene in manifest["scenes"]) else "incomplete"
+    if not http.is_verified(destination, source=source) or json.loads(destination.read_text(encoding="utf-8")) != manifest:
+        _cache_json(http, destination, manifest, source)
+    return destination
+
+
+def _scl_pivot_quality(path: Path, pivots: list[tuple[str, BaseGeometry]], footprint: BaseGeometry) -> dict:
+    quality = {}
+    with rasterio.open(path) as dataset:
+        for pivot_id, geometry in pivots:
+            if footprint.intersection(geometry).area <= 0:
+                quality[pivot_id] = {"status": "no_intersection", "total_pixels": None,
+                                     "clear_pixels": 0, "valid_fraction": 0.0}
+                continue
+            projected = transform_geom("EPSG:4326", dataset.crs, mapping(geometry))
+            window = geometry_window(dataset, [projected], boundless=True)
+            if window.width * window.height > MAX_CROP_PIXELS:
+                raise ValueError(f"Janela SCL do pivô {pivot_id} excede o limite de pixels.")
+            mask_shape = (int(window.height), int(window.width))
+            inside = geometry_mask([projected], mask_shape, dataset.window_transform(window), invert=True)
+            values = dataset.read(1, window=window, boundless=True, masked=True).filled(0)
+            total = int(np.count_nonzero(inside))
+            clear = int(np.count_nonzero(inside & np.isin(values, VALID_SCL)))
+            quality[pivot_id] = {"status": "ok" if total else "no_pixel_centers", "total_pixels": total,
+                                 "clear_pixels": clear, "valid_fraction": clear / total if total else 0.0}
+    return quality
+
+
+def _screen_candidate(http: HttpClient, item: dict, pivots, data_dir: Path,
+                       pivots_hash: str, min_valid_fraction: float) -> dict:
+    result = {"id": item["id"], "date": _item_date(item),
+              "cloud_cover": item["properties"].get("eo:cloud_cover"), "pivots": {}}
+    footprint = shape(item["geometry"]) if item.get("geometry") else None
+    if footprint is None or not footprint.is_valid or footprint.is_empty:
+        return result | {"status": "rejected", "reason": "invalid_scene_footprint"}
+    geometries = [geometry for _, geometry in pivots if footprint.intersection(geometry).area > 0]
+    if not geometries:
+        return result | {"status": "rejected", "reason": "no_intersection"}
+    try:
+        for name in ASSETS:
+            _asset_band(item, name)
+    except (KeyError, TypeError, ValueError) as error:
+        return result | {"status": "rejected", "reason": "invalid_asset_metadata", "error": str(error)}
+    try:
+        scl = _obtain_crop(http, item, "scl", union_all(geometries), data_dir, pivots_hash)
+        result["scl"] = scl
+        result["pivots"] = _scl_pivot_quality(data_dir / scl["path"], pivots, footprint)
+    except (AcquisitionError, WindowError, OSError, ValueError, rasterio.errors.RasterioError) as error:
+        return result | {"status": "failed", "reason": "scl_acquisition_failed", "error": str(error)}
+    fractions = [value["valid_fraction"] for value in result["pivots"].values()]
+    eligible_count = sum(value > 0 and value >= min_valid_fraction for value in fractions)
+    return result | {
+        "status": "eligible" if eligible_count else "rejected",
+        "reason": "scl_threshold_met" if eligible_count else "no_pivot_above_scl_threshold",
+        "eligible_pivots": eligible_count, "minimum_valid_fraction": min(fractions),
+        "mean_valid_fraction": sum(fractions) / len(fractions),
+    }
+
+
+def _finish_screening(document: dict, items: list[dict], max_scenes: int) -> None:
+    candidates = {item["id"]: item for item in items}
+    eligible = sorted((entry for entry in document["screening"] if entry["status"] == "eligible"), key=lambda entry: (
+        -entry["eligible_pivots"], -entry["minimum_valid_fraction"], -entry["mean_valid_fraction"],
+        entry["cloud_cover"] if entry["cloud_cover"] is not None else math.inf, entry["date"], entry["id"],
+    ))
+    selected, dates = [], set()
+    for entry in eligible:
+        if len(selected) >= max_scenes:
+            break
+        if entry["date"] not in dates:
+            selected.append(entry)
+            dates.add(entry["date"])
+    selected.sort(key=lambda entry: (entry["date"], entry["id"]))
+    document["selected_ids"] = [entry["id"] for entry in selected]
+    document["selected"] = [candidates[entry["id"]] for entry in selected]
+    document["selection"] = [{key: value for key, value in entry.items() if key != "scl"} for entry in selected]
+    for entry in document["screening"]:
+        if entry["status"] == "eligible":
+            entry["selection_reason"] = "selected" if entry["id"] in document["selected_ids"] else "lower_local_quality_or_duplicate_date"
+
+
+def screen_scenes(http: HttpClient, pivots_path: Path, scenes_path: Path, data_dir: Path,
+                   *, output_path: Path, max_scenes: int, min_valid_fraction: float) -> Path:
+    """Evaluate every candidate's local SCL before acquiring reflectance bands.
+
+    A candidate can be selected when at least one pivot passes the threshold.
+    The final index stage independently verifies all bands on the common grid.
+    """
+    if max_scenes < 1 or not math.isfinite(min_valid_fraction) or not 0 <= min_valid_fraction <= 1:
+        raise ValueError("Limites de triagem SCL inválidos.")
+    pivots = read_pivots(pivots_path)
+    pivots_hash = checksum(pivots_path)
+    plan = json.loads(scenes_path.read_text(encoding="utf-8"))
+    if plan["collection"] != COLLECTION or plan["parameters"]["pivots_sha256"] != pivots_hash:
+        raise ValueError("O catálogo STAC não corresponde à coleção e aos pivôs atuais.")
+    policy = {"max_scenes": max_scenes, "min_valid_fraction": min_valid_fraction, "valid_scl": list(VALID_SCL)}
     source = f"{STAC_ROOT}/search"
-    if not http.is_verified(manifest_path, source=source) or json.loads(manifest_path.read_text(encoding="utf-8")) != manifest:
-        _cache_json(http, manifest_path, manifest, source)
-    return manifest_path
+    document = {
+        "collection": COLLECTION, "source": source, "request": plan["request"], "parameters": plan["parameters"],
+        "catalog_sha256": checksum(scenes_path), "candidate_count": plan["candidate_count"],
+        "screening_policy": policy, "screening": [], "screening_complete": False,
+        "state": "incomplete", "failures": [], "selected_ids": [], "selected": [], "selection": [],
+    }
+    if output_path.exists():
+        if not http.is_verified(output_path, source=source):
+            raise ValueError(f"O checkpoint de triagem não passou pela verificação de integridade: {output_path}.")
+        previous = json.loads(output_path.read_text(encoding="utf-8"))
+        if previous.get("catalog_sha256") != document["catalog_sha256"] or previous.get("screening_policy") != policy:
+            raise ValueError(f"O checkpoint de triagem pertence a outro catálogo ou política: {output_path}.")
+        if previous.get("screening_complete"):
+            return output_path
+        document["failures"] = previous.get("failures", [])
+    items = plan["candidates"]
+    for item in sorted(items, key=lambda value: (_item_date(value), value["id"])):
+        try:
+            entry = _screen_candidate(http, item, pivots, data_dir, pivots_hash, min_valid_fraction)
+        except BudgetError as error:
+            document["failures"].append({"id": item["id"], "reason": "budget_interrupted", "error": str(error),
+                                         "at": datetime.now(timezone.utc).isoformat()})
+            _finish_screening(document, items, max_scenes)
+            _cache_json(http, output_path, document, source)
+            raise
+        document["screening"].append(entry)
+        if entry["status"] == "failed":
+            document["failures"].append({"id": item["id"], "reason": entry["reason"], "error": entry["error"],
+                                         "at": datetime.now(timezone.utc).isoformat()})
+        _finish_screening(document, items, max_scenes)
+        _cache_json(http, output_path, document, source)
+    document["screening_complete"] = all(entry["status"] != "failed" for entry in document["screening"])
+    document["state"] = "complete" if document["screening_complete"] else "incomplete"
+    _cache_json(http, output_path, document, source)
+    return output_path
+
+
+def _estimated_window_pixels(geometry: BaseGeometry, item: dict, name: str) -> int:
+    asset = item["assets"][name]
+    centroid = geometry.centroid
+    zone = min(60, max(1, int((centroid.x + 180) // 6) + 1))
+    local_utm = (32600 if centroid.y >= 0 else 32700) + zone
+    target_crs = asset.get("proj:code", item["properties"].get("proj:code"))
+    if target_crs is None:
+        target_crs = asset.get("proj:epsg", item["properties"].get("proj:epsg", local_utm))
+    left, bottom, right, top = shape(transform_geom("EPSG:4326", target_crs, mapping(geometry))).bounds
+    resolution = ASSETS[name][1]
+    width = math.ceil((right - left) / resolution) + 5
+    height = math.ceil((top - bottom) / resolution) + 5
+    pixels = width * height
+    if pixels > MAX_CROP_PIXELS:
+        raise ValueError(f"A janela estimada de {item['id']}/{name} excede o limite de pixels.")
+    return pixels
+
+
+def estimate_acquisition(pivots_path: Path, scenes_path: Path, data_dir: Path,
+                          *, max_scenes: int = 2) -> dict:
+    """Forecast cropped payloads without HTTP and keep full-scene sizes separate.
+
+    Compression and TIFF layout vary between acquisitions. These estimates
+    include a safety factor and the HTTP client enforces the actual hard cap.
+    """
+    if max_scenes < 1:
+        raise ValueError("A estimativa requer ao menos uma cena por período.")
+    pivots = read_pivots(pivots_path)
+    pivots_hash = checksum(pivots_path)
+    plan = json.loads(scenes_path.read_text(encoding="utf-8"))
+    if plan["collection"] != COLLECTION or plan["parameters"]["pivots_sha256"] != pivots_hash:
+        raise ValueError("O catálogo não corresponde à coleção e aos pivôs da estimativa.")
+    items = plan.get("candidates", plan["selected"])
+    geometry = union_all([value for _, value in pivots])
+    pilot_path = data_dir / "raw" / "sentinel" / "crops.json"
+    calibration = {name: [] for name in ASSETS}
+    if pilot_path.is_file():
+        pilot = json.loads(pilot_path.read_text(encoding="utf-8"))
+        for scene in pilot.get("scenes", []):
+            for name, asset in scene.get("assets", {}).items():
+                if name in calibration and asset.get("status") == "ok" and asset.get("range_bytes", 0) > 0:
+                    calibration[name].append((asset["range_bytes"], math.prod(asset["shape"])))
+
+    def predicted(item, name):
+        path = _crop_path(data_dir, pivots_hash, item["id"], name)
+        if _cached_crop(path, item, name) is not None:
+            return 0
+        pixels = _estimated_window_pixels(geometry, item, name)
+        if calibration[name]:
+            baseline = median(value[0] for value in calibration[name])
+            per_pixel = median(value[0] / value[1] for value in calibration[name])
+            return math.ceil(2 * max(baseline, pixels * per_pixel))
+        # No TIFF headers are fetched during planning. Reserve metadata and
+        # neighboring compressed blocks in addition to raw window samples.
+        sample_bytes = 1 if name == "scl" else 2
+        return 2 * (2 * 1024**2 + pixels * sample_bytes)
+
+    scl_bytes, per_date_bands = 0, {}
+    for item in items:
+        if not ASSETS.keys() <= item.get("assets", {}).keys():
+            continue
+        footprint = shape(item["geometry"]) if item.get("geometry") else None
+        if footprint is None or not footprint.is_valid or footprint.intersection(geometry).area <= 0:
+            continue
+        if "screening" not in plan:
+            scl_bytes += predicted(item, "scl")
+        band_bytes = sum(predicted(item, name) for name in ("red", "nir", "swir16"))
+        day = _item_date(item)
+        per_date_bands[day] = max(per_date_bands.get(day, 0), band_bytes)
+    selected_bound = min(max_scenes, len(per_date_bands))
+    band_bytes = sum(sorted(per_date_bands.values(), reverse=True)[:selected_bound])
+    full_sizes = [item.get("assets", {}).get(name, {}).get("file:size") for item in items for name in ASSETS]
+    known_sizes = all(isinstance(value, int) and value > 0 for value in full_sizes)
+    return {
+        "candidate_count": plan["candidate_count"], "selected_scene_count_upper_bound": selected_bound,
+        "estimated_scl_transfer_bytes": scl_bytes, "estimated_band_transfer_bytes": band_bytes,
+        "estimated_transfer_bytes": scl_bytes + band_bytes,
+        "declared_full_cog_bytes": sum(full_sizes) if known_sizes else None,
+        "declared_full_cog_scope": "catalog_candidates" if "candidates" in plan else "selected_items",
+        "method": "pilot_range_scaled_safety2" if any(calibration.values()) else "window_samples_plus_block_overhead_safety2",
+        "estimate_is_hard_cap": False,
+        "assumptions": [
+            "A triagem lê somente SCL dos candidatos ainda não armazenados.",
+            "As três bandas contínuas são adquiridas apenas para as datas selecionadas.",
+            "A estimativa utiliza o maior custo por data e fator de segurança 2 sobre o piloto ou a reserva sem calibração.",
+            "Compressão, blocos TIFF, retentativas e respostas STAC podem alterar os bytes efetivos.",
+            "O limite financeiro é zero e os limites efetivos de bytes e requisições são impostos pelo HttpClient.",
+        ],
+    }

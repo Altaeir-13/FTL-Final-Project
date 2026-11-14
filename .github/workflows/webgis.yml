@@ -1,0 +1,99 @@
+name: AquaClima WebGIS
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: webgis-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  science:
+    name: Frozen scientific suite
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Install locked scientific dependencies
+        run: uv sync --locked --python 3.12 --group dev
+      - name: Preserve scientific behavior
+        run: uv run --no-sync python -m pytest -q
+
+  frontend:
+    name: Validate, build and exercise WebGIS
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Verify CI deployment policy
+        run: node --test ../.github/tests/webgis-workflow.test.mjs
+      - name: Install locked frontend dependencies
+        run: npm ci
+      - name: Validate frozen public contracts and SHA-256
+        run: npm run data:validate
+      - name: Test data behavior and integrity failures
+        run: npm test
+      - name: Compile only verified public assets
+        run: npm run build
+      - name: Verify production output and project-path assets
+        run: npm run verify:dist
+      - name: Install browser for real navigation tests
+        run: npx playwright install --with-deps chromium
+      - name: Exercise project path and responsive interface
+        run: npm run test:browser
+      - name: Upload browser diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: webgis-browser-diagnostics
+          path: |
+            web/test-results/
+            web/playwright-report/
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Prepare Pages artifact
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: web/dist
+
+  deploy:
+    name: Publish GitHub Pages
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    needs: [science, frontend]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Read Pages configuration
+        uses: actions/configure-pages@v5
+      - name: Deploy verified static artifact
+        id: deployment
+        uses: actions/deploy-pages@v4

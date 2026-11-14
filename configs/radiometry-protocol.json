@@ -1,0 +1,15 @@
+{
+  "protocol_version": 1,
+  "purpose": "Small local source compatibility audit, not global validation of every processing baseline",
+  "declared_before_pb04_pb0510_comparison": true,
+  "same_safe_product_rule": "All four crop grids and every raw DN must match exactly between PC and C1",
+  "pb04_pb0510_common_clear_rule": {
+    "reflectance_p95_absolute_difference_max": 0.02,
+    "accepted_pivot_index_median_absolute_difference_max": 0.02,
+    "require_grid_equality": true,
+    "require_all_five_pivots_accepted_in_both_versions": true,
+    "sample_acquisitions": ["S2A_20220320T132241_R038_T23KKA", "S2A_20220728T132241_R038_T23KKA"],
+    "interpretation": "Explicit engineering tolerance for this five-pivot pilot. Remaining processing differences must be retained in provenance and discussed as a possible temporal confounder."
+  },
+  "pb03_policy": "Diagnose native reflectance only; exclude from consolidated dataset because PB04 changed S2B VNIR calibration and no local PB03 versus reprocessed coincidence was available. Do not apply an ad-hoc L2A multiplicative correction."
+}

@@ -18,6 +18,10 @@ from shapely.geometry import shape
 from aquaclima.storage.http import AcquisitionError, HttpClient, checksum, write_atomic, write_json
 
 BASE_URL = "https://data.chc.ucsb.edu/products/CHIRPS/v3.0/monthly"
+USGS_BASE_URL = (
+    "https://edcintl.cr.usgs.gov/downloads/sciweb1/shared/fews/web/global/"
+    "monthly/chirps/final/downloads/monthly"
+)
 PRODUCT = "CHIRPS v3.0 Final monthly"
 UNIT_SOURCE = "https://doi.org/10.1038/s41597-026-07096-4"
 NODATA_SOURCE = "https://wiki.chc.ucsb.edu/CHIRPS3_FAQ"
@@ -45,6 +49,12 @@ def chirps_url(month: str, *, domain: str = "latam") -> str:
         raise ValueError(f"Unknown CHIRPS domain: {domain}")
     stamp = month.replace("-", ".")
     return f"{BASE_URL}/{domain}/tifs/chirps-v3.0.{stamp}.tif"
+
+
+def usgs_url(month: str) -> str:
+    """Return the official USGS FEWS NET mirror of the v3 Final monthly product."""
+    filename = chirps_url(month).rsplit("/", 1)[-1]
+    return f"{USGS_BASE_URL}/{filename}"
 
 
 def _metadata(dataset: rasterio.DatasetReader) -> dict:
@@ -87,6 +97,9 @@ def _metadata(dataset: rasterio.DatasetReader) -> dict:
         "units": "mm",
         "accumulation": "calendar month",
         "unit_reference": UNIT_SOURCE,
+        "document_name": tags.get("tifftag_documentname"),
+        "tiff_software": tags.get("tifftag_software"),
+        "tiff_datetime": tags.get("tifftag_datetime"),
     }
 
 
@@ -98,46 +111,149 @@ def validate_monthly_tif(path: Path) -> None:
             dataset.read(1, window=window, masked=True)
 
 
-def download_precip(http: HttpClient, data_dir: Path, months: Iterable[str]) -> Path:
-    """Record availability, provenance, and integrity for each requested month."""
-    directory = data_dir / "raw" / "chirps"
-    manifest = directory / "manifest.json"
-    previous_entries = json.loads(manifest.read_text(encoding="utf-8"))["months"] if manifest.is_file() else {}
+def _unique_keys(pairs: list[tuple]) -> dict:
+    document = dict(pairs)
+    if len(document) != len(pairs):
+        raise ValueError("Duplicate keys in CHIRPS manifest")
+    return document
+
+
+def _months(months: Iterable[str]) -> list[str]:
     requested = sorted(set(months))
-    entries = {month: previous_entries[month] for month in requested if month in previous_entries}
+    for month in requested:
+        chirps_url(month)
+    return requested
+
+
+def _read_manifest(path: Path, data_dir: Path) -> dict:
+    try:
+        manifest = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_unique_keys)
+    except (json.JSONDecodeError, UnicodeError) as error:
+        raise ValueError(f"Invalid CHIRPS manifest: {path}") from error
+    if (
+        not isinstance(manifest, dict) or manifest.get("product") != PRODUCT
+        or not isinstance(manifest.get("months"), dict)
+    ):
+        raise ValueError(f"Invalid CHIRPS manifest schema: {path}")
+    for month, entry in manifest["months"].items():
+        sources = {chirps_url(month, domain=domain) for domain in ("latam", "global")} | {usgs_url(month)}
+        if (
+            not isinstance(entry, dict) or not isinstance(entry.get("status"), str)
+            or not entry["status"] or not isinstance(entry.get("source"), str)
+            or entry["source"] not in sources
+        ):
+            raise ValueError(f"Invalid CHIRPS manifest entry for {month}: {path}")
+        if entry["status"] == "available" or "sha256" in entry:
+            if (
+                not isinstance(entry.get("path"), str) or not entry["path"]
+                or Path(entry["path"]).is_absolute()
+                or type(entry.get("size_bytes")) is not int or entry["size_bytes"] <= 0
+                or not isinstance(entry.get("sha256"), str)
+                or re.fullmatch(r"[0-9a-f]{64}", entry["sha256"], re.ASCII) is None
+                or not isinstance(entry.get("metadata"), dict)
+            ):
+                raise ValueError(f"Incomplete available CHIRPS record for {month}: {path}")
+            _entry_path(data_dir, entry)
+    return manifest
+
+
+def _entry_path(data_dir: Path, entry: dict) -> Path:
+    path = data_dir / entry["path"]
+    filename = entry["source"].rsplit("/", 1)[-1]
+    if entry["source"].startswith(f"{USGS_BASE_URL}/"):
+        domain = "usgs"
+    else:
+        _, domain, _, _ = entry["source"].rsplit("/", 3)
+    expected = data_dir / "raw" / "chirps" / domain / filename
+    if path.resolve() != expected.resolve():
+        raise ValueError(f"Unexpected path for CHIRPS: {path}")
+    return path
+
+
+def _matches_entry(data_dir: Path, entry: dict) -> bool:
+    path = _entry_path(data_dir, entry)
+    return (
+        path.is_file() and path.stat().st_size == entry["size_bytes"]
+        and checksum(path) == entry["sha256"]
+    )
+
+
+def download_precip(
+    http: HttpClient, data_dir: Path, months: Iterable[str], manifest_path: Path | None = None,
+    *, provider: str = "ucsb",
+) -> Path:
+    """Merge monthly checkpoints while sharing raw files across manifests.
+
+    `manifest_path` defaults to the pilot manifest. Existing available records
+    keep their origin metadata when the local file matches their recorded hash.
+    Each completed or failed month is saved atomically before the next request.
+    Explicit `provider="usgs"` acquires pending months from the official global
+    mirror, preserving prior UCSB files and failed source-attempt provenance.
+    """
+    if provider not in {"ucsb", "usgs"}:
+        raise ValueError(f"Unknown CHIRPS provider: {provider}")
+    directory = data_dir / "raw" / "chirps"
+    manifest = manifest_path if manifest_path is not None else directory / "manifest.json"
+    document = _read_manifest(manifest, data_dir) if manifest.is_file() else {"product": PRODUCT, "months": {}}
+    entries = document["months"]
+    requested = _months(months)
     paused = None
     for month in requested:
-        domains = ["latam", "global"]
+        sources = (
+            [("usgs", usgs_url(month))] if provider == "usgs"
+            else [(domain, chirps_url(month, domain=domain)) for domain in ("latam", "global")]
+        )
         previous = entries.get(month, {})
-        if previous.get("status") == "available" and previous.get("source") == chirps_url(month, domain="global"):
-            domains.reverse()
+        if previous.get("sha256") and _matches_entry(data_dir, previous):
+            if previous["status"] != "available":
+                entries[month] = previous | {"status": "available"}
+                write_json(manifest, document)
+            continue
+        if provider == "ucsb" and previous.get("source") == chirps_url(month, domain="global"):
+            sources.reverse()
         failures = []
-        for domain in domains:
-            url = chirps_url(month, domain=domain)
+        acquired = None
+        failure_status = paused or "not_published"
+        failed_source = sources[0][1]
+        for domain, url in sources:
             target = directory / domain / url.rsplit("/", 1)[-1]
+            headers = None
             try:
                 if http.is_verified(target, source=url):
-                    if previous.get("status") != "available" or previous.get("source") != url:
-                        validate_monthly_tif(target)
+                    validate_monthly_tif(target)
                 else:
                     if paused:
                         continue
-                    http.head(url)
+                    headers = http.head(url)
                     http.download(url, target, validate=validate_monthly_tif)
                 with rasterio.open(target) as dataset:
                     metadata = _metadata(dataset)
-                entries[month] = {
+                acquired = {
                     "status": "available",
                     "source": url,
                     "path": target.relative_to(data_dir).as_posix(),
                     "size_bytes": target.stat().st_size,
                     "sha256": checksum(target),
                     "metadata": metadata,
+                    "provider": "usgs" if domain == "usgs" else "ucsb",
+                    "publisher": "USGS EROS / FEWS NET" if domain == "usgs" else "UCSB Climate Hazards Center",
+                    "producer": "Climate Hazards Center, UC Santa Barbara",
+                    "product_stage": "Final",
                 }
+                if headers is not None:
+                    values = {key.lower(): value for key, value in headers.items()}
+                    acquired["source_http"] = {
+                        key: values[key] for key in ("content-length", "etag", "last-modified")
+                        if key in values
+                    }
+                if previous.get("sha256") and (
+                    previous["sha256"] != acquired["sha256"] or previous.get("source") != url
+                ):
+                    acquired["previous_acquisition"] = previous
                 if failures:
-                    entries[month]["failed_alternatives"] = failures
+                    acquired["failed_alternatives"] = failures
                 elif previous.get("source") == url and previous.get("failed_alternatives"):
-                    entries[month]["failed_alternatives"] = previous["failed_alternatives"]
+                    acquired["failed_alternatives"] = previous["failed_alternatives"]
                 break
             except AcquisitionError as error:
                 failures.append({"source": url, "error": str(error), "http_status": error.status_code})
@@ -145,23 +261,34 @@ def download_precip(http: HttpClient, data_dir: Path, months: Iterable[str]) -> 
                     continue
                 if error.status_code in {403, 429}:
                     paused = "rate_limited" if error.status_code == 429 else "access_denied"
-                entries[month] = {"status": paused or "download_failed", "source": url, "failures": failures}
+                failure_status = paused or "download_failed"
+                failed_source = url
                 break
             except (RasterioError, ValueError) as error:
                 failures.append({"source": url, "error": str(error), "http_status": None})
-                entries[month] = {"status": "download_failed", "source": url, "failures": failures}
+                failure_status = "download_failed"
+                failed_source = url
                 break
+        if acquired is not None:
+            entries[month] = acquired
         else:
-            entries[month] = {
-                "status": paused or "not_published",
-                "source": chirps_url(month),
+            retained = previous if previous.get("sha256") else {}
+            entries[month] = retained | {
+                "status": failure_status,
+                "source": retained.get("source", failed_source),
                 "failures": failures,
             }
-            if paused:
+            if paused and not failures:
                 entries[month]["request_skipped"] = True
-        write_json(manifest, {"product": PRODUCT, "months": entries})
+        if previous:
+            history = list(previous.get("source_attempt_history", []))
+            snapshot = {key: value for key, value in previous.items() if key != "source_attempt_history"}
+            if not history or history[-1] != snapshot:
+                history.append(snapshot)
+            entries[month]["source_attempt_history"] = history
+        write_json(manifest, document)
     if not requested:
-        write_json(manifest, {"product": PRODUCT, "months": entries})
+        write_json(manifest, document)
     return manifest
 
 
@@ -208,14 +335,23 @@ def _sample(dataset: rasterio.DatasetReader, lon: float, lat: float) -> dict:
     return result | {"precip_mm": value, "precip_status": "ok"}
 
 
-def extract_precip(pivots_path: Path, manifest_path: Path, data_dir: Path) -> Path:
-    """Sample the cell containing a polygon's interior representative point."""
+def extract_precip(
+    pivots_path: Path, manifest_path: Path, data_dir: Path,
+    months: Iterable[str] | None = None, output_path: Path | None = None,
+) -> Path:
+    """Sample native cells for all acquired months or an explicit selection.
+
+    Missing requested months remain explicit rows. `output_path` allows a
+    historical table to coexist with the default pilot precipitation CSV.
+    """
     points = _pivot_points(pivots_path)
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest = _read_manifest(manifest_path, data_dir)
+    selected = sorted(manifest["months"]) if months is None else _months(months)
     output = StringIO(newline="")
     writer = csv.DictWriter(output, fieldnames=PRECIP_COLUMNS, lineterminator="\n")
     writer.writeheader()
-    for month, entry in sorted(manifest["months"].items()):
+    for month in selected:
+        entry = manifest["months"].get(month, {"status": "no_monthly_data", "source": chirps_url(month)})
         base = {
             "month": month,
             "chirps_source": entry["source"],
@@ -227,15 +363,13 @@ def extract_precip(pivots_path: Path, manifest_path: Path, data_dir: Path) -> Pa
             for pivot_id, _, _ in points:
                 writer.writerow(base | {"pivot_id": pivot_id, "precip_status": entry["status"]})
             continue
-        path = data_dir / entry["path"]
-        if not path.resolve().is_relative_to((data_dir / "raw" / "chirps").resolve()):
-            raise ValueError(f"Unexpected path for CHIRPS {month}: {path}")
-        if not path.is_file() or path.stat().st_size != entry["size_bytes"] or checksum(path) != entry["sha256"]:
+        path = _entry_path(data_dir, entry)
+        if not _matches_entry(data_dir, entry):
             raise ValueError(f"Missing or corrupt local CHIRPS file for {month}: {path}")
         with rasterio.open(path) as dataset:
             _metadata(dataset)
             for pivot_id, lon, lat in points:
                 writer.writerow(base | {"pivot_id": pivot_id} | _sample(dataset, lon, lat))
-    path = data_dir / "processed" / "precip_monthly.csv"
+    path = output_path if output_path is not None else data_dir / "processed" / "precip_monthly.csv"
     write_atomic(path, output.getvalue().encode("utf-8"))
     return path
