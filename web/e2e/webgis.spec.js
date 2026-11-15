@@ -9,6 +9,8 @@ for (const name of ['monthly', 'observations', 'precipitation', 'quality', 'even
   frozen[name] = parseCSV(await readFile(new URL(manifest.files[name].path, dataRoot), 'utf8'));
 }
 const ids = ['8087', '16708', '17373', '17382', '19997'];
+const regionalCatalog = JSON.parse(await readFile(new URL('../regions/catalog.json', import.meta.url), 'utf8'));
+const regional = JSON.parse(await readFile(new URL(`../regions/${regionalCatalog.regional.package.path}`, import.meta.url), 'utf8'));
 const failures = new WeakMap();
 const format = value => Number(value).toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
 const productionDependency = url => /\/(?:@vite|@react-refresh|@id|@fs|src|node_modules)(?:\/|$)|(?:__vite_ping|__webpack_hmr|sockjs)/i.test(url.pathname)
@@ -343,4 +345,67 @@ test('corrupted scientific bytes fail the browser SHA-256 validation', async ({ 
   await expect(page.getByRole('heading', { name: 'Não foi possível abrir o pacote científico.' })).toBeVisible();
   await expect(page.locator('.load-error')).toContainText('SHA-256 de monthly');
   await expect(page.locator('#series-chart')).toHaveCount(0);
+});
+
+test('case selector keeps regional evidence, quality rejections and frozen Paracatu separate', async ({ page }) => {
+  await open(page);
+  await page.locator('#study-select').selectOption('guadalupe-pi');
+  await expect(page.locator('#regional-study-detail')).toBeVisible();
+  await expect(page.locator('#regional-study-detail')).toContainText('29/115');
+  await expect(page.locator('#regional-study-detail')).toContainText('25,2%');
+  await expect(page.locator('#regional-map path[role="button"]')).toHaveCount(5);
+  for (const pivot of ['PI:5795', 'PI:5802']) {
+    await page.locator('#regional-pivot-select').selectOption(pivot);
+    const expected = regional.pilot.observations.filter(row => row.pivot_id === pivot);
+    const actual = await page.locator('#regional-series-chart circle[data-value]').evaluateAll(points => points.map(point => ({ month:point.getAttribute('data-month'), value:Number(point.getAttribute('data-value')) })));
+    expect(actual).toEqual(expected.map(row => ({ month:row.month, value:row.ndvi_median })));
+    await expectPoints(page, '8087', 'ndvi_median');
+  }
+  await page.getByText('Ver tentativas, rejeições, índices e proveniência regional', { exact:true }).click();
+  await expect(page.locator('#regional-observation-table')).toContainText('Rejeitada');
+  await expect(page.locator('#regional-observation-table')).toContainText('52,5%');
+  await page.locator('#regional-index').selectOption('ndmi_median');
+  await expect(page.locator('#regional-series-chart circle[data-value]')).toHaveCount(5);
+  await page.locator('#study-select').selectOption('paracatu-mg');
+  await expect(page.locator('#regional-study-detail')).toBeHidden();
+  await expectPoints(page, '8087', 'ndvi_median');
+  await expect(page.locator('#package-info')).toContainText(manifest.package_sha256);
+});
+
+test('real image comparison loads verified local PNGs with dates, bands and scientific caveats', async ({ page }) => {
+  await open(page);
+  await page.locator('#study-select').selectOption('guadalupe-pi');
+  const images = page.locator('.regional-image-pair img');
+  await expect(images).toHaveCount(2);
+  await expect.poll(() => images.evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0))).toBe(true);
+  await expect(images.nth(0)).toHaveAttribute('alt', /2023-07-18/);
+  await expect(images.nth(1)).toHaveAttribute('alt', /2024-07-22/);
+  const comparison = page.locator('.regional-image-comparison');
+  await expect(comparison).toContainText('Vermelho = infravermelho próximo (B08)');
+  await expect(comparison).toContainText('estiramento fixo de reflectância 0–0,6');
+  await expect(comparison).toContainText('As cores não diagnosticam falhas de irrigação.');
+});
+
+test('regional view fits a 390px viewport and exposes municipal inventory and provenance', async ({ page }) => {
+  await page.setViewportSize({ width:390, height:844 });
+  await open(page);
+  await page.locator('#study-select').selectOption('guadalupe-pi');
+  await expect(page.locator('#regional-map path[role="button"]')).toHaveCount(5);
+  await page.locator('#regional-pivot-select').selectOption('PI:5804');
+  await page.locator('.regional-audit > summary').click();
+  await expect(page.locator('.regional-audit')).toContainText('Caxias, MA');
+  await expect(page.locator('.regional-audit tbody tr')).toHaveCount(regional.selection.comparison.length);
+  const width = await page.evaluate(() => ({ page:document.documentElement.scrollWidth, viewport:innerWidth }));
+  expect(width.page).toBeLessThanOrEqual(width.viewport + 1);
+});
+
+test('corrupt regional bytes fail separately while the frozen study remains usable', async ({ page }) => {
+  const bytes = Buffer.from(await readFile(new URL(`../regions/${regionalCatalog.regional.package.path}`, import.meta.url)));
+  bytes[bytes.length - 2] ^= 1;
+  await page.route('**/regions/**/regional.json', route => route.fulfill({ status:200, contentType:'application/json', body:bytes }));
+  await open(page);
+  await expect(page.getByRole('heading', { name:'Investigação regional indisponível.' })).toBeVisible();
+  await expect(page.locator('#estudos')).toContainText('SHA-256');
+  await page.locator('#pivot-select').selectOption('16708');
+  await expectPoints(page, '16708', 'ndvi_median');
 });

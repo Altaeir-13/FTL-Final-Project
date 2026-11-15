@@ -79,6 +79,17 @@ export function coverageState(row) {
   return 'valid';
 }
 
+export function eventContext(data, event) {
+  const endpoint = month => {
+    const monthly = data.monthly.find(row => row.pivot_id === event.pivot_id && row.month === month);
+    const quality = data.quality.find(row => row.pivot_id === event.pivot_id && row.month === month);
+    return { month, precip_mm: monthly?.precip_status === 'ok' ? monthly.precip_mm : null,
+      valid_pixel_pct: quality?.valid_pixel_pct_min ?? null, quality: coverageState(quality),
+      scenes: data.observations.filter(row => row.pivot_id === event.pivot_id && row.month === month).map(row => row.scene_id) };
+  };
+  return { before: endpoint(event.from_month), after: endpoint(event.to_month) };
+}
+
 function monthOrdinal(month) {
   const [year, value] = month.split('-').map(Number);
   return year * 12 + value - 1;

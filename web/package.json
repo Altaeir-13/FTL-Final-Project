@@ -8,6 +8,8 @@
     "dev": "vite --host 127.0.0.1",
     "data:export": "node scripts/export-public.mjs",
     "data:validate": "node scripts/validate-data.mjs",
+    "regions:export": "node scripts/export-regional.mjs",
+    "regions:validate": "node scripts/validate-regions.mjs",
     "test": "node --test test/*.test.mjs",
     "test:browser": "playwright test",
     "build": "node build.mjs",

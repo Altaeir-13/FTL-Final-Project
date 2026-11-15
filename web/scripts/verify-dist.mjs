@@ -4,6 +4,7 @@ import { readFile, readdir, realpath } from 'node:fs/promises';
 import { resolve, relative, sep, posix } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { validatePackage, sha256 } from './validate-data.mjs';
+import { validateRegions } from './validate-regions.mjs';
 
 export const PAGES_BASE = '/FTL-Final-Project/';
 const webRoot = fileURLToPath(new URL('../', import.meta.url));
@@ -122,10 +123,14 @@ export async function verifyDist(directory = resolve(webRoot, 'dist')) {
   assert((await readFile(resolve(root, '.nojekyll'))).length === 0, '.nojekyll deve ser vazio');
   const data = await validatePackage(resolve(root, 'data'), { publicOnly: true });
   const snapshot = await validatePackage(snapshotRoot, { publicOnly: true });
+  const regional = await validateRegions(resolve(root, 'regions'));
+  const regionalSnapshot = await validateRegions(resolve(webRoot, 'regions'));
+  assert(regional.catalogBytes.equals(regionalSnapshot.catalogBytes) && regional.payloadBytes.equals(regionalSnapshot.payloadBytes), 'snapshot regional dist difere dos bytes revisados');
   const expectedData = ['data/manifest.json', ...Object.values(data.manifest.files).map(file => `data/${file.path}`)];
   const permittedData = new Set(expectedData);
+  const permittedRegions = new Set(regional.files.map(name => `regions/${name}`));
   for (const name of files) {
-    const allowed = name === 'index.html' || name === '.nojekyll' || permittedData.has(name)
+    const allowed = name === 'index.html' || name === '.nojekyll' || permittedData.has(name) || permittedRegions.has(name)
       || (name.startsWith('assets/') && name.split('/').length === 2 && assetName.test(posix.basename(name)));
     assert(allowed, `arquivo não permitido na publicação: ${name}`);
     const actual = await realpath(resolve(root, name));
@@ -162,6 +167,7 @@ export async function verifyDist(directory = resolve(webRoot, 'dist')) {
   return { directory: root, base: PAGES_BASE, files: files.length, assets: reachable.size,
     total_bytes: totalBytes, package_sha256: data.manifest.package_sha256,
     source_package_sha256: data.manifest.source_package_sha256,
+    regional_sha256: regional.catalog.regional.package.sha256,
     artifact_sha256: sha256(Buffer.from(await Promise.all(files.map(async name => `${name}\0${sha256(await readFile(resolve(root, name)))}`)).then(rows => rows.join('\n')))) };
 }
 

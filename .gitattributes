@@ -2,6 +2,8 @@
 configs/radiometry-protocol.json text eol=lf
 web/** text eol=lf
 web/data/** -text
+web/regions/** -text
+docs/images/*.png binary
 .github/** text eol=lf
 # Evidence hashes identify exact acquisition/output bytes across checkouts.
 docs/evidencias/** -text
