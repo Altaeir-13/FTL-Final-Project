@@ -10,6 +10,8 @@ Consulte a [seleção territorial](docs/selecao-regional-ma-pi.md), o [resultado
 
 As evidências compactas estão em `data/regions/selection/` e `docs/evidencias/guadalupe-pi/`. Os recortes COG, XML ESA e caches de aquisição permanecem fora do Git. A aquisição é incremental e limitada a 150 MB por execução; os rasters CHIRPS locais já existentes são copiados e verificados antes da nova extração regional.
 
+O [registro de execução da fase 6](docs/execucao-fase6.md) reúne contadores de aquisição, hashes preservados, 216 testes Python, 37 de frontend, 16 de navegador e reprodução do build em clone limpo.
+
 ```powershell
 uv run --no-sync python scripts/verify_regional_selection.py
 uv run --no-sync python -m aquaclima.regions.pilot --region-dir data/regions/guadalupe-pi

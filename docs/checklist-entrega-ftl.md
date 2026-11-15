@@ -14,17 +14,18 @@ Referência: 15/11/2026, fuso America/Sao_Paulo. Prazo oficial: **24/11/2026**. 
 
 ## Integridade e revisão
 
-- [ ] Executar e registrar testes científicos, regionais, de contrato/frontend e navegador.
-- [ ] Executar build de produção e verificação do pacote público.
-- [ ] Conferir hashes congelados de Paracatu e separação dos namespaces regionais.
-- [ ] Conferir nomes, unidades, legendas e referências científicas nas figuras, tabelas e slides.
-- [ ] Validar links e confirmar que o site público corresponde ao deployment aprovado da `main`.
+- [x] Executar e registrar testes: 216 Python, 37 frontend, cinco de política e 16 de navegador; clone limpo conferido. [Evidências](execucao-fase6.md).
+- [x] Executar build de produção e verificação do pacote público; 25 arquivos e mesmo digest no workspace/clone.
+- [x] Conferir hashes congelados de Paracatu e separação dos namespaces regionais.
+- [x] Conferir nomes, unidades, legendas e referências científicas nas figuras, tabelas e slides.
+- [x] Validar o site público da `main` anterior: 12 cenários aprovados. A versão regional ainda depende de merge e deployment.
+- [ ] Após o merge, validar a nova publicação com os 16 cenários de navegador.
 - [ ] Revisar o PR e decidir o merge manual. Não há merge automático ou publicação pela branch regional.
 
 ## Apresentação e submissão
 
 - [ ] Ensaiar cinco minutos de slides e três minutos de demonstração.
-- [ ] Preparar preview local compilado para contingência de conexão, identificando quando usado.
+- [x] Preparar preview local compilado para contingência de conexão, identificando quando usado.
 - [ ] Conferir legibilidade no projetor e testar abertura do PPTX em um editor compatível.
 - [ ] Congelar funcionalidades em **23/11** e registrar o commit final.
 - [ ] Guardar cópia dos materiais finais e dos links públicos.
