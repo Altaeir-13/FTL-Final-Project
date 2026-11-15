@@ -2,6 +2,22 @@
 
 O AquaClima investiga se o histórico da vegetação e o contexto meteorológico ajudam a identificar comportamentos espectrais atípicos em áreas irrigadas. O primeiro piloto cruza polígonos de pivôs da ANA, reflectância de superfície Sentinel-2 e precipitação mensal CHIRPS na bacia do rio São Marcos. O projeto integra o Capstone do Future Tech Leaders Brasil.
 
+## Fase 6 — seleção regional e entrega FTL
+
+Paracatu/MG permanece congelado em `2022_2024_recovery_v1`. A auditoria real de 14 municípios MA/PI selecionou **Guadalupe/PI**; a prova exploratória processou cinco pivôs, seis cenas de 2023–2024 e **29 observações aceitas em 30 tentativas**, com CHIRPS e reprodução offline. O calendário completo de 23 meses contém 115 espaços pivô/mês, dos quais 29 são observados. Não há modelos ou métricas de generalização para Guadalupe. Caxias é referência territorial do autor; não é apresentada como município monitorado.
+
+Consulte a [seleção territorial](docs/selecao-regional-ma-pi.md), o [resultado regional e protocolo de reprodução](docs/resultado-regional-guadalupe.md), o [relatório científico final](docs/relatorio-final-ftl.md), a [apresentação editável](docs/apresentacao/aquaclima-ftl.pptx), o [roteiro e perguntas da banca](docs/roteiro-final-ftl.md) e o [checklist de entrega](docs/checklist-entrega-ftl.md). A expansão proposta depende de revisão e merge do PR; a URL pública continua servindo a versão aprovada da `main` até essa integração. Não há publicação automática de branches experimentais.
+
+As evidências compactas estão em `data/regions/selection/` e `docs/evidencias/guadalupe-pi/`. Os recortes COG, XML ESA e caches de aquisição permanecem fora do Git. A aquisição é incremental e limitada a 150 MB por execução; os rasters CHIRPS locais já existentes são copiados e verificados antes da nova extração regional.
+
+```powershell
+uv run --no-sync python scripts/verify_regional_selection.py
+uv run --no-sync python -m aquaclima.regions.pilot --region-dir data/regions/guadalupe-pi
+uv run --no-sync python -m aquaclima.regions.pilot --region-dir data/regions/guadalupe-pi --offline
+```
+
+O comando offline requer o cache local íntegro; o snapshot público permite compilar e explorar o WebGIS em um clone limpo sem os rasters. Para refazer toda a seleção com respostas atuais: `uv run --no-sync python -m aquaclima.regions.audit --directory data/regions/new-selection`; preserve a decisão congelada original.
+
 ## WebGIS científico — Fases 4 e 5
 
 A aplicação estática em `web/` permite selecionar os cinco polígonos ANA reais e explorar índices NDVI/NDMI, chuva regional, cobertura, mudanças espectrais e reconstrução por baselines. Consome exclusivamente o snapshot público validado de `2022_2024_recovery_v1`: 256 observações, 57 cenas e 141 de 180 espaços mensais observados (78,3%). Não executa aquisição ou ajuste de modelos. Mapa, gráficos e dependências são empacotados, sem CDNs ou tiles externos.
