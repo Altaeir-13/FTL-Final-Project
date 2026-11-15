@@ -177,6 +177,8 @@ A escala e o offset dos produtos C1 foram conferidos contra os XMLs de calibraç
 
 O namespace independente é `data/regions/guadalupe-pi`, com chaves `PI:<FID>`. Um [snapshot público pequeno](evidencias/guadalupe-pi/manifest.json) preserva tabelas, amostra, configuração e relatórios de integridade. Rasters, XMLs e caches de catálogo permanecem locais. O snapshot permite conferir os resultados tabulares; a reprodução dos pixels exige os caches originais. O [relatório da prova](resultado-regional-guadalupe.md) detalha a aquisição.
 
+O controle XML/STAC regional verifica a conversão declarada por produto. Não houve comparação da mesma aquisição reprocessada nas três baselines C1 usadas em Guadalupe. Diferenças de processamento podem participar dos contrastes entre datas; não se declara equivalência radiométrica absoluta entre versões ou validação de reflectância em campo.
+
 | 18/07/2023 | 22/07/2024 |
 |---|---|
 | ![Falsa cor observada em julho de 2023](evidencias/guadalupe-pi/comparison/false-colour-2023-07-18.png) | ![Falsa cor observada em julho de 2024](evidencias/guadalupe-pi/comparison/false-colour-2024-07-22.png) |

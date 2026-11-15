@@ -47,4 +47,6 @@ Com o cache local íntegro, o segundo comando proíbe requisições via `request
 
 O piloto alcança uma prova de portabilidade e uma série exploratória com seis meses distribuídos entre 2023 e 2024. Não foram ajustados modelos para Guadalupe, nem calculados MAE/RMSE regionais. Culturas, manejo, solos, estágio fenológico e irrigação não foram verificados em campo. A diferença de índices e precipitação não demonstra causa, consumo hídrico ou economia de água. A seleção de uma cena por mês não permite comparação direta de desempenho com o estudo histórico de Paracatu.
 
+A concordância XML/STAC verifica a conversão radiométrica declarada de cada produto. Não foi realizado um ensaio com a mesma aquisição reprocessada nas três baselines C1 regionais; diferenças de processamento também podem contribuir para contrastes entre datas. Não se afirma equivalência radiométrica absoluta entre versões nem validação contra reflectância medida em campo.
+
 A decisão é integrar Guadalupe ao WebGIS como **estudo exploratório separado** e concluir os materiais FTL. A comparação de imagens só deve ser oferecida se os recortes reais e a proveniência forem adequados. Não se inicia expansão histórica adicional nesta entrega. O prazo final permanece **24/11/2026**, com congelamento de funcionalidades em 23/11 e sem novos experimentos após 20/11.
