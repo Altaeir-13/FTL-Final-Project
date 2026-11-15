@@ -1,0 +1,91 @@
+{
+  "region_id": "guadalupe-pi",
+  "type": "observed_false_colour_comparison",
+  "composition": "R=B08 (NIR), G=B04 (red), B=B11 (SWIR1)",
+  "grid_resolution_m": 20,
+  "stretch": {
+    "method": "fixed linear reflectance",
+    "min": 0,
+    "max": 0.6
+  },
+  "mask": "SCL4/5 and finite nonnegative reflectance; other pixels shown grey",
+  "note": "Real C1 imagery; same grid and fixed display parameters. Display colours do not diagnose irrigation. 10m bands averaged to native20m B11 grid. PNGs are visual derivatives, not analytical rasters.",
+  "scenes": [
+    {
+      "date": "2023-07-18",
+      "scene_id": "S2B_T23MPN_20230718T132238_L2A",
+      "source": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2B_T23MPN_20230718T132238_L2A",
+      "processing_baseline": "05.09",
+      "valid_pixel_pct_each_pivot": 100.0,
+      "manifest_sha256": "4d7c80858d2fa1c0c5ddfcb7dea58f9bf8f5711fb5244f545c6f697dca3b1452",
+      "image": "false-colour-2023-07-18.png",
+      "image_sha256": "2ab53e38fa0f3a10d553aaeee227ff9dc650d8a79584bf5a44fc8514766bd9e9",
+      "crs": "EPSG:32723",
+      "transform": [
+        20.0,
+        0.0,
+        652220.0,
+        0.0,
+        -20.0,
+        9250280.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "shape": [
+        178,
+        217
+      ],
+      "bounds": [
+        652220.0,
+        9246720.0,
+        656560.0,
+        9250280.0
+      ],
+      "source_crops_sha256": {
+        "red": "5baf65aa0b7e4a88d227c7e1a4c277face9ee6ababda73bd6a1212935de0f6fb",
+        "nir": "ac6dc67e534304fa478e739ce90b80862c863be78d240730ef0112ca898e9f12",
+        "swir16": "5f93c7187e6453ea998b7a7853fed4cd8443f7bc3456306dd22a7cf674fd909c",
+        "scl": "bc359d20aa469cf2e0fcfd0fce3535f146b6a68b9ec45380b018817eeb572695"
+      }
+    },
+    {
+      "date": "2024-07-22",
+      "scene_id": "S2B_T23MPN_20240722T132235_L2A",
+      "source": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2B_T23MPN_20240722T132235_L2A",
+      "processing_baseline": "05.10",
+      "valid_pixel_pct_each_pivot": 100.0,
+      "manifest_sha256": "3ebcec4546294df3300b0ce44ac17b1e8e0ae9494e1e9bd5b02ee63db24c7a13",
+      "image": "false-colour-2024-07-22.png",
+      "image_sha256": "34ed3a23e801cc78baf9ee927f84de8e2c240650baaeda247e1f30b1614b2303",
+      "crs": "EPSG:32723",
+      "transform": [
+        20.0,
+        0.0,
+        652220.0,
+        0.0,
+        -20.0,
+        9250280.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "shape": [
+        178,
+        217
+      ],
+      "bounds": [
+        652220.0,
+        9246720.0,
+        656560.0,
+        9250280.0
+      ],
+      "source_crops_sha256": {
+        "red": "c5050efa83ea46f4b4a01a7d6516a33c52888d500322d4db1b3814eab1d6b8bc",
+        "nir": "1b6ec485565692015c23e5ca3472b340dba3fe1a76d1c31bfaa0bed1c825ca5c",
+        "swir16": "28122dd19e084786d5467e68310b38e6aee5a328da615453b486a9c982d7bb8c",
+        "scl": "d5cff90efc67155f242c291e5b694a5c87c0f45dbbe8c2f9f1732d7b23606264"
+      }
+    }
+  ]
+}

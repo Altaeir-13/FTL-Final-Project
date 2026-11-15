@@ -1,0 +1,24 @@
+{
+  "registered_at_utc": "2026-11-15T17:35:06.032130+00:00",
+  "weights": {
+    "geometry": 0.25,
+    "availability": 0.25,
+    "continuity": 0.2,
+    "proximity": 0.15,
+    "cost": 0.15
+  },
+  "minimum_area_ha": 25,
+  "minimum_pivots": 3,
+  "sample_target": 5,
+  "period": "2023-01-01/2024-12-31",
+  "preliminary_scene_cloud_max": 40,
+  "geometry": "min(number of valid >=25 ha pivots with centroid inside official municipal mesh / 5, 1)",
+  "availability": "min(distinct dates whose scene fully covers every selected pivot and eo:cloud_cover <=40 / 48, 1)",
+  "continuity": "number of 2023-2024 months with a fully covering scene at scene cloud <=40 / 24",
+  "proximity": "max(0, 1 - cluster-centroid geodesic distance from Caxias sede / 600 km)",
+  "cost": "0.5 / number of distinct MGRS tiles among usable scenes + 0.5*max(0, 1 - cluster radius /20 km)",
+  "targets_rationale": "5 pivots matches established pilot sample; 25 ha matches existing native-20m pixel budget; 48 dates is two candidate dates per month for cloud fallback, 24 months measures continuity. 600 km is the regional distance scale, 20 km is a compact pilot radius relative to a 100km Sentinel tile. Scores compare engineering feasibility, not statistical validity.",
+  "eligibility": "At least 3 valid >=25ha pivots with verified municipal centroid; at least 6 months of fully covering cloud<=40 scenes; exact SCL acceptance and calibration require subsequent pixel-level pilot.",
+  "selection_rule": "highest weighted score among eligible candidates; ties by distance then municipal code",
+  "warning": "Scene cloud is only a planning proxy. No per-pivot quality, seasonality, index or regional model validation is inferred."
+}

@@ -1,0 +1,98 @@
+{
+  "format_version": 1,
+  "created_at_utc": "2026-11-15T17:44:27.413196+00:00",
+  "files": [
+    {
+      "path": "decision.json",
+      "bytes": 13226,
+      "sha256": "43f1c57db963fe29ec3f57a085f705e421ff3b762ee255fc7d6b1d2d8968ccf0"
+    },
+    {
+      "path": "method.json",
+      "bytes": 1703,
+      "sha256": "9f318ffe71a89bcc8ae685554f7ce9b9881b3c3c0d0bc083a5504fa05279e509"
+    },
+    {
+      "path": "inventory.csv",
+      "bytes": 15714,
+      "sha256": "7bac962e37b9c59583766b3acdaa966b6fbadbb966a41942975fc6a361aa8472"
+    },
+    {
+      "path": "inventory.geojson",
+      "bytes": 2313907,
+      "sha256": "d1c52d7df7cb48867bf307c16ca1eb7e72fed4eae50e6de0d4c56dff152edc92"
+    },
+    {
+      "path": "inventory-initial-recovered.geojson",
+      "bytes": 2192717,
+      "sha256": "e44e0ee0da29a6865e71aa3d64dadef774254587d8c52f3d4cb18607e6c2e2a3"
+    },
+    {
+      "path": "comparison.json",
+      "bytes": 14679,
+      "sha256": "c2d44dae1c6f1211097f3ad3228f9ef00f11cf4372dab3a35966622f2f3964d0"
+    },
+    {
+      "path": "supplemental.json",
+      "bytes": 19995,
+      "sha256": "69f89292f2e77ddfad15a737bf53f03da12f2f0e0f9a066075af2cbcf8859179"
+    },
+    {
+      "path": "state-municipality-counts.json",
+      "bytes": 2386,
+      "sha256": "9102055123764c10631329093b3a8d44a61cd2471e41d8ea78935138601129ed"
+    },
+    {
+      "path": "municipalities.csv",
+      "bytes": 3306,
+      "sha256": "7dfba6c886a6c4cbca03420a4c610aaccfabc14815cc5130682230da6379a410"
+    },
+    {
+      "path": "cache-inventory.json",
+      "bytes": 32398,
+      "sha256": "5fb3a3cec90dc70828ccb7057cf887a55d4a5da1b73d4a755a2dbaa396f538f6"
+    },
+    {
+      "path": "sample-2204501.geojson",
+      "bytes": 39696,
+      "sha256": "51d38995ab528c00b380ba8d4fce7fb041c70151702cf98e013e47d3edba859b"
+    },
+    {
+      "path": "stac-summary-2101400.json",
+      "bytes": 186231,
+      "sha256": "aab133db33e59908d88f5aa8e59d93107ada4905979800349a01bf512edc42cc"
+    },
+    {
+      "path": "stac-summary-2101608.json",
+      "bytes": 64955,
+      "sha256": "2f44ac755c77dcf61bfc215c5c4bf38567bce8709f54cc0bf96da4b27cdd4bbd"
+    },
+    {
+      "path": "stac-summary-2103505.json",
+      "bytes": 61099,
+      "sha256": "100ab62811a286194eafd374785150416a611e7ed320cee98e71754cab85782d"
+    },
+    {
+      "path": "stac-summary-2106102.json",
+      "bytes": 119243,
+      "sha256": "1332845c05ed9ab2ff0409d18128be3cb3f622018faffe732f3c207a32bde5e1"
+    },
+    {
+      "path": "stac-summary-2109502.json",
+      "bytes": 74881,
+      "sha256": "499efd222799e56a3010271b3d373f5bb817ecb3583392485f90f5f36aa15621"
+    },
+    {
+      "path": "stac-summary-2112209.json",
+      "bytes": 37136,
+      "sha256": "ec182958ed7569ea4aaf74e9f4c18e5b76178919afda84a578bcc793d974bd50"
+    },
+    {
+      "path": "stac-summary-2204501.json",
+      "bytes": 48045,
+      "sha256": "deeefb11fb9f88ee97086f425bdc14c2fa427f6a8b08456185c0ac820b6cee77"
+    }
+  ],
+  "frozen_decision_sha256": "43f1c57db963fe29ec3f57a085f705e421ff3b762ee255fc7d6b1d2d8968ccf0",
+  "note": "Initial decision and sample remain frozen; inventory.geojson is transformed WGS84 supplemental inventory; initial inventory hash is retained separately."
+}
