@@ -1,6 +1,6 @@
 # Roteiro final do AquaClima
 
-Autor: Randerson Sousa de Sá Nunes. Entrega FTL: 24/11/2026. O roteiro usa a versão congelada `2022_2024_recovery_v1`. As falas regionais devem acompanhar o estado real do [relatório MA/PI](selecao-regional-ma-pi.md), sem converter candidatos em áreas monitoradas.
+Autor: Randerson Sousa de Sá Nunes. Referência: 16/11/2026. Entrega FTL: 24/11/2026. O roteiro usa a versão congelada `2022_2024_recovery_v1` e a prova exploratória de Guadalupe, preservadas na Fase 7. As novas interações organizam evidências já produzidas; não demonstram novas descobertas agronômicas.
 
 ## Apresentação de cinco minutos
 
@@ -13,25 +13,27 @@ Autor: Randerson Sousa de Sá Nunes. Entrega FTL: 24/11/2026. O roteiro usa a ve
 | 2:20–2:55 | 5. Paracatu | “Paracatu ofereceu pivôs próximos para desenvolver e verificar o pipeline. O estudo concluído tem cinco equipamentos, 256 observações em 57 cenas e 141 dos 180 espaços pivô/mês. São 78,3% de cobertura entre 2022 e 2024. As falhas de cobertura aparecem na própria interface.” |
 | 2:55–3:45 | 6. Resultados | “Treinamos com 2022–2023 e avaliamos 2024. A mediana sazonal atende aos critérios nos cinco pivôs. A Ridge atende em dois, pois os outros não representam todos os meses do calendário no treino. A tabela usa os mesmos sete meses para os três métodos. MAE é o erro absoluto médio e RMSE dá maior peso a erros grandes. A Ridge não vence em toda métrica. Esses erros são de índices espectrais, sem avaliação de defeitos de irrigação.” |
 | 3:45–4:25 | 7. Expansão | “Minha ligação com Caxias motivou a investigação do Maranhão e do Piauí. A base ANA não trouxe registros associados a Caxias nessa edição. Selecionamos Guadalupe por critérios explícitos e processamos 29 observações aceitas em cinco pivôs e seis datas, com chuva integrada e reprodução offline. São seis meses amostrados, sem série mensal contínua. A prova demonstra execução do pipeline na amostra, sem validar modelos agronômicos regionais.” |
-| 4:25–5:00 | 8. Conclusões | “A contribuição é uma cadeia aberta, auditável e reproduzível, com comunicação das limitações. Para uso operacional, precisamos de dados de campo, culturas e manejo, avaliação geográfica independente e custos medidos. Vou mostrar agora como o WebGIS liga o polígono, a observação, a qualidade e sua proveniência.” |
+| 4:25–5:00 | 8. Conclusões | “A contribuição é uma cadeia aberta, auditável e reproduzível, com comunicação das limitações. A investigação guiada compara observações reais e gera uma ficha de evidências com fontes e hashes. Para uso operacional, precisamos de dados de campo, culturas e manejo, avaliação geográfica independente e custos medidos. Vou mostrar como o WebGIS liga o polígono, a observação, a qualidade e sua proveniência.” |
 
 Ensaiar em voz alta com cronômetro. A tabela distribui cinco minutos; a velocidade real depende do apresentador. Cortar exemplos antes de reduzir a clareza dos limites científicos.
 
 ## Demonstração de aproximadamente três minutos
 
-Antes da apresentação, abrir o site público e o preview local já compilado. Conferir o caso/versão e o [checklist](checklist-entrega-ftl.md). A versão local serve de contingência de conexão e deve ser identificada como tal.
+Antes da apresentação, abrir o build de produção revisado e o site público. Conferir a versão e o [checklist](checklist-entrega-ftl.md). A Fase 7 só estará na URL pública após revisão, merge manual e deployment aprovado. O preview local compilado pode ser usado como contingência, identificado ao público. Acionar **Iniciar demonstração**; o avanço é manual, sem temporizador obrigatório.
 
-1. **0:00–0:30, contexto territorial.** Mostrar Paracatu como caso concluído e a região MA/PI com seu estado real. Explicar que Caxias é a origem territorial da pesquisa. Selecionar um pivô no mapa e conferir o FID.
-2. **0:30–1:10, séries.** Alternar NDVI/NDMI e apontar um valor observado com data e qualidade. Mostrar a chuva mensal e explicar a diferença de resolução e de janela temporal. Não atribuir uma variação a irrigação sem dados independentes.
-3. **1:10–1:40, lacunas.** Abrir cobertura/qualidade. Mostrar um mês ausente e o motivo registrado. Explicar que ausência não equivale a índice zero e que a nuvem do catálogo não substitui a máscara no próprio pivô.
-4. **1:40–2:20, comparação temporal/modelos.** Mostrar os valores anterior e posterior e a diferença, incluindo meses sem observação entre eles. Abrir modelos e usar a comparação em meses comuns. Explicar por que três pivôs não recebem Ridge elegível.
-5. **2:20–3:00, proveniência.** Abrir a origem da observação ou do pacote. Mostrar período 2022–2024, versão, hashes e links metodológicos. Encerrar com a contribuição e o próximo passo de validação de campo. Se a prova regional estiver integrada, mostrar brevemente seus dados descritivos e o rótulo exploratório, sem transportar métricas de Paracatu.
+| Tempo | Passo no WebGIS | Fala e ação |
+|---|---|---|
+| 0:00–0:25 | 1. O problema | “Precisamos acompanhar mudanças espectrais com qualidade conhecida. Caxias é minha origem territorial; não é apresentada como área já monitorada.” Mostrar os papéis geográficos na visão territorial. |
+| 0:25–1:00 | 2. O estudo de Paracatu | “A validação começou em Paracatu: cinco pivôs, 256 observações, 57 cenas e 78,3% de cobertura em 2022–2024.” Mostrar mapa, cobertura e resultados congelados; os números são derivados do pacote real. |
+| 1:00–1:50 | 3. Uma investigação | Mostrar o pivô e os dois agregados mensais disponíveis. “Esta é a diferença assinada B menos A. A chuva corresponde aos meses indicados; a qualidade e as cenas estão registradas. Lacunas não foram preenchidas.” Abrir **Gerar ficha de evidências**, mostrar seleção, identificador e hash; fechar a prévia para continuar. A impressão pode ficar para depois da fala. |
+| 1:50–2:30 | 4. Expansão para Guadalupe | “A seleção oficial levou a Guadalupe, uma prova exploratória com cinco pivôs e 29 observações em seis datas.” Mostrar as imagens reais de 18/07/2023 e 22/07/2024, na mesma grade e falsa cor. “O recorte contém o grupo dos cinco pivôs. Não existe modelo regional validado.” |
+| 2:30–3:00 | 5. Conclusões e limitações | “O AquaClima organiza evidências rastreáveis e períodos para revisão. A mudança pode refletir fenologia, colheita, manejo e ambiente. Não atribuímos causa ou economia de água. O próximo passo é validação de campo.” Encerrar a demonstração, restaurando a seleção anterior. |
 
-Se um recurso visual não existir na versão demonstrada, mostrar a evidência equivalente nas tabelas e no relatório. Não prometer interação inexistente. O roteiro técnico detalhado do caso concluído permanece em [roteiro-demonstracao.md](roteiro-demonstracao.md).
+Usar **Avançar**, **Voltar**, **Reiniciar** e **Encerrar**; Escape também encerra. O passo e o progresso ficam visíveis. O link da investigação preserva região, pivô, observações e pacote; pode ser copiado após a fala. Se uma observação não possuir derivado visual, mostrar a mensagem de indisponibilidade e seus valores, sem substituir por outra imagem. A [documentação da investigação](investigacao-guiada-ftl.md) registra as regras e os exemplos. O roteiro técnico anterior de Paracatu permanece em [roteiro-demonstracao.md](roteiro-demonstracao.md).
 
 ## Versão rápida de aproximadamente um minuto
 
-“O AquaClima é meu Capstone do Future Tech Leaders. Ele integra polígonos oficiais da ANA, reflectância Sentinel-2 e chuva CHIRPS para acompanhar índices espectrais de áreas irrigadas. Em cinco pivôs de Paracatu, processamos 256 observações aceitas e cobrimos 141 de 180 espaços mensais entre 2022 e 2024. O WebGIS permite verificar séries, lacunas, qualidade e proveniência. Avaliamos baselines sazonais com treino em 2022–2023 e validação em 2024, sem incluir 2025. Minha origem em Caxias motivou uma investigação territorial no Maranhão e Piauí, com a seleção guiada por dados reais. A contribuição é uma metodologia aberta e reproduzível. Detectar falhas de irrigação ou quantificar economia de água ainda exige dados de campo e validação específica.”
+“O AquaClima é meu Capstone do Future Tech Leaders. Integra polígonos ANA, Sentinel-2 e chuva CHIRPS para investigar mudanças espectrais. O estudo de Paracatu tem 256 observações e 78,3% de cobertura mensal em 2022–2024, com baselines avaliados em 2024. Guadalupe acrescenta 29 observações exploratórias, sem modelo regional validado. O WebGIS orienta a comparação de duas observações reais e gera uma ficha com valores, qualidade, proveniência e hashes. Caxias é minha origem e motivação territorial. A contribuição é uma metodologia aberta e uma tecnologia rastreável de investigação. Diagnóstico de irrigação e economia de água ainda exigem validação de campo.”
 
 ## Perguntas prováveis da banca
 
@@ -53,6 +55,10 @@ Se um recurso visual não existir na versão demonstrada, mostrar a evidência e
 
 **O modelo detecta falhas de irrigação?** Não há essa validação. Há mudanças espectrais descritivas e reconstruções sazonais. Colheita, rotação, fenologia ou nuvens residuais também podem explicar mudanças. Seriam necessários rótulos e dados independentes de operação e campo.
 
+**A ficha é um laudo agronômico?** É um registro descritivo da seleção feita no WebGIS. Preserva observações, chuva, qualidade, imagens correspondentes, proveniência, limites e pacote utilizado. Não atribui causa, recomenda manejo ou certifica falha de irrigação. Pode ser impressa ou salva como PDF localmente.
+
+**A interpretação usa inteligência artificial generativa?** A síntese da investigação utiliza templates determinísticos sobre os dados publicados, sem modelo de linguagem externo ou API paga. O identificador científico permanece o mesmo quando a seleção e os parâmetros são iguais, mesmo que a impressão ocorra em outro dia.
+
 **Qual a diferença entre demanda e consumo hídrico?** Demanda é a necessidade de água sob condições e critérios definidos. Consumo se relaciona à parcela efetivamente utilizada e não restituída ao sistema no recorte considerado. Retirada e água aplicada são outras grandezas. Este protótipo não estima nenhuma delas por NDVI/NDMI e chuva isoladamente.
 
 **A tecnologia funciona em outras regiões?** A prova de Guadalupe processou 29 observações reais em cinco pivôs e seis datas, integrou CHIRPS e reproduziu cinco arquivos offline. Isso demonstra execução do procedimento nessa amostra. Os 96,7% referem-se aos 30 espaços planejados, enquanto a grade completa de 23 meses tem 25,2% de cobertura. Validação agronômica e generalização dos modelos exigem protocolo externo adicional.
@@ -71,4 +77,4 @@ Se um recurso visual não existir na versão demonstrada, mostrar a evidência e
 
 ## Evidências de apoio
 
-[Relatório científico](relatorio-final-ftl.md), [seleção territorial](selecao-regional-ma-pi.md), [métricas congeladas](modelagem-recuperada.md), [contratos](contratos-webgis.md) e [apresentação editável](apresentacao/aquaclima-ftl.pptx).
+[Relatório científico](relatorio-final-ftl.md), [seleção territorial](selecao-regional-ma-pi.md), [métricas congeladas](modelagem-recuperada.md), [contratos](contratos-webgis.md) e [apresentação editável da Fase 7](apresentacao/aquaclima-ftl-fase7.pptx).

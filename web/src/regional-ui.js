@@ -7,11 +7,11 @@ const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&':'&am
 const fmt = (value, digits = 0) => value == null ? '—' : Number(value).toLocaleString('pt-BR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
 const documents = 'https://github.com/Altaeir-13/FTL-Final-Project/blob/main/docs/';
 
-export async function mountStudies(container) {
+export async function mountStudies(container, { onStudy = () => {}, onPivot = () => {} } = {}) {
   try {
     const { catalog, evidence, images } = await loadRegions();
     const imageURLs = images.map(image => ({ ...image, url: URL.createObjectURL(new Blob([image.bytes], { type: 'image/png' })) }));
-    window.addEventListener('pagehide', () => imageURLs.forEach(image => URL.revokeObjectURL(image.url)), { once: true });
+    window.addEventListener('pagehide', event => { if (!event.persisted) imageURLs.forEach(image => URL.revokeObjectURL(image.url)); });
     const { selection, pilot } = evidence;
     const winner = selection.winner;
     const exploratory = catalog.regional.status === 'exploratory_portability';
@@ -31,11 +31,12 @@ export async function mountStudies(container) {
     const $ = id => container.querySelector(`#${id}`);
     let regionalMap;
     let pivot = evidence.pivots.features[0].properties.pivot_id;
-    function updatePivot(id) {
+    function updatePivot(id, notify = true) {
       pivot = id;
       $('regional-pivot-select').value = id;
       const feature = evidence.pivots.features.find(feature => feature.properties.pivot_id === id);
       $('regional-pivot-description').textContent = `${id} · FID ${feature.properties.FID} · ${fmt(feature.properties.area_ha, 2)} ha · município IBGE 2204501.`;
+      if (notify) onPivot(id);
       if (!pilot) return;
       const rows = filterMonthly(pilot.monthly, id, '2023-01', '2024-12');
       const observations = pilot.observations.filter(row => row.pivot_id === id);
@@ -48,7 +49,7 @@ export async function mountStudies(container) {
         return `<tr><th>${row.date}</th><td>${fmt(row.ndvi_median, 4)}</td><td>${fmt(row.ndmi_median, 4)}</td><td>${fmt(row.valid_pixel_pct, 1)}%<small>${row.status === 'ok' ? 'Aceita' : 'Rejeitada · pixels válidos insuficientes'}</small></td><td>${month?.precip_status === 'ok' ? `${fmt(month.precip_mm, 1)} mm` : 'Ausente'}</td><td><details><summary>${esc(row.scene_id)}</summary><p>${esc(scene?.provider || row.provider || row.sentinel_source)} · ${esc(scene?.collection || row.collection)} · PB ${esc(scene?.processing_baseline || row.processing_baseline)}</p><p>${esc(scene?.method || row.radiometric_method)}</p><p class="hash-text">${esc(scene?.product)}</p></details></td></tr>`;
       }).join('')}</tbody></table>`;
     }
-    function selectStudy(id) {
+    function selectStudy(id, notify = true) {
       const regional = id === 'guadalupe-pi';
       $('study-select').value = id;
       $('paracatu-study-detail').hidden = regional;
@@ -56,13 +57,26 @@ export async function mountStudies(container) {
       container.querySelectorAll('[data-study]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.study === id)));
       if (regional) {
         if (!regionalMap) regionalMap = createMap($('regional-map'), evidence.pivots, updatePivot, { label: 'Guadalupe, PI', title: 'Guadalupe · Piauí', subtitle: exploratory ? 'Amostra exploratória · 2023–2024' : 'Amostra selecionada · ANA 2022', ariaLabel: 'Mapa dos cinco pivôs ANA selecionados em Guadalupe, PI.' });
-        regionalMap.invalidateSize(); regionalMap.select(pivot); updatePivot(pivot);
+        regionalMap.invalidateSize(); regionalMap.select(pivot); updatePivot(pivot, false);
       }
+      if (notify) onStudy(id);
     }
     $('study-select').addEventListener('change', event => selectStudy(event.target.value));
     container.querySelectorAll('[data-study]').forEach(button => button.addEventListener('click', () => selectStudy(button.dataset.study)));
     $('regional-pivot-select').addEventListener('change', event => { regionalMap.select(event.target.value); updatePivot(event.target.value); });
     $('regional-index')?.addEventListener('change', () => updatePivot(pivot));
+    return {
+      loaded: { catalog, evidence, images: imageURLs },
+      selectStudy: id => selectStudy(id, false),
+      selectPivot(id, index) {
+        if (!evidence.pivots.features.some(feature => feature.properties.pivot_id === id)) return;
+        if (index) $('regional-index').value = index === 'ndmi' ? 'ndmi_median' : 'ndvi_median';
+        selectStudy('guadalupe-pi', false);
+        regionalMap.select(id); updatePivot(id, false);
+      },
+      getState: () => ({ study: $('study-select').value, pivot, index: $('regional-index')?.value, mapView:regionalMap?.getView() }),
+      restoreView: view => regionalMap?.setView(view),
+    };
   } catch (error) {
     container.innerHTML = `<div class="regional-unavailable" role="status"><h2>Investigação regional indisponível.</h2><p>${esc(error.message)} O estudo congelado de Paracatu continua disponível abaixo.</p></div>`;
   }

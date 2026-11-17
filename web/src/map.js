@@ -212,6 +212,15 @@ export function createMap(container, geojson, onSelect, study = {}) {
   return {
     select,
     fitAll,
+    getView() { const center = map.getCenter(); return { lat:center.lat, lng:center.lng, zoom:map.getZoom(), polygonsVisible:map.hasLayer(polygons) }; },
+    setView(view) {
+      if (!view) return;
+      map.setView([view.lat,view.lng],view.zoom,{ animate:false });
+      if (typeof view.polygonsVisible === 'boolean') {
+        const toggle = container.querySelector('input[aria-label="Exibir camada de pivôs ANA"]');
+        if (toggle.checked !== view.polygonsVisible) { toggle.checked=view.polygonsVisible; toggle.dispatchEvent(new Event('change')); }
+      }
+    },
     invalidateSize() { map.invalidateSize({ animate: false }); },
     destroy() { observer.disconnect(); map.remove(); },
   };

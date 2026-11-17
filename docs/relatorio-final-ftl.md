@@ -1,12 +1,12 @@
 # AquaClima: monitoramento espectral reproduzível de áreas agrícolas irrigadas
 
-**Autor:** Randerson Sousa de Sá Nunes. **Programa:** Future Tech Leaders Brasil, Capstone. **Origem territorial:** Caxias, Maranhão. **Data de referência:** 15 de novembro de 2026. **Entrega:** 24 de novembro de 2026.
+**Autor:** Randerson Sousa de Sá Nunes. **Programa:** Future Tech Leaders Brasil, Capstone. **Origem territorial:** Caxias, Maranhão. **Data de referência:** 16 de novembro de 2026. **Entrega:** 24 de novembro de 2026.
 
 **Código aberto:** [FTL-Final-Project](https://github.com/Altaeir-13/FTL-Final-Project). **Demonstração:** [WebGIS AquaClima](https://altaeir-13.github.io/FTL-Final-Project/). **Versão científica de Paracatu:** `2022_2024_recovery_v1`, congelada no commit `1440f3e5b28736d12ded226d6baa6b5ca9005262`. Este documento distingue esse resultado concluído da investigação territorial MA/PI.
 
 ## 1. Título e identificação
 
-O AquaClima é um protótipo científico aplicado para acompanhar índices de vegetação e umidade do dossel em polígonos oficiais de pivôs centrais. Seu produto de pesquisa inclui uma cadeia local de aquisição, controle de qualidade, séries mensais, baselines sazonais e uma aplicação WebGIS estática. A contribuição empresarial permanece uma perspectiva de continuidade.
+O AquaClima é um protótipo científico aplicado para acompanhar índices de vegetação e umidade do dossel em polígonos oficiais de pivôs centrais. Seu produto de pesquisa inclui uma cadeia local de aquisição, controle de qualidade, séries mensais, baselines sazonais e uma aplicação WebGIS estática. A Fase 7 acrescenta investigação guiada por pivô, comparação rastreável, ficha de evidências imprimível, compartilhamento por URL e demonstração territorial. Esses recursos organizam os resultados existentes; não constituem novas descobertas agronômicas. A contribuição empresarial permanece uma perspectiva de continuidade.
 
 ## 2. Resumo
 
@@ -64,7 +64,13 @@ A investigação regional começa por Caxias e Timon/MA, Guadalupe, Jerumenha e 
 
 A aplicação separa ingestão ANA/Sentinel-2/CHIRPS, armazenamento HTTP com inventário e hashes, processamento radiométrico e espectral, consolidação mensal, modelagem, relatórios e contratos de publicação. Python 3.12 executa o processamento local em CPU. O lock de dependências acompanha o código.
 
-O frontend Vite/JavaScript consome um pacote estático com contrato **1.0.0**, verifica integridade e não executa modelos no navegador. Mapa e dependências são empacotados sem CDN. Um catálogo territorial superior pode referenciar estudos independentes preservando o contrato e os bytes do pacote de Paracatu. Uma região investigada tem estado distinto de uma região processada ou avaliada.
+O frontend Vite/JavaScript consome um pacote estático com contrato **1.0.0**, verifica integridade e não executa modelos no navegador. Mapa e dependências são empacotados sem CDN. Um catálogo territorial superior referencia estudos independentes preservando o contrato e os bytes do pacote de Paracatu. Uma região investigada tem estado distinto de uma região processada ou avaliada.
+
+A experiência de investigação possui cinco etapas: território, pivô, observações A/B, análise da mudança e interpretação. A seleção sincroniza polígonos, indicadores e contexto. A comparação usa agregados mensais já publicados em Paracatu e medianas espaciais por cena aceita em Guadalupe. Distingue mês de referência e data efetiva, preserva lacunas e calcula somente a diferença assinada `B − A`, sem interpolar ou recalcular modelos. Templates locais produzem a síntese descritiva com limites explícitos. A imagem só é vinculada quando data e cena correspondem à observação aceita.
+
+A **Ficha de Evidências — AquaClima** preserva uma cópia da seleção, valores e precisão publicados, qualidade, CHIRPS, cenas, imagens correspondentes, fontes, limitações e hash do pacote. A visualização A4 é impressa ou salva como PDF pelo navegador, sem backend ou transmissão a terceiros. O identificador determinístico deriva da região, pivô, observações, versão/hash e parâmetros; a data de geração aparece separadamente. Links compartilháveis validam a seleção e o pacote, mantendo compatibilidade com os filtros anteriores.
+
+O modo demonstração percorre cinco passos com avanço manual, teclado, Escape e restauração da navegação. A visão territorial comunica a trajetória **Caxias → Paracatu → Guadalupe**, com Caxias apenas como sede municipal de referência e origem do pesquisador. Essa cartografia não representa cobertura operacional nacional. A [documentação da Fase 7](investigacao-guiada-ftl.md) registra arquitetura, fontes, capturas e verificações da implementação.
 
 ## 11. Aquisição e pré-processamento
 
@@ -199,7 +205,7 @@ As unidades de avaliação são dependentes no tempo e no espaço. Pivôs próxi
 
 O pacote científico de origem é `16094dc7ef7ae3e6881b86bc0cbb0ff7b146f0558fc0947957865026882360a3`; o pacote público é `7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d`. O CSV original de observações tem SHA-256 `0b1341b57615a5503a68fc8e3e54983f96fd6129ab463c63a517dce6cf05a780`, e o mensal, `d78469f3dd13287d390aa75cceaa745e1dbf9ed83a1b4efbf18a17718e64fc7a`.
 
-No ambiente original, a reprodução em diretório novo com requisições proibidas gerou 40 arquivos idênticos, sem HTTP nem transferência. Nesta fase, a reprodução de Paracatu repetiu os 40 arquivos idênticos em 8,979 s, com zero HTTP/bytes, e a suíte científica existente aprovou 193 testes. A prova regional também reproduziu cinco arquivos idênticos com requisições proibidas. Esses procedimentos exigem os caches locais e não devem ser confundidos com execução científica completa a partir de um clone sem dados. Um clone limpo consegue construir o WebGIS pelo snapshot público, sem rasters. Os resultados históricos de validação estão em [finalização do WebGIS](finalizacao-webgis.md); as suítes ampliadas e a execução final corrente devem ser consultadas no registro da fase 6 e no PR.
+No ambiente original, a reprodução em diretório novo com requisições proibidas gerou 40 arquivos idênticos, sem HTTP nem transferência. Na Fase 6, a reprodução de Paracatu repetiu os 40 arquivos idênticos em 8,979 s, com zero HTTP/bytes, e a suíte científica então existente aprovou 193 testes. A prova regional também reproduziu cinco arquivos idênticos com requisições proibidas. Esses procedimentos exigem os caches locais e não devem ser confundidos com execução científica completa a partir de um clone sem dados. Um clone limpo consegue construir o WebGIS pelo snapshot público, sem rasters. Os resultados históricos de validação estão em [finalização do WebGIS](finalizacao-webgis.md) e no [registro da Fase 6](execucao-fase6.md); a validação das funcionalidades atuais está na [Fase 7](investigacao-guiada-ftl.md) e em seu PR.
 
 ```powershell
 uv sync --locked
@@ -208,13 +214,14 @@ uv run --no-sync python scripts/verify_recovery_offline.py
 Set-Location web
 npm ci
 npm run data:validate
+npm run regions:validate
 npm test
 npm run build
 npm run test:browser
 npm run verify:dist
 ```
 
-Cada comando só constitui evidência de aprovação quando executado com resultado registrado. A publicação continua condicionada ao merge humano na `main`, com CI e deployment aprovados. A branch regional não publica automaticamente.
+Cada comando só constitui evidência de aprovação quando executado com resultado registrado. A Fase 6 foi integrada pelo PR #2 no commit `ffb7ba41d5286fd58c47acd8007903fd38b799d4`. A publicação da Fase 7 continua condicionada ao seu merge humano na `main`, com CI e deployment aprovados. Nenhuma branch experimental publica automaticamente.
 
 ## 19. Limitações
 
@@ -230,7 +237,7 @@ Como hipótese de Climate Tech/AgTech, o AquaClima poderá oferecer organizaçã
 
 ## 21. Conclusão
 
-O estudo de Paracatu demonstra uma cadeia reproduzível de integração e avaliação espectral, com 256 observações aceitas, 78,3% de cobertura mensal e comparação de baselines em períodos explícitos. O WebGIS apresenta esses resultados com qualidade, ausências e proveniência. A investigação MA/PI selecionou Guadalupe e produziu uma prova exploratória com 29 observações aceitas em cinco pivôs, seis datas, chuva integrada e reprodução offline. A evidência sustenta execução do procedimento na amostra regional, mantendo a distinção entre portabilidade de engenharia e validação agronômica externa. A contribuição do Capstone é a metodologia e a evidência auditável produzida. A aplicação operacional à irrigação permanece condicionada a novos dados e validação de campo.
+O estudo de Paracatu demonstra uma cadeia reproduzível de integração e avaliação espectral, com 256 observações aceitas, 78,3% de cobertura mensal e comparação de baselines em períodos explícitos. O WebGIS apresenta esses resultados com qualidade, ausências e proveniência. A investigação MA/PI selecionou Guadalupe e produziu uma prova exploratória com 29 observações aceitas em cinco pivôs, seis datas, chuva integrada e reprodução offline. A evidência sustenta execução do procedimento na amostra regional, mantendo a distinção entre portabilidade de engenharia e validação agronômica externa. A Fase 7 transforma essa base em uma experiência de investigação compartilhável e em fichas rastreáveis para revisão, com demonstração interativa dos dois estudos. A contribuição do Capstone é a metodologia, a evidência auditável e a tecnologia de exploração produzidas. A aplicação operacional à irrigação permanece condicionada a novos dados e validação de campo.
 
 ## 22. Referências e links
 

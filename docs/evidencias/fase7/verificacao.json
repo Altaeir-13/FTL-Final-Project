@@ -1,0 +1,107 @@
+{
+  "reference_date": "2026-11-16",
+  "artifact": {
+    "sha256": "30c96116b9f84daa8dfee0fe4fa3dbd4a7457d2895524d423e56c44f89f8ba3f",
+    "files": 25,
+    "assets": 3,
+    "total_bytes": 2007127
+  },
+  "artifact_sha256": "30c96116b9f84daa8dfee0fe4fa3dbd4a7457d2895524d423e56c44f89f8ba3f",
+  "browser": "Chromium / Microsoft Edge",
+  "report_investigation_id": "AQ-154c628f69b4b01c9dc2a951c97f6667a9ff940d8d2212c124d3a25494c28608",
+  "captures": [
+    {
+      "file": "phase7-territorio.png",
+      "bytes": 93794,
+      "sha256": "c7bf610a079d9b038e8974a54c6b9e633cb13076ee32342b94616ce98b6b241c"
+    },
+    {
+      "file": "phase7-investigacao-paracatu.png",
+      "bytes": 134100,
+      "sha256": "883a696ec6b51a806f1c4c7a58ec25aaaf03373370f37df99c87c137351ab3a9"
+    },
+    {
+      "file": "phase7-investigacao-guadalupe.png",
+      "bytes": 526092,
+      "sha256": "e19d575765671545cace2599189f31ebf061bfd064926b81fa844b8ccf4d7f85"
+    },
+    {
+      "file": "phase7-ficha.png",
+      "bytes": 146638,
+      "sha256": "8a6142e06d191bb16636de646639e1c4c47ad6d959234b9abcd70bed560a9b26"
+    },
+    {
+      "file": "phase7-demonstracao.png",
+      "bytes": 502161,
+      "sha256": "88ad32c25b76fe83cfb45f328a0ed98ebb9714413dc03475aae046dc04251f87"
+    },
+    {
+      "file": "phase7-mobile.png",
+      "bytes": 154603,
+      "sha256": "d15513081a77927323963f17588632a374620c396974c09f8e4606fe0ea33408"
+    },
+    {
+      "file": "phase7-impressao-a4.png",
+      "bytes": 145199,
+      "sha256": "f1420c3861b0d1a3b3955fb1eee694f160d563df1dcd78fcd99ebc40b3536688",
+      "source": "Rendered actual browser PDF page with Poppler"
+    }
+  ],
+  "implementation_base": "ffb7ba41d5286fd58c47acd8007903fd38b799d4",
+  "validated_code_commit": "8f87d2c",
+  "system_version": "1.1.0",
+  "checks": {
+    "python": {
+      "passed": 216
+    },
+    "frontend": {
+      "passed": 60
+    },
+    "publication_policy": {
+      "passed": 5
+    },
+    "playwright": {
+      "passed": 25,
+      "existing": 16,
+      "phase7": 9,
+      "browser": "Microsoft Edge",
+      "seconds": 40.2
+    },
+    "clean_clone": {
+      "dependency_install": "npm ci --no-audit --no-fund",
+      "frontend": 60,
+      "publication_policy": 5,
+      "no_private_rasters": true,
+      "artifact_sha256": "30c96116b9f84daa8dfee0fe4fa3dbd4a7457d2895524d423e56c44f89f8ba3f",
+      "python": 216
+    },
+    "print": {
+      "format": "A4",
+      "paracatu_pages": 5,
+      "guadalupe_pages": 4,
+      "all_pages_visually_inspected": true
+    },
+    "scientific_paths_unchanged": [
+      "web/data",
+      "web/regions",
+      "docs/evidencias/guadalupe-pi",
+      ".github/workflows"
+    ]
+  },
+  "public_hashes": {
+    "manifest": "69fb2f8083daaf2cc8bcb4b062bb922d36b40ea849468b778d3397aae1ae49b8",
+    "regional_catalog": "afda1abd42ddc472c83db3f6b3953f18e86b19dea954200731f7fb4e70b7384b",
+    "paracatu_package": "7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d",
+    "regional_package": "8d7a54f09174e5890f8a8babf153df855699c727d639b7868a94a658a7495131"
+  },
+  "presentation": {
+    "pptx_sha256": "ab6ffca022d1dee3d46b16388719781e829d48b04ed17cceea7d235d3882865e",
+    "pdf_sha256": "90a780fe14061a9a64da03e1dcc085a4cb00550decff544c3885ae3f2f97e39e",
+    "slides": 8,
+    "changed_slides": [
+      7,
+      8
+    ],
+    "pdf_is_raster_backup": true
+  }
+}
