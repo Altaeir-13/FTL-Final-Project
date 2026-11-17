@@ -11,3 +11,5 @@ data/regions/selection/** -text
 # ASCII-encoded PDF streams still require byte-preserving checkout.
 *.pdf binary
 *.pptx binary
+# Delivery checksums identify the reviewed bytes, including Markdown and JSON.
+entrega/** -text

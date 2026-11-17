@@ -1,0 +1,317 @@
+{
+  "reference_date": "2026-11-17",
+  "baseURL": "https://altaeir-13.github.io/FTL-Final-Project/",
+  "server_started": false,
+  "browser": "Microsoft Edge",
+  "deployed_commit": "ad107d0c29c63ad9eb9f91a5970d96906676e3df",
+  "stats": {
+    "startTime": "2026-11-17T11:18:21.178Z",
+    "duration": 57011.159,
+    "expected": 25,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "tests": [
+    {
+      "title": "territorial Brazil has 27 states and opens only the two scientifically distinct studies",
+      "file": "investigation.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 4593,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "Paracatu comparison uses actual accepted monthly aggregates, signed deltas, rain and full scene provenance",
+      "file": "investigation.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 2306,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "Guadalupe scene selection shows exactly the published real images and never a rejected or substituted acquisition",
+      "file": "investigation.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 1943,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "A4 evidence report freezes exact current values, matching images, scientific identity and complete provenance",
+      "file": "investigation.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 2508,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "shared investigation survives reload and preserves legacy pivot, index and exploration periods",
+      "file": "investigation.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 1986,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "invalid and cross-region URL entries are corrected and a different package blocks export until explicitly changed",
+      "file": "investigation.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 1506,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "five manual demo steps navigate the real WebGIS and back, restart and Escape restore the prior selection",
+      "file": "investigation.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 4396,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "mobile investigation, evidence preview and keyboard demo fit the viewport with local runtime assets",
+      "file": "investigation.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 2067,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "Paracatu interactions during regional loading and from an active regional study preserve a valid synchronized investigation",
+      "file": "investigation.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 1850,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "overview and all five selections use frozen observations and real geometries",
+      "file": "webgis.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 2055,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "NDVI/NDMI tabs, years and custom periods synchronize chart values without filling gaps",
+      "file": "webgis.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 2110,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "rainfall and quality distinguish regional context, missing months and limited quality",
+      "file": "webgis.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 1381,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "common-month models show real Ridge metrics and insufficient training explicitly",
+      "file": "webgis.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 1368,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "events show observed changes, exact endpoints, gaps and provenance",
+      "file": "webgis.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 1162,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map polygons support keyboard selection, focus controls and optional layer visibility",
+      "file": "webgis.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 1773,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "project subpath assets, shareable filters and hash navigation survive reload",
+      "file": "webgis.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 2343,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "production runtime remains functional when localhost services, tiles and CDNs are unavailable",
+      "file": "webgis.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 2353,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "390px mobile layout stays inside the viewport and all primary interactions work",
+      "file": "webgis.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 2368,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "scientific notes meet WCAG text contrast and reduced motion is respected",
+      "file": "webgis.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 1916,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "missing mandatory data fails visibly instead of rendering invented values",
+      "file": "webgis.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 1543,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "corrupted scientific bytes fail the browser SHA-256 validation",
+      "file": "webgis.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 1438,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "case selector keeps regional evidence, quality rejections and frozen Paracatu separate",
+      "file": "webgis.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 2862,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "real image comparison loads verified local PNGs with dates, bands and scientific caveats",
+      "file": "webgis.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 2224,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "regional view fits a 390px viewport and exposes municipal inventory and provenance",
+      "file": "webgis.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 2376,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "corrupt regional bytes fail separately while the frozen study remains usable",
+      "file": "webgis.spec.js",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration_ms": 2261,
+          "errors": []
+        }
+      ]
+    }
+  ]
+}
