@@ -1,0 +1,52 @@
+{
+  "region_id": "guadalupe-pi",
+  "validation_state": "exploratory_portability",
+  "target_months": [
+    "2023-01",
+    "2023-07",
+    "2023-11",
+    "2024-03",
+    "2024-07",
+    "2024-11"
+  ],
+  "calendar_slots": 115,
+  "pivot_count": 5,
+  "accepted_observations": 29,
+  "accepted_scenes": 6,
+  "observed_months": [
+    "2023-01",
+    "2023-07",
+    "2023-11",
+    "2024-03",
+    "2024-07",
+    "2024-11"
+  ],
+  "observed_pivot_months": 29,
+  "rain_target_slots_ok": 30,
+  "minimum_accepted_valid_pixel_pct": 80.13771186440678,
+  "models": "not fitted; no regional generalization metrics",
+  "policy_sha256": "cd661cc7a67cb408304139508331bbf6966c09e584e053f3ec76c486ed7698e7",
+  "pivots_sha256": "51d38995ab528c00b380ba8d4fce7fb041c70151702cf98e013e47d3edba859b",
+  "files": {
+    "observations": {
+      "path": "observations.csv",
+      "sha256": "f6d9d255ecea772d012da487c6e25d3c67866d921df332149dcd4a301b61fa73",
+      "bytes": 25481
+    },
+    "attempts": {
+      "path": "attempts.csv",
+      "sha256": "43754ad49adf3dd5b1249aa04ed7941f1603cb17ad3f10001f2c0a0d50a42315",
+      "bytes": 26353
+    },
+    "monthly": {
+      "path": "monthly.csv",
+      "sha256": "b012883c957cc436a8dca6ca91d613f4953f640af36567024bac75f1ea4e04d4",
+      "bytes": 63128
+    },
+    "precipitation": {
+      "path": "precipitation.csv",
+      "sha256": "e98391c2dfffe579d0b1f2f02ce2c89991488a24fe2aff3a6b793fd37dc7339f",
+      "bytes": 20874
+    }
+  }
+}

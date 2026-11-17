@@ -1,8 +1,9 @@
 import './style.css';
 import { loadPackage } from './data.js';
 import { createMap } from './map.js';
-import { filterMonthly, coverageState, commonComparison } from './science.js';
+import { filterMonthly, coverageState, commonComparison, eventContext } from './science.js';
 import { renderSeries, renderPrecipitation, renderCoverage } from './charts.js';
+import { mountStudies } from './regional-ui.js';
 import mark from './mark.svg';
 
 const icons = {
@@ -34,9 +35,10 @@ if (state.from > state.to) [state.from,state.to] = ['2022-01','2024-12'];
 function shell() {
   $('app').innerHTML = `
     <aside class="sidebar">
-      <a class="brand" href="#explorar" aria-label="AquaClima início"><img src="${mark}" alt=""/><span>AquaClima<small>OBSERVATÓRIO ESPECTRAL</small></span></a>
+      <a class="brand" href="#estudos" aria-label="AquaClima início"><img src="${mark}" alt=""/><span>AquaClima<small>OBSERVATÓRIO ESPECTRAL</small></span></a>
       <div class="project-label">WORKSPACE DE PESQUISA</div>
       <nav aria-label="Navegação principal">
+        <a class="nav-link" href="#estudos">${icon('layers')}<span>Estudos de caso</span></a>
         <a class="nav-link active" href="#explorar">${icon('map')}<span>Explorar pivôs</span><span class="nav-count">05</span></a>
         <a class="nav-link" href="#series">${icon('chart')}<span>Séries temporais</span></a>
         <a class="nav-link" href="#cobertura">${icon('grid')}<span>Cobertura e qualidade</span></a>
@@ -50,7 +52,9 @@ function shell() {
     <div class="workspace">
       <header class="topbar"><span class="breadcrumb">AquaClima <span>/</span> <b>Observatório</b></span><span class="topbar-status">${icon('check')} Base científica congelada <span class="version-label">v1.0</span></span></header>
       <main id="main">
-        <section id="explorar" class="intro"><div><div class="eyebrow">INTELIGÊNCIA GEOESPACIAL · 2022–2024</div><h1>Um olhar sobre a vegetação irrigada.</h1><p>Explore os históricos espectrais e a qualidade das observações de cinco pivôs centrais.</p></div><a class="secondary-button intro-link" href="#metodologia">Sobre a pesquisa ${icon('arrow')}</a></section>
+        <section class="territorial-hero"><div><span class="eyebrow">AQUACLIMA · CIÊNCIA ABERTA PARA OS TERRITÓRIOS</span><h1>Acompanhar a vegetação.<br/>Compreender os limites da evidência.</h1><p>Áreas irrigadas mudam ao longo do tempo. O AquaClima combina satélites, polígonos oficiais e precipitação para investigar essas mudanças, com qualidade e proveniência verificáveis.</p><p class="territorial-origin">De Paracatu, onde o pipeline foi desenvolvido e avaliado, à investigação no Maranhão e no Piauí, motivada pelo vínculo do pesquisador com Caxias, MA.</p></div><aside class="ods-context" aria-label="Relação com os Objetivos de Desenvolvimento Sustentável"><span class="eyebrow">CONTRIBUIÇÃO CIENTÍFICA AOS ODS</span><div><span class="ods-number">06</span><p><strong>Água potável e saneamento</strong><span>Evidências para estudar a vegetação irrigada; consumo e economia de água não foram medidos.</span></p></div><div><span class="ods-number">13</span><p><strong>Ação contra a mudança global do clima</strong><span>Contexto de precipitação e transparência das observações para pesquisas de adaptação.</span></p></div><p class="ods-secondary">ODS 2 e 9: pesquisa aplicada à agricultura e infraestrutura de dados aberta. Perspectiva futura de inteligência hídrica.</p></aside></section>
+        <section id="estudos" class="studies-section" aria-labelledby="studies-title"><p class="regional-loading" role="status">Carregando catálogo independente de estudos…</p></section>
+        <section id="explorar" class="intro"><div><div class="eyebrow">OBSERVATÓRIO DE PARACATU, MG · 2022–2024</div><h2>Um olhar sobre a vegetação irrigada.</h2><p>Explore os históricos espectrais e a qualidade das observações dos cinco pivôs do estudo concluído.</p></div><a class="secondary-button intro-link" href="#metodologia">Sobre a pesquisa ${icon('arrow')}</a></section>
         <div class="kpi-grid" aria-label="Resumo do estudo">
           <article class="kpi"><span class="kpi-icon">${icon('map')}</span><div><span>Pivôs monitorados</span><strong id="kpi-pivots">—</strong><small>Polígonos reais · ANA</small></div></article>
           <article class="kpi"><span class="kpi-icon">${icon('layers')}</span><div><span>Observações aceitas</span><strong id="kpi-observations">—</strong><small id="kpi-scenes">Sentinel-2 L2A</small></div></article>
@@ -146,7 +150,7 @@ function renderEvents() {
   const events = data.events.filter(e => e.pivot_id === state.pivot && e.index === state.target && e.from_month >= state.from && e.to_month <= state.to);
   $('events-count').textContent = `${events.length} mudanças · ${state.target === 'ndvi_median'?'NDVI':'NDMI'}`;
   const visible = showingAllEvents ? events : events.slice(0,6);
-  $('events-table').innerHTML = events.length ? `<table><caption>ANA ${state.pivot} · mudanças espectrais observadas · ${state.from} a ${state.to}</caption><thead><tr><th>Período</th><th>Índice / pivô</th><th>Inicial → final</th><th>Diferença</th><th>Intervalo</th><th>Meses sem observação</th><th>Proveniência</th></tr></thead><tbody>${visible.map(e => `<tr><th>${e.from_month} → ${e.to_month}</th><td>${e.index === 'ndvi_median'?'NDVI':'NDMI'}<small>ANA ${esc(e.pivot_id)}</small></td><td>${fmt(e.from_value,4)} → ${fmt(e.to_value,4)}</td><td class="delta">${e.change > 0?'+':''}${fmt(e.change,4)}</td><td>${e.elapsed_calendar_months} ${e.elapsed_calendar_months === 1?'mês':'meses'}</td><td>${e.unobserved_months_between}</td><td><details><summary>Ver evidência</summary><p>events.csv · limiar ${fmt(e.absolute_change_threshold,2)} · cenas aceitas: ${e.from_accepted_scenes ?? '—'} → ${e.to_accepted_scenes ?? '—'} · lotes ${esc(e.from_batch_status)} / ${esc(e.to_batch_status)}</p><p class="hash-text">Pacote ${esc(data.manifest.source_package_sha256 || data.manifest.package_sha256)}</p></details></td></tr>`).join('')}</tbody></table>` : '<div class="empty-state">Nenhuma mudança espectral acima do limiar descritivo neste pivô, índice e período. Isso não indica ausência de alterações agronômicas.</div>';
+  $('events-table').innerHTML = events.length ? `<table><caption>ANA ${state.pivot} · mudanças espectrais observadas · ${state.from} a ${state.to}</caption><thead><tr><th>Período</th><th>Índice / pivô</th><th>Inicial → final</th><th>Diferença</th><th>Intervalo</th><th>Meses sem observação</th><th>Chuva inicial → final</th><th>Pixels válidos mín.</th><th>Proveniência</th></tr></thead><tbody>${visible.map(e => { const context = eventContext(data,e); return `<tr><th>${e.from_month} → ${e.to_month}</th><td>${e.index === 'ndvi_median'?'NDVI':'NDMI'}<small>ANA ${esc(e.pivot_id)}</small></td><td>${fmt(e.from_value,4)} → ${fmt(e.to_value,4)}</td><td class="delta">${e.change > 0?'+':''}${fmt(e.change,4)}</td><td>${e.elapsed_calendar_months} ${e.elapsed_calendar_months === 1?'mês':'meses'}</td><td>${e.unobserved_months_between}</td><td>${fmt(context.before.precip_mm,1)} → ${fmt(context.after.precip_mm,1)} mm<small>Contexto mensal CHIRPS v3</small></td><td>${fmt(context.before.valid_pixel_pct,1)}% → ${fmt(context.after.valid_pixel_pct,1)}%<small>Início e fim · cenas aceitas</small></td><td><details><summary>Ver evidência</summary><p>events.csv · limiar ${fmt(e.absolute_change_threshold,2)} · cenas aceitas: ${e.from_accepted_scenes ?? '—'} → ${e.to_accepted_scenes ?? '—'} · lotes ${esc(e.from_batch_status)} / ${esc(e.to_batch_status)}</p><p class="hash-text">Pacote ${esc(data.manifest.source_package_sha256 || data.manifest.package_sha256)}</p><p>Cenas iniciais: ${esc(context.before.scenes.join(' · '))}<br/>Cenas finais: ${esc(context.after.scenes.join(' · '))}</p></details></td></tr>`; }).join('')}</tbody></table>` : '<div class="empty-state">Nenhuma mudança espectral acima do limiar descritivo neste pivô, índice e período. Isso não indica ausência de alterações agronômicas.</div>';
   $('more-events').hidden = events.length <= 6;
   $('more-events').innerHTML = `${showingAllEvents ? 'Mostrar menos' : `Ver todas as ${events.length} mudanças`} ${icon('arrow')}`;
 }
@@ -207,6 +211,7 @@ async function start() {
     $('package-info').innerHTML=`<dt>Pacote científico original</dt><dd>${esc(data.manifest.source_package_sha256 || data.manifest.package_sha256)}</dd><dt>Pacote público derivado</dt><dd>${esc(data.manifest.package_sha256)}</dd><dt>Agregação temporal</dt><dd>Mediana das medianas de cenas aceitas, com pesos iguais.</dd>`;
     map=createMap($('map'),data.pivots,id=>selectPivot(String(id),true));
     bind(); map.select(state.pivot); render();
+    await mountStudies($('estudos'));
     if (location.hash) requestAnimationFrame(()=>$(location.hash.slice(1))?.scrollIntoView());
   } catch (error) {
     $('app').innerHTML=`<main class="load-error"><img src="${mark}" alt=""/><h1>Não foi possível abrir o pacote científico.</h1><p>${esc(error.message)}</p><p>Confirme os arquivos do build e sirva a aplicação por HTTP.</p><button onclick="location.reload()">Tentar novamente</button></main>`;

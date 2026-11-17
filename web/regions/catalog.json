@@ -1,0 +1,40 @@
+{
+  "catalog_version": "1.0.0",
+  "reference_date": "2026-11-15",
+  "paracatu": {
+    "id": "paracatu-mg",
+    "label": "Paracatu, MG",
+    "status": "completed",
+    "contract_version": "1.0.0",
+    "dataset_version": "2022_2024_recovery_v1",
+    "manifest_path": "../data/manifest.json",
+    "package_sha256": "7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d"
+  },
+  "regional": {
+    "id": "guadalupe-pi",
+    "label": "Guadalupe, PI",
+    "status": "exploratory_portability",
+    "version": "2023_2024_exploratory_v1",
+    "package": {
+      "path": "packages/8d7a54f09174e5890f8a8babf153df855699c727d639b7868a94a658a7495131/regional.json",
+      "bytes": 199553,
+      "sha256": "8d7a54f09174e5890f8a8babf153df855699c727d639b7868a94a658a7495131"
+    },
+    "images": [
+      {
+        "path": "images/false-colour-2023-07-18.png",
+        "sha256": "2ab53e38fa0f3a10d553aaeee227ff9dc650d8a79584bf5a44fc8514766bd9e9",
+        "bytes": 233573,
+        "date": "2023-07-18",
+        "scene_id": "S2B_T23MPN_20230718T132238_L2A"
+      },
+      {
+        "path": "images/false-colour-2024-07-22.png",
+        "sha256": "34ed3a23e801cc78baf9ee927f84de8e2c240650baaeda247e1f30b1614b2303",
+        "bytes": 232181,
+        "date": "2024-07-22",
+        "scene_id": "S2B_T23MPN_20240722T132235_L2A"
+      }
+    ]
+  }
+}

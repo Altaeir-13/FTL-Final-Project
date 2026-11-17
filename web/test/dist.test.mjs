@@ -20,6 +20,7 @@ async function artifact(t, { script = '', style = '', html } = {}) {
   });
   await mkdir(resolve(directory, 'assets'));
   await cp(resolve(webRoot, 'data'), resolve(directory, 'data'), { recursive: true });
+  await cp(resolve(webRoot, 'regions'), resolve(directory, 'regions'), { recursive: true });
   await writeFile(resolve(directory, '.nojekyll'), '');
   await writeFile(resolve(directory, 'index.html'), html ?? `<!doctype html><html lang="pt-BR"><head><script type="module" src="${PAGES_BASE}${scriptName}"></script><link rel="stylesheet" href="${PAGES_BASE}${styleName}"></head><body><div id="app"></div></body></html>`);
   await writeFile(resolve(directory, scriptName), `const mark="${PAGES_BASE}${markName}";${script}`);
@@ -33,7 +34,7 @@ test('static verifier accepts only local reachable assets at the explicit GitHub
   const result = await verifyDist(directory);
   assert.equal(result.base, '/FTL-Final-Project/');
   assert.equal(result.assets, 3);
-  assert.equal(result.files, 21);
+  assert.equal(result.files, 25);
   assert.equal(result.source_package_sha256, '16094dc7ef7ae3e6881b86bc0cbb0ff7b146f0558fc0947957865026882360a3');
   assert.equal(result.package_sha256, '7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d');
 });

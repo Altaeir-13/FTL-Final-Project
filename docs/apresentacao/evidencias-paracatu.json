@@ -1,0 +1,201 @@
+{
+  "dataset_version": "2022_2024_recovery_v1",
+  "public_package_sha256": "7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d",
+  "source_package_sha256": "16094dc7ef7ae3e6881b86bc0cbb0ff7b146f0558fc0947957865026882360a3",
+  "observations": 256,
+  "scenes": 57,
+  "observed_pivot_months": 141,
+  "expected_pivot_months": 180,
+  "annual_observed": {
+    "2022": 35,
+    "2023": 57,
+    "2024": 49
+  },
+  "common_metrics": [
+    {
+      "comparison": "calendar_month_median__vs__harmonic_ridge__vs__previous_year_same_calendar_month",
+      "pivot_id": "16708",
+      "target": "ndvi_median",
+      "method": "calendar_month_median",
+      "phase": "common_months_validation_2024",
+      "n_common_months": "7",
+      "common_months": "[\"2024-03\",\"2024-04\",\"2024-05\",\"2024-07\",\"2024-08\",\"2024-09\",\"2024-10\"]",
+      "coverage_fraction": "0.5833333333333334",
+      "mae": "0.1945472854588713",
+      "rmse": "0.2640503539671855",
+      "bias_mean": "0.1817741175847394",
+      "status": "ok"
+    },
+    {
+      "comparison": "calendar_month_median__vs__harmonic_ridge__vs__previous_year_same_calendar_month",
+      "pivot_id": "16708",
+      "target": "ndvi_median",
+      "method": "harmonic_ridge",
+      "phase": "common_months_validation_2024",
+      "n_common_months": "7",
+      "common_months": "[\"2024-03\",\"2024-04\",\"2024-05\",\"2024-07\",\"2024-08\",\"2024-09\",\"2024-10\"]",
+      "coverage_fraction": "0.5833333333333334",
+      "mae": "0.188341999866724",
+      "rmse": "0.26646608228740204",
+      "bias_mean": "0.1721047967892819",
+      "status": "ok"
+    },
+    {
+      "comparison": "calendar_month_median__vs__harmonic_ridge__vs__previous_year_same_calendar_month",
+      "pivot_id": "16708",
+      "target": "ndvi_median",
+      "method": "previous_year_same_calendar_month",
+      "phase": "common_months_validation_2024",
+      "n_common_months": "7",
+      "common_months": "[\"2024-03\",\"2024-04\",\"2024-05\",\"2024-07\",\"2024-08\",\"2024-09\",\"2024-10\"]",
+      "coverage_fraction": "0.5833333333333334",
+      "mae": "0.2269991146666663",
+      "rmse": "0.2726732420896728",
+      "bias_mean": "0.1200191421168191",
+      "status": "ok"
+    },
+    {
+      "comparison": "calendar_month_median__vs__harmonic_ridge__vs__previous_year_same_calendar_month",
+      "pivot_id": "16708",
+      "target": "ndmi_median",
+      "method": "calendar_month_median",
+      "phase": "common_months_validation_2024",
+      "n_common_months": "7",
+      "common_months": "[\"2024-03\",\"2024-04\",\"2024-05\",\"2024-07\",\"2024-08\",\"2024-09\",\"2024-10\"]",
+      "coverage_fraction": "0.5833333333333334",
+      "mae": "0.17384813027456403",
+      "rmse": "0.2332645103979499",
+      "bias_mean": "0.16998947724433883",
+      "status": "ok"
+    },
+    {
+      "comparison": "calendar_month_median__vs__harmonic_ridge__vs__previous_year_same_calendar_month",
+      "pivot_id": "16708",
+      "target": "ndmi_median",
+      "method": "harmonic_ridge",
+      "phase": "common_months_validation_2024",
+      "n_common_months": "7",
+      "common_months": "[\"2024-03\",\"2024-04\",\"2024-05\",\"2024-07\",\"2024-08\",\"2024-09\",\"2024-10\"]",
+      "coverage_fraction": "0.5833333333333334",
+      "mae": "0.16046199397418154",
+      "rmse": "0.2293483252997256",
+      "bias_mean": "0.15696012905169324",
+      "status": "ok"
+    },
+    {
+      "comparison": "calendar_month_median__vs__harmonic_ridge__vs__previous_year_same_calendar_month",
+      "pivot_id": "16708",
+      "target": "ndmi_median",
+      "method": "previous_year_same_calendar_month",
+      "phase": "common_months_validation_2024",
+      "n_common_months": "7",
+      "common_months": "[\"2024-03\",\"2024-04\",\"2024-05\",\"2024-07\",\"2024-08\",\"2024-09\",\"2024-10\"]",
+      "coverage_fraction": "0.5833333333333334",
+      "mae": "0.19270600105768868",
+      "rmse": "0.25025951035176625",
+      "bias_mean": "0.11437416336100016",
+      "status": "ok"
+    },
+    {
+      "comparison": "calendar_month_median__vs__harmonic_ridge__vs__previous_year_same_calendar_month",
+      "pivot_id": "8087",
+      "target": "ndvi_median",
+      "method": "calendar_month_median",
+      "phase": "common_months_validation_2024",
+      "n_common_months": "7",
+      "common_months": "[\"2024-03\",\"2024-04\",\"2024-05\",\"2024-07\",\"2024-08\",\"2024-09\",\"2024-10\"]",
+      "coverage_fraction": "0.5833333333333334",
+      "mae": "0.3051606783909457",
+      "rmse": "0.38428429155326743",
+      "bias_mean": "-0.056413966098002026",
+      "status": "ok"
+    },
+    {
+      "comparison": "calendar_month_median__vs__harmonic_ridge__vs__previous_year_same_calendar_month",
+      "pivot_id": "8087",
+      "target": "ndvi_median",
+      "method": "harmonic_ridge",
+      "phase": "common_months_validation_2024",
+      "n_common_months": "7",
+      "common_months": "[\"2024-03\",\"2024-04\",\"2024-05\",\"2024-07\",\"2024-08\",\"2024-09\",\"2024-10\"]",
+      "coverage_fraction": "0.5833333333333334",
+      "mae": "0.29678335227414043",
+      "rmse": "0.3446437717777922",
+      "bias_mean": "-0.06409104050383278",
+      "status": "ok"
+    },
+    {
+      "comparison": "calendar_month_median__vs__harmonic_ridge__vs__previous_year_same_calendar_month",
+      "pivot_id": "8087",
+      "target": "ndvi_median",
+      "method": "previous_year_same_calendar_month",
+      "phase": "common_months_validation_2024",
+      "n_common_months": "7",
+      "common_months": "[\"2024-03\",\"2024-04\",\"2024-05\",\"2024-07\",\"2024-08\",\"2024-09\",\"2024-10\"]",
+      "coverage_fraction": "0.5833333333333334",
+      "mae": "0.34911298964704784",
+      "rmse": "0.4554680534010483",
+      "bias_mean": "-0.08284957706928253",
+      "status": "ok"
+    },
+    {
+      "comparison": "calendar_month_median__vs__harmonic_ridge__vs__previous_year_same_calendar_month",
+      "pivot_id": "8087",
+      "target": "ndmi_median",
+      "method": "calendar_month_median",
+      "phase": "common_months_validation_2024",
+      "n_common_months": "7",
+      "common_months": "[\"2024-03\",\"2024-04\",\"2024-05\",\"2024-07\",\"2024-08\",\"2024-09\",\"2024-10\"]",
+      "coverage_fraction": "0.5833333333333334",
+      "mae": "0.34248640512981054",
+      "rmse": "0.3875201210405839",
+      "bias_mean": "0.030339874875997857",
+      "status": "ok"
+    },
+    {
+      "comparison": "calendar_month_median__vs__harmonic_ridge__vs__previous_year_same_calendar_month",
+      "pivot_id": "8087",
+      "target": "ndmi_median",
+      "method": "harmonic_ridge",
+      "phase": "common_months_validation_2024",
+      "n_common_months": "7",
+      "common_months": "[\"2024-03\",\"2024-04\",\"2024-05\",\"2024-07\",\"2024-08\",\"2024-09\",\"2024-10\"]",
+      "coverage_fraction": "0.5833333333333334",
+      "mae": "0.33400525740287296",
+      "rmse": "0.36234045974699547",
+      "bias_mean": "0.019896811821195327",
+      "status": "ok"
+    },
+    {
+      "comparison": "calendar_month_median__vs__harmonic_ridge__vs__previous_year_same_calendar_month",
+      "pivot_id": "8087",
+      "target": "ndmi_median",
+      "method": "previous_year_same_calendar_month",
+      "phase": "common_months_validation_2024",
+      "n_common_months": "7",
+      "common_months": "[\"2024-03\",\"2024-04\",\"2024-05\",\"2024-07\",\"2024-08\",\"2024-09\",\"2024-10\"]",
+      "coverage_fraction": "0.5833333333333334",
+      "mae": "0.37005012053331093",
+      "rmse": "0.44565045022067207",
+      "bias_mean": "0.002244753995910287",
+      "status": "ok"
+    }
+  ],
+  "figures": {
+    "temporal_pivots.png": {
+      "sha256": "bf51ef31f3547df050517d97f402a0d500819b7cd94afa0402cc413e7e4f31cc",
+      "source": "data/recovery/curated/2022_2024_recovery_v1/temporal_pivots.png",
+      "bytes": 288363
+    },
+    "seasonal_heatmap.png": {
+      "sha256": "6d569581114dfdc8cb9c170c00f1d48d05e8d29c78852512928bcf92ddd78b8b",
+      "source": "data/recovery/curated/2022_2024_recovery_v1/seasonal_heatmap.png",
+      "bytes": 119267
+    },
+    "rain_context.png": {
+      "sha256": "2e8df82e9cfccb10554f20bef97a21bedc8e1e2cd2b66c43642e702d19815d3b",
+      "source": "data/recovery/curated/2022_2024_recovery_v1/rain_context.png",
+      "bytes": 105575
+    }
+  }
+}

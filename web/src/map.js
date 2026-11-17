@@ -26,9 +26,9 @@ function control(position, className, build) {
 }
 
 /** Cartography from contract geometry only. No external tiles or invented context. */
-export function createMap(container, geojson, onSelect) {
+export function createMap(container, geojson, onSelect, study = {}) {
   container.classList.add('ac-map');
-  container.setAttribute('aria-label', 'Mapa dos cinco pivôs ANA. Use Tab para selecionar polígonos, setas para navegar e + ou − para ampliar.');
+  container.setAttribute('aria-label', study.ariaLabel || 'Mapa dos cinco pivôs ANA. Use Tab para selecionar polígonos, setas para navegar e + ou − para ampliar.');
   const map = L.map(container, {
     zoomControl: true,
     attributionControl: true,
@@ -73,7 +73,7 @@ export function createMap(container, geojson, onSelect) {
       const detail = document.createElement('div');
       detail.append(
         textElement('strong', '', `Pivô ANA ${id}`),
-        textElement('div', '', `${number.format(feature.properties.area_ha)} ha · Paracatu, MG`),
+        textElement('div', '', `${number.format(feature.properties.area_ha)} ha · ${study.label || 'Paracatu, MG'}`),
         textElement('small', '', 'Clique ou pressione Enter para explorar'),
       );
       layer.bindTooltip(detail, { direction: 'top', className: 'ac-map-tooltip', sticky: true });
@@ -136,8 +136,8 @@ export function createMap(container, geojson, onSelect) {
 
   control('topleft', 'ac-map-location', element => {
     element.append(textElement('span', 'ac-map-location-eyebrow', 'ÁREA DE ESTUDO'));
-    element.append(textElement('strong', '', 'Paracatu · Minas Gerais'));
-    element.append(textElement('span', 'ac-map-location-sub', 'Bacia do rio São Marcos'));
+    element.append(textElement('strong', '', study.title || 'Paracatu · Minas Gerais'));
+    element.append(textElement('span', 'ac-map-location-sub', study.subtitle || 'Bacia do rio São Marcos'));
   }).addTo(map);
 
   control('topright', 'ac-map-actions', element => {

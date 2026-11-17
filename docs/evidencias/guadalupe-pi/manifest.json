@@ -1,0 +1,75 @@
+{
+  "region_id": "guadalupe-pi",
+  "validation_state": "exploratory_portability",
+  "note": "Small evidence snapshot. Raw COG windows, ESA XML and STAC caches remain local and are listed by SHA-256 in inventory.json. Offline raster reproduction requires that local cache.",
+  "files": {
+    "pivots.geojson": {
+      "sha256": "51d38995ab528c00b380ba8d4fce7fb041c70151702cf98e013e47d3edba859b",
+      "bytes": 39696
+    },
+    "policy.json": {
+      "sha256": "cd661cc7a67cb408304139508331bbf6966c09e584e053f3ec76c486ed7698e7",
+      "bytes": 892
+    },
+    "execution.json": {
+      "sha256": "0d40e6ec1b64d9bea115ca812e2c4cddbcb55d202f513dbb427df2464b371d9c",
+      "bytes": 1128
+    },
+    "inventory.json": {
+      "sha256": "06fc3016b92b62f4d8c4e26c998b3103c090fa2363c252e39f019ea3168b44b1",
+      "bytes": 25931
+    },
+    "offline-verification.json": {
+      "sha256": "80956bed3627e014d5732b6186c75b5c7ce053f21c9b4d9ed892b1ee4e205d04",
+      "bytes": 98
+    },
+    "curated/v1/observations.csv": {
+      "sha256": "f6d9d255ecea772d012da487c6e25d3c67866d921df332149dcd4a301b61fa73",
+      "bytes": 25481
+    },
+    "curated/v1/attempts.csv": {
+      "sha256": "43754ad49adf3dd5b1249aa04ed7941f1603cb17ad3f10001f2c0a0d50a42315",
+      "bytes": 26353
+    },
+    "curated/v1/monthly.csv": {
+      "sha256": "b012883c957cc436a8dca6ca91d613f4953f640af36567024bac75f1ea4e04d4",
+      "bytes": 63128
+    },
+    "curated/v1/precipitation.csv": {
+      "sha256": "e98391c2dfffe579d0b1f2f02ce2c89991488a24fe2aff3a6b793fd37dc7339f",
+      "bytes": 20874
+    },
+    "curated/v1/summary.json": {
+      "sha256": "8f8fd24853490bbec88993d6533014e6138e04d88588d6bc4b37e76adea068de",
+      "bytes": 1442
+    },
+    "batches/2023-01/radiometry.json": {
+      "sha256": "502e82285a2e1912fe86ce9683548118354d276fdac7a8132b636e8b6ffd0ce5",
+      "bytes": 2482
+    },
+    "batches/2023-07/radiometry.json": {
+      "sha256": "0223501207d573d0715a9bbdf32c7589930554eeeb0603dfd43133c001693992",
+      "bytes": 6912
+    },
+    "batches/2023-11/radiometry.json": {
+      "sha256": "3d89c4f485b0af26b8840f873958e1316711cdc254704eacfb12fed43b580448",
+      "bytes": 6915
+    },
+    "batches/2024-03/radiometry.json": {
+      "sha256": "ca8149a05730f7757c04288d4e3a5df09cc50b140bbce6c903714bb6bca9b634",
+      "bytes": 4697
+    },
+    "batches/2024-07/radiometry.json": {
+      "sha256": "2ae756c66523fc288c195d2749c670629e048ef57097da195338ecf40d9ac4c8",
+      "bytes": 6912
+    },
+    "batches/2024-11/radiometry.json": {
+      "sha256": "dbd367eb2ff3af2e1dcba30798adc7042f83e0c575dc51aec6f9c9b3b55017a3",
+      "bytes": 4699
+    },
+    "scene-summary.csv": {
+      "sha256": "c5c922061af1ccc274bbb1c64a9c8c5fcc20a3c91a444f556db28f683e38bd6d",
+      "bytes": 1149
+    }
+  }
+}

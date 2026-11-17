@@ -1,0 +1,625 @@
+{
+  "files": [
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:35:06.251900+00:00",
+      "path": "raw/pivot-layer.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0?f=json",
+      "bytes": 5174,
+      "sha256": "3da2347075c4ca96a4878a0b3475e2f5e44bec588903cc130c419b3b5963a6b8"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:35:06.325904+00:00",
+      "path": "raw/seat-layer.json",
+      "source": "https://portal1.snirh.gov.br/arcgis/rest/services/DADOSABERTOS/Sede_Municipais/MapServer/0?f=json",
+      "bytes": 6182,
+      "sha256": "3b3dd4b59f1c60913303beab1ce31636a71447df89b41f1f69bd4266eabb3666"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:35:43.565430+00:00",
+      "path": "raw/caxias-seat.geojson",
+      "source": "https://portal1.snirh.gov.br/arcgis/rest/services/DADOSABERTOS/Sede_Municipais/MapServer/0/query?f=geojson&where=CD_GEOCODM%3D%272103000%27&outFields=%2A&outSR=4326",
+      "bytes": 633,
+      "sha256": "b23e0a951e910d679aca5f47a43f1001d072527985b0891c2052b36d332d92d3"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:35:47.706705+00:00",
+      "path": "raw/MA-count.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27MA%27&f=json&returnCountOnly=true",
+      "bytes": 13,
+      "sha256": "73c6c36c9d18f9e7b9ee501c77a214aaf94a2bb331fcebd52a2b383618aa917e"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:35:47.827762+00:00",
+      "path": "raw/MA-ids.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27MA%27&f=json&returnIdsOnly=true",
+      "bytes": 803,
+      "sha256": "f5d93e3be4728ac1cd20e8cf23e66291a526b0041c3b5f3196a77836e40f851f"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:35:48.338648+00:00",
+      "path": "raw/batch-80631a60fed099d3.geojson",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?objectIds=5604%2C5605%2C5606%2C5607%2C5608%2C5609%2C5610%2C5611%2C5612%2C5613%2C5614%2C5615%2C5616%2C5617%2C5618%2C5619%2C5620%2C5621%2C5622%2C5623%2C5624%2C5625%2C5626%2C5627%2C5628%2C5629%2C5630%2C5631%2C5632%2C5633%2C5634%2C5635%2C5636%2C5637%2C5638%2C5639%2C5640%2C6088%2C6152%2C6153%2C6214%2C6215%2C6216%2C6217%2C6218%2C6219%2C6220%2C6221%2C6233%2C6234%2C6235%2C6236%2C6237%2C6238%2C16817%2C16818%2C16819%2C16820%2C16821%2C16822%2C16823%2C17172%2C17173%2C17175%2C17176%2C17177%2C17178%2C17179%2C17180%2C17181%2C17182%2C17183%2C17184%2C17185%2C17186%2C17187%2C17188%2C17189%2C17190%2C17191%2C17192%2C17193%2C18920%2C18921%2C18922%2C18923%2C18924%2C18925%2C18926%2C18927%2C18928%2C18929%2C18930%2C18931%2C18932%2C18933%2C18934%2C18935%2C18936%2C18937%2C18938%2C18939%2C18940%2C18941%2C18942%2C18943%2C18944%2C18945%2C18946%2C18947%2C18948%2C18949%2C18950%2C18951%2C18952%2C18953%2C18954%2C18955%2C18956%2C18957%2C18958%2C18959%2C18960%2C18961%2C18962%2C18963%2C18964%2C18966%2C18967%2C18968%2C18969%2C18970%2C18971%2C18972%2C18973%2C18974&outFields=%2A&outSR=4674&f=geojson",
+      "bytes": 1309056,
+      "sha256": "22bae20af99b46cb40bec57d17a5d1d4055648480741319a1eeba80dd5f66cb3"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:35:48.458598+00:00",
+      "path": "raw/PI-count.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27PI%27&f=json&returnCountOnly=true",
+      "bytes": 12,
+      "sha256": "514aa02b33f0f3bd55a6720137352149f8a3ab2bfe5a74caf52e3b54b9d061cb"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:35:48.580553+00:00",
+      "path": "raw/PI-ids.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27PI%27&f=json&returnIdsOnly=true",
+      "bytes": 251,
+      "sha256": "f15afb277a0632aba7db515208e5cdc4089890a87f7c33429d874e6052cfca5e"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:35:48.688542+00:00",
+      "path": "raw/batch-24a568c9f951e7d0.geojson",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?objectIds=5790%2C5791%2C5792%2C5793%2C5794%2C5795%2C5796%2C5797%2C5798%2C5799%2C5800%2C5801%2C5802%2C5803%2C5804%2C5805%2C5806%2C5807%2C5808%2C5809%2C5810%2C5811%2C5812%2C5813%2C5814%2C5815%2C5816%2C6424%2C6425%2C6464%2C16885%2C16886%2C16887%2C17174%2C17998%2C17999%2C18000%2C18965%2C18976%2C18977&outFields=%2A&outSR=4674&f=geojson",
+      "bytes": 179226,
+      "sha256": "a4ba1c7c0c725a30737e5e6beff08e6fddd69c04fa45040c57c9c2811a91bf65"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:35:48.844406+00:00",
+      "path": "raw/2103000-count.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27MA%27+AND+MUNIC_CD%3D%272103000%27&f=json&returnCountOnly=true",
+      "bytes": 11,
+      "sha256": "618de7d9f46f3f697d827a1b6d84974760d5deda62e4e592adaa3c646602a94c"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:35:48.983145+00:00",
+      "path": "raw/2103000-ids.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27MA%27+AND+MUNIC_CD%3D%272103000%27&f=json&returnIdsOnly=true",
+      "bytes": 44,
+      "sha256": "c34c204c4248f806d2d44c364319013c12941e781ef4597cf60321785674fcaa"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:35:49.121849+00:00",
+      "path": "raw/2112209-count.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27MA%27+AND+MUNIC_CD%3D%272112209%27&f=json&returnCountOnly=true",
+      "bytes": 11,
+      "sha256": "a7b59f14220279bf034e35863bb5c8f0e489b130e214b6eead2d04fe26f2ea8b"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:35:49.254162+00:00",
+      "path": "raw/2112209-ids.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27MA%27+AND+MUNIC_CD%3D%272112209%27&f=json&returnIdsOnly=true",
+      "bytes": 70,
+      "sha256": "c1baf100662e17f8adf794ff70668fb1cb92976b0627c1d9f6e59e5b4d3052b8"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:01.469351+00:00",
+      "path": "raw/ibge-localities-MA.json",
+      "source": "https://servicodados.ibge.gov.br/api/v1/localidades/estados/MA/municipios",
+      "bytes": 97316,
+      "sha256": "a563ef683ded9a8aa9e898e1c2e153888d3ff914564019a1ccd1c1420739ed53"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:01.554840+00:00",
+      "path": "raw/ibge-localities-PI.json",
+      "source": "https://servicodados.ibge.gov.br/api/v1/localidades/estados/PI/municipios",
+      "bytes": 99743,
+      "sha256": "f485605d2fd236462fb59f1c61dceed09aa105dc6b0c9224a60745277a3db8bb"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:01.676904+00:00",
+      "path": "raw/municipality-2112209.geojson",
+      "source": "https://servicodados.ibge.gov.br/api/v3/malhas/municipios/2112209?formato=application%2Fvnd.geo%2Bjson&qualidade=maxima",
+      "bytes": 4271,
+      "sha256": "605a55efa6bf0d1719a5cf360dbcac18ab4be6df89de514d0300640681a7873e"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:01.960078+00:00",
+      "path": "raw/2204501-count.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27PI%27+AND+MUNIC_CD%3D%272204501%27&f=json&returnCountOnly=true",
+      "bytes": 12,
+      "sha256": "8a5c7f0a249309a0a490436246d7e4c75abc97488ad2da0c6e85a517ac13cdd2"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:02.093032+00:00",
+      "path": "raw/2204501-ids.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27PI%27+AND+MUNIC_CD%3D%272204501%27&f=json&returnIdsOnly=true",
+      "bytes": 101,
+      "sha256": "449fc9700123d37cb4ef639e5a92396519db3ce41c8d7eee220fb42d105ef11f"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:02.167784+00:00",
+      "path": "raw/municipality-2204501.geojson",
+      "source": "https://servicodados.ibge.gov.br/api/v3/malhas/municipios/2204501?formato=application%2Fvnd.geo%2Bjson&qualidade=maxima",
+      "bytes": 3981,
+      "sha256": "b7229865e8f26020d549347de450d3d5225bd4cf4020cd13e25a0c6987a676b2"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:02.305997+00:00",
+      "path": "raw/2205300-count.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27PI%27+AND+MUNIC_CD%3D%272205300%27&f=json&returnCountOnly=true",
+      "bytes": 11,
+      "sha256": "57413ce83ee1d989e384dfd3a82c6e2d9052a23c4204706bd2d7df11aa4c2d7c"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:02.442559+00:00",
+      "path": "raw/2205300-ids.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27PI%27+AND+MUNIC_CD%3D%272205300%27&f=json&returnIdsOnly=true",
+      "bytes": 53,
+      "sha256": "eb71067f2a22ab1ad93061485d5b03e3e444970d74a9a6fa8a37b9761e30adff"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:02.515945+00:00",
+      "path": "raw/municipality-2205300.geojson",
+      "source": "https://servicodados.ibge.gov.br/api/v3/malhas/municipios/2205300?formato=application%2Fvnd.geo%2Bjson&qualidade=maxima",
+      "bytes": 3319,
+      "sha256": "c0cd2c88970180d49b1887dc86b37873bfd9afea5e21619b749c175a6c3614de"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:02.652354+00:00",
+      "path": "raw/2205607-count.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27PI%27+AND+MUNIC_CD%3D%272205607%27&f=json&returnCountOnly=true",
+      "bytes": 11,
+      "sha256": "618de7d9f46f3f697d827a1b6d84974760d5deda62e4e592adaa3c646602a94c"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:02.781312+00:00",
+      "path": "raw/2205607-ids.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27PI%27+AND+MUNIC_CD%3D%272205607%27&f=json&returnIdsOnly=true",
+      "bytes": 44,
+      "sha256": "c34c204c4248f806d2d44c364319013c12941e781ef4597cf60321785674fcaa"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:02.912921+00:00",
+      "path": "raw/2101400-count.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27MA%27+AND+MUNIC_CD%3D%272101400%27&f=json&returnCountOnly=true",
+      "bytes": 12,
+      "sha256": "9705a251c7441ed4f4ebe50c71d3e81e0d9b09da03ce9985f04c13f92df8ba40"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:03.046916+00:00",
+      "path": "raw/2101400-ids.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27MA%27+AND+MUNIC_CD%3D%272101400%27&f=json&returnIdsOnly=true",
+      "bytes": 313,
+      "sha256": "c2cf75e12a12ea2a902d1a5b8c9896a0560f296cb99d88867053db1807a7c5b0"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:03.179651+00:00",
+      "path": "raw/municipality-2101400.geojson",
+      "source": "https://servicodados.ibge.gov.br/api/v3/malhas/municipios/2101400?formato=application%2Fvnd.geo%2Bjson&qualidade=maxima",
+      "bytes": 33491,
+      "sha256": "0566296e782682cb923511725a5833259a42ce53c95abfe1de0bac361b8db48f"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:03.470358+00:00",
+      "path": "raw/2109502-count.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27MA%27+AND+MUNIC_CD%3D%272109502%27&f=json&returnCountOnly=true",
+      "bytes": 12,
+      "sha256": "52aa0abe7b47012a5285efab6e22093d351180321938c1cdd985859a4bda1c0d"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:03.601450+00:00",
+      "path": "raw/2109502-ids.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27MA%27+AND+MUNIC_CD%3D%272109502%27&f=json&returnIdsOnly=true",
+      "bytes": 220,
+      "sha256": "5f7797f8f40978f5803a00e5b5d225a6f69ff6f92c00b957985cbae2036a43af"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:03.677871+00:00",
+      "path": "raw/municipality-2109502.geojson",
+      "source": "https://servicodados.ibge.gov.br/api/v3/malhas/municipios/2109502?formato=application%2Fvnd.geo%2Bjson&qualidade=maxima",
+      "bytes": 25662,
+      "sha256": "cbff65a5c7467981987291b05419c354114a704098d67de42c98635b4e5c60a1"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:03.831195+00:00",
+      "path": "raw/2106102-count.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27MA%27+AND+MUNIC_CD%3D%272106102%27&f=json&returnCountOnly=true",
+      "bytes": 11,
+      "sha256": "0c07187ea6d064441225b3cba26a7b1e8bc702fcf332b457dae8e26892ba68a6"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:03.967877+00:00",
+      "path": "raw/2106102-ids.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27MA%27+AND+MUNIC_CD%3D%272106102%27&f=json&returnIdsOnly=true",
+      "bytes": 59,
+      "sha256": "e553baa885a128b1d3d2b2d2ee411047c20d48746228b98e48019f24bdf5b623"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:04.042120+00:00",
+      "path": "raw/municipality-2106102.geojson",
+      "source": "https://servicodados.ibge.gov.br/api/v3/malhas/municipios/2106102?formato=application%2Fvnd.geo%2Bjson&qualidade=maxima",
+      "bytes": 12641,
+      "sha256": "a8e97b7ee76b50a725dcd281059db896af359e3f8ed3e5a3b0c961980a3a6951"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:04.194554+00:00",
+      "path": "raw/2101608-count.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27MA%27+AND+MUNIC_CD%3D%272101608%27&f=json&returnCountOnly=true",
+      "bytes": 11,
+      "sha256": "a5fb8eb97856970b61d9f466deb64f7659e835ee8ec5497003b78438fe888cad"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:04.326567+00:00",
+      "path": "raw/2101608-ids.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27MA%27+AND+MUNIC_CD%3D%272101608%27&f=json&returnIdsOnly=true",
+      "bytes": 62,
+      "sha256": "c250beae768d6118dee3835b8783d54118f671775d79a9207a1d6d609fa8baa4"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:04.398093+00:00",
+      "path": "raw/municipality-2101608.geojson",
+      "source": "https://servicodados.ibge.gov.br/api/v3/malhas/municipios/2101608?formato=application%2Fvnd.geo%2Bjson&qualidade=maxima",
+      "bytes": 19846,
+      "sha256": "a6a50a3da50fdd846a82f3a05ef3701828672182a0a312eeb100d0c81c2c77ff"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:04.534026+00:00",
+      "path": "raw/2103505-count.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27MA%27+AND+MUNIC_CD%3D%272103505%27&f=json&returnCountOnly=true",
+      "bytes": 11,
+      "sha256": "0c07187ea6d064441225b3cba26a7b1e8bc702fcf332b457dae8e26892ba68a6"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:04.668481+00:00",
+      "path": "raw/2103505-ids.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27MA%27+AND+MUNIC_CD%3D%272103505%27&f=json&returnIdsOnly=true",
+      "bytes": 59,
+      "sha256": "e105c6f5812272c9a3de661b4a5ce56447ae476ce4908481e7141b429149eed3"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:04.740953+00:00",
+      "path": "raw/municipality-2103505.geojson",
+      "source": "https://servicodados.ibge.gov.br/api/v3/malhas/municipios/2103505?formato=application%2Fvnd.geo%2Bjson&qualidade=maxima",
+      "bytes": 12653,
+      "sha256": "a913f171868a3d55d5ae3113215a02f270d84f89195b9dddfed3f893a9cea2b0"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:07.300321+00:00",
+      "path": "raw/stac-2112209/2063e04a6eb5a2fa/page-0001.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=d1f451ffeb63612d8cf22eea92b376df1c66d0607901ffe29e5c02f29f8f9e66]",
+      "bytes": 1765779,
+      "sha256": "b7131250f558010040dac31024215983839ed676b7b58b4047b15e397a388b82"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:09.324351+00:00",
+      "path": "raw/stac-2112209/2063e04a6eb5a2fa/page-0002.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=215b12d212c54f31854ceaeed64502a69ab42e60b82587e20546f21b4d75cb97]",
+      "bytes": 952565,
+      "sha256": "43e0ee192a71a7cfd1c42dd507994e473a387a54231dc8c30a99fbe44b640d23"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:10.035661+00:00",
+      "path": "raw/stac-2112209/2063e04a6eb5a2fa/page-0003.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=a51910c8e5d8a83ab4d9901c43ee6e48b67b3113fa9c1360242a76eab50c6d64]",
+      "bytes": 278,
+      "sha256": "7e13d010fcad40a1f9968c7336dc936ce565f42f02745a2c469c81c0e5a36b06"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:12.363782+00:00",
+      "path": "raw/stac-2204501/1135f791a6e32a70/page-0001.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=114ba8b9549de0c620ab32ecb818264adb7d5effa9ef6754a11c9bbfdee921c9]",
+      "bytes": 1774870,
+      "sha256": "42181637f08a529c7d76894b40ba8e9f7f79f7c1cc1d208d36bb8b879d273d3c"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:14.320032+00:00",
+      "path": "raw/stac-2204501/1135f791a6e32a70/page-0002.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=a84a40eb0a8fdee2f1194104569b493315c230c65931f86e1bdd9369eadffe66]",
+      "bytes": 820257,
+      "sha256": "8b7bee21b1660887efd381c7d31736879b2ca8a1ee64934522c101e53b6f9c05"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:15.053820+00:00",
+      "path": "raw/stac-2204501/1135f791a6e32a70/page-0003.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=da68fcfaa13e205e492f5345a8550db0e116a1a287389a64e2d9518f8363017e]",
+      "bytes": 278,
+      "sha256": "da6bfd33295e557b85e6aee3db54a790374600476600cc25b260b93910b61688"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:17.888391+00:00",
+      "path": "raw/stac-2101400/974029e9d2632e99/page-0001.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=b0ad9440c34f49cd93844080ff79e9ef232a6c6fccec50053a91d6136cc979f0]",
+      "bytes": 1833206,
+      "sha256": "044e72e04025172641928605d71f27dd1cc01c863a7e198137b4062857d8a043"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:20.364969+00:00",
+      "path": "raw/stac-2101400/974029e9d2632e99/page-0002.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=7c426132b5fdea65879009d0ee91e453157c81728486dc395ae010a4d22a40a3]",
+      "bytes": 930316,
+      "sha256": "75b7f4000af680af2ef9033d378f76ea04ce90a629684324d532adbb6cae9b2a"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:21.481604+00:00",
+      "path": "raw/stac-2101400/974029e9d2632e99/page-0003.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=0ebf0b0850515a923379dbaeed23d5a29536799128c0c6b9be1c37c2aff40d5d]",
+      "bytes": 278,
+      "sha256": "f5ed5265a15fc72e77078a5ef562127f382513e338c7225b64b1f92f80cb5f02"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:23.774237+00:00",
+      "path": "raw/stac-2109502/bf6982324420723e/page-0001.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=27f37b0d70eccf378d8a0351582256bdd08c02b1ad38c30117c1ad2519791b24]",
+      "bytes": 1786616,
+      "sha256": "222522a414894de08629fe845eefc981b30b2912e3324916ddab1c24dcbbb6a6"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:25.957276+00:00",
+      "path": "raw/stac-2109502/bf6982324420723e/page-0002.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=49a517d55c6e2a058b2e3f4700325f7bf45ef5060c3bcdae4fadc6c48ecfa7d8]",
+      "bytes": 883726,
+      "sha256": "8fbd779fa5a44bdf59a3c0311109d1cb5f1ffb41448ab7c3b5658a5c9a464830"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:26.889785+00:00",
+      "path": "raw/stac-2109502/bf6982324420723e/page-0003.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=a2934fc6d56f0f70ea3dec33f60b9c54105790272fd9bab30aceb96866aec044]",
+      "bytes": 278,
+      "sha256": "f5ed5265a15fc72e77078a5ef562127f382513e338c7225b64b1f92f80cb5f02"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:29.480077+00:00",
+      "path": "raw/stac-2106102/f5ecb5770b0bd8a6/page-0001.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=95beee150ffb3730dbcbacdd4b1c2a0726328da114ce4eb5a1ad8401bd9472a3]",
+      "bytes": 1798642,
+      "sha256": "7a72f81180af890fc3413174bbf3d27eb8d22ee7458118dcf9d3d72dc87b9d75"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:31.643648+00:00",
+      "path": "raw/stac-2106102/f5ecb5770b0bd8a6/page-0002.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=7474c9dd76431dc8fb83e61a4083bc8191345955d7cf1fa0ac4492fafc0f141f]",
+      "bytes": 863971,
+      "sha256": "f7287372626a8682f100c3f292a357e2dc49e49b64a368f2b40e02c14654f8d0"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:32.070213+00:00",
+      "path": "raw/stac-2106102/f5ecb5770b0bd8a6/page-0003.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=828adcc0405abebad7ce45a8b236ef335e25d83a32dd96b39e5c5daf4d376d1a]",
+      "bytes": 278,
+      "sha256": "c3325de5989e7aa9c4df7ef2ba7134fbbcec4485752c5befa7880d3a3d6434c0"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:34.368994+00:00",
+      "path": "raw/stac-2101608/6006fdf5267e741e/page-0001.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=990bb4648eb2c07903bf53b110e531663aa777fac8fad9065dbae2886fb72367]",
+      "bytes": 1786607,
+      "sha256": "e66fd49536b378769e39ccf4c509140c420b94d126d325b8f90aee84387271bc"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:35.197526+00:00",
+      "path": "raw/stac-2101608/6006fdf5267e741e/page-0002.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=a14177fe218e0a3891af4ec3bb3593d0a2195c4c5dd42103801d0f358880f287]",
+      "bytes": 1780132,
+      "sha256": "836b295405994c8492580315ac6354581529d453846145fc7aa3caa9bae55437"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:37.492646+00:00",
+      "path": "raw/stac-2101608/6006fdf5267e741e/page-0003.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=4c2bc09c35e89977a2115dbe7835775ab79c73e320ac28491374e255546893ec]",
+      "bytes": 1771316,
+      "sha256": "df79715b09cfd5eb986a54d99deb56e28191b66b822a4204fdf3f1fdebcc0367"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:39.827155+00:00",
+      "path": "raw/stac-2101608/6006fdf5267e741e/page-0004.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=1336d8d591c054e8808beb83f0ace24bed0fac09784ae79674a60bd626d56c3b]",
+      "bytes": 1769898,
+      "sha256": "cc9aca117874524a63909a906d1000439b7d9a88478576d7dd974d928601f7d3"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:41.789669+00:00",
+      "path": "raw/stac-2101608/6006fdf5267e741e/page-0005.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=f63f556891cfc444f5b4d259d7ab7f9df7de99fd5b595cdd2b8ba45bfe526b4b]",
+      "bytes": 687273,
+      "sha256": "c1ec5b204f6c1af15cf5723f9f8d0c27f585bfc16510aedb756bd216762d6816"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:42.555330+00:00",
+      "path": "raw/stac-2101608/6006fdf5267e741e/page-0006.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=90a33e56664568154dfa5ccdb695468dd2ac85a0ad304199ef244cda1d03691e]",
+      "bytes": 278,
+      "sha256": "929defe23eafedeb3d9ea21f2bc0eff349436c033866acd6dc8f3fd0205e6c1d"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:44.897140+00:00",
+      "path": "raw/stac-2103505/7ee0488b4a5ba1dc/page-0001.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=735cb1502d4bdc945aab2ec83478a57e5a4ccbb93b717505d8ec7f39f967468e]",
+      "bytes": 1776138,
+      "sha256": "64c65dc18fa69185d470a55a45ed239b3b49e5aab60fc0ee1ec92cb61cd045c5"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:46.834913+00:00",
+      "path": "raw/stac-2103505/7ee0488b4a5ba1dc/page-0002.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=2753fecd553715b4cfaa64de37a5b6b7a00bf04e1fdf5effcb6472a64fdeab12]",
+      "bytes": 841464,
+      "sha256": "0c0ce220ae3d015ac1953e5a2e7525d804c1c71ccf5919181b92c04a59ae27d5"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:37:47.607988+00:00",
+      "path": "raw/stac-2103505/7ee0488b4a5ba1dc/page-0003.json",
+      "source": "https://earth-search.aws.element84.com/v1/search [corpo sha256=d1d77fcc2526e77c590a963b30cc99811c7e45458aeca1d1b28b8901e5d9f391]",
+      "bytes": 278,
+      "sha256": "c3325de5989e7aa9c4df7ef2ba7134fbbcec4485752c5befa7880d3a3d6434c0"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:40:09.844031+00:00",
+      "path": "raw/municipality-2103000.geojson",
+      "source": "https://servicodados.ibge.gov.br/api/v3/malhas/municipios/2103000?formato=application%2Fvnd.geo%2Bjson&qualidade=maxima",
+      "bytes": 12668,
+      "sha256": "96697ef3f39ca1342237ba237f954e0261d23ccecef932c7de4f059aaccdbfbb"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:40:10.026307+00:00",
+      "path": "raw/municipality-2205607.geojson",
+      "source": "https://servicodados.ibge.gov.br/api/v3/malhas/municipios/2205607?formato=application%2Fvnd.geo%2Bjson&qualidade=maxima",
+      "bytes": 1212,
+      "sha256": "3165a1f3f74b99037fd63c6864cc1ee282d20d58640d9fde0b625ed1448903a9"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:40:10.600812+00:00",
+      "path": "raw/2100808-count.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27MA%27+AND+MUNIC_CD%3D%272100808%27&f=json&returnCountOnly=true",
+      "bytes": 11,
+      "sha256": "6aea6dfe6561984cdc5c54ead84d47d2cf29e48253ae282aef237404adad4661"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:40:10.739502+00:00",
+      "path": "raw/2100808-ids.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27MA%27+AND+MUNIC_CD%3D%272100808%27&f=json&returnIdsOnly=true",
+      "bytes": 47,
+      "sha256": "fc30cb651a70a56676a7cb4b2736bdb3267486332b139d3a7a0e8a32cc34373c"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:40:10.811352+00:00",
+      "path": "raw/municipality-2100808.geojson",
+      "source": "https://servicodados.ibge.gov.br/api/v3/malhas/municipios/2100808?formato=application%2Fvnd.geo%2Bjson&qualidade=maxima",
+      "bytes": 9632,
+      "sha256": "5ff0c94cf7f7c28579f4b6331dd784d4e8d720723cf997a2230c7f0595575310"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:40:11.023893+00:00",
+      "path": "raw/2107803-count.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27MA%27+AND+MUNIC_CD%3D%272107803%27&f=json&returnCountOnly=true",
+      "bytes": 11,
+      "sha256": "57413ce83ee1d989e384dfd3a82c6e2d9052a23c4204706bd2d7df11aa4c2d7c"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:40:11.162759+00:00",
+      "path": "raw/2107803-ids.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27MA%27+AND+MUNIC_CD%3D%272107803%27&f=json&returnIdsOnly=true",
+      "bytes": 53,
+      "sha256": "8eb5e3c9c98e3e87238aab04e9689846b72100c6c82a8f94e1879d0b0fc36ae1"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:40:11.233709+00:00",
+      "path": "raw/municipality-2107803.geojson",
+      "source": "https://servicodados.ibge.gov.br/api/v3/malhas/municipios/2107803?formato=application%2Fvnd.geo%2Bjson&qualidade=maxima",
+      "bytes": 11304,
+      "sha256": "0f05cb03bcaff3af31e3214df640834d71d5252d268603c9dacf5fb30e074eab"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:40:11.384885+00:00",
+      "path": "raw/2207504-count.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27PI%27+AND+MUNIC_CD%3D%272207504%27&f=json&returnCountOnly=true",
+      "bytes": 11,
+      "sha256": "6aea6dfe6561984cdc5c54ead84d47d2cf29e48253ae282aef237404adad4661"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:40:11.519690+00:00",
+      "path": "raw/2207504-ids.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27PI%27+AND+MUNIC_CD%3D%272207504%27&f=json&returnIdsOnly=true",
+      "bytes": 47,
+      "sha256": "94cc22b8c7b55a2738359111f24edb8e5de2f41d70e9efdfd11e29151a71837d"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:40:11.592840+00:00",
+      "path": "raw/municipality-2207504.geojson",
+      "source": "https://servicodados.ibge.gov.br/api/v3/malhas/municipios/2207504?formato=application%2Fvnd.geo%2Bjson&qualidade=maxima",
+      "bytes": 4311,
+      "sha256": "be65d87537d07cb2d91419855ea20a9a1d30ac0d806d88e4fc2ff2d0ff9e95d0"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:40:11.755402+00:00",
+      "path": "raw/2211001-count.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27PI%27+AND+MUNIC_CD%3D%272211001%27&f=json&returnCountOnly=true",
+      "bytes": 11,
+      "sha256": "6aea6dfe6561984cdc5c54ead84d47d2cf29e48253ae282aef237404adad4661"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:40:11.900733+00:00",
+      "path": "raw/2211001-ids.json",
+      "source": "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0/query?where=UF%3D%27PI%27+AND+MUNIC_CD%3D%272211001%27&f=json&returnIdsOnly=true",
+      "bytes": 47,
+      "sha256": "01b74617d12308df0f7f8f3df5e31f035d7fc73cca68589c497c7d6c9b5b214a"
+    },
+    {
+      "event": "file",
+      "at_utc": "2026-11-15T17:40:11.973676+00:00",
+      "path": "raw/municipality-2211001.geojson",
+      "source": "https://servicodados.ibge.gov.br/api/v3/malhas/municipios/2211001?formato=application%2Fvnd.geo%2Bjson&qualidade=maxima",
+      "bytes": 5551,
+      "sha256": "a8ad8a8d25f8078c65cf15a75871e6f5bb671f567cb00ff232aaf91c39ece117"
+    }
+  ],
+  "http_requests_including_failures": 83,
+  "http_transfer_bytes": 25405987,
+  "recorded_file_bytes": 25685049,
+  "failed_http_requests": 6,
+  "note": "Wire bytes are recorded before decompression; raw caches remain local and are not required for public-artifact integrity verification."
+}

@@ -1,0 +1,138 @@
+{
+  "catalog_sha256": "1e9cbde3c5ddcb9e919a97592361efa8ae0e84743a0a0447f0d7a28ae5376a71",
+  "products": [
+    {
+      "scene_id": "S2A_T23MPN_20240309T132233_L2A",
+      "collection": "sentinel-2-c1-l2a",
+      "provider": "Element 84 Earth Search",
+      "product": "S2A_MSIL2A_20240309T132231_N0510_R038_T23MPN_20240309T162250.SAFE",
+      "processing_baseline": "05.10",
+      "method": "C1 raster:bands independently matched to product-specific ESA BOA XML; downloaded COG grid checked",
+      "xml_path": "radiometry/S2A_T23MPN_20240309T132233_L2A.xml",
+      "xml_source": "https://e84-earth-search-sentinel-data.s3.us-west-2.amazonaws.com/sentinel-2-c1-l2a/23/M/PN/2024/3/S2A_T23MPN_20240309T132233_L2A/product_metadata.xml",
+      "xml_sha256": "adc283e98815f539a9cffed36d178715379be41e270d11846de5bc9c2eb4a004",
+      "calibration": {
+        "contract": "pc-safe-boa-v1",
+        "product_uri": "S2A_MSIL2A_20240309T132231_N0510_R038_T23MPN_20240309T162250.SAFE",
+        "processing_baseline": "05.10",
+        "formula": "reflectance=(DN+BOA_ADD_OFFSET)/BOA_QUANTIFICATION_VALUE",
+        "quantification_value": 10000.0,
+        "special_values": {
+          "NODATA": 0,
+          "SATURATED": 65535
+        },
+        "offset_policy": "explicit_safe_band_offsets",
+        "bands": {
+          "red": {
+            "band_id": "3",
+            "scale": 0.0001,
+            "offset_dn": -1000.0,
+            "offset": -0.1
+          },
+          "nir": {
+            "band_id": "7",
+            "scale": 0.0001,
+            "offset_dn": -1000.0,
+            "offset": -0.1
+          },
+          "swir16": {
+            "band_id": "11",
+            "scale": 0.0001,
+            "offset_dn": -1000.0,
+            "offset": -0.1
+          }
+        }
+      },
+      "bands": {
+        "red": {
+          "nodata": 0,
+          "data_type": "uint16",
+          "spatial_resolution": 10,
+          "scale": 0.0001,
+          "offset": -0.1
+        },
+        "nir": {
+          "nodata": 0,
+          "data_type": "uint16",
+          "spatial_resolution": 10,
+          "scale": 0.0001,
+          "offset": -0.1
+        },
+        "swir16": {
+          "nodata": 0,
+          "data_type": "uint16",
+          "spatial_resolution": 20,
+          "scale": 0.0001,
+          "offset": -0.1
+        }
+      }
+    },
+    {
+      "scene_id": "S2B_T23MPN_20240324T132232_L2A",
+      "collection": "sentinel-2-c1-l2a",
+      "provider": "Element 84 Earth Search",
+      "product": "S2B_MSIL2A_20240324T132229_N0510_R038_T23MPN_20240324T143656.SAFE",
+      "processing_baseline": "05.10",
+      "method": "C1 raster:bands independently matched to product-specific ESA BOA XML; downloaded COG grid checked",
+      "xml_path": "radiometry/S2B_T23MPN_20240324T132232_L2A.xml",
+      "xml_source": "https://e84-earth-search-sentinel-data.s3.us-west-2.amazonaws.com/sentinel-2-c1-l2a/23/M/PN/2024/3/S2B_T23MPN_20240324T132232_L2A/product_metadata.xml",
+      "xml_sha256": "87f4e3c9c8db3d18b8402a1a55d8acee65f097cd59dc793b4cb290c9a9afdbc5",
+      "calibration": {
+        "contract": "pc-safe-boa-v1",
+        "product_uri": "S2B_MSIL2A_20240324T132229_N0510_R038_T23MPN_20240324T143656.SAFE",
+        "processing_baseline": "05.10",
+        "formula": "reflectance=(DN+BOA_ADD_OFFSET)/BOA_QUANTIFICATION_VALUE",
+        "quantification_value": 10000.0,
+        "special_values": {
+          "NODATA": 0,
+          "SATURATED": 65535
+        },
+        "offset_policy": "explicit_safe_band_offsets",
+        "bands": {
+          "red": {
+            "band_id": "3",
+            "scale": 0.0001,
+            "offset_dn": -1000.0,
+            "offset": -0.1
+          },
+          "nir": {
+            "band_id": "7",
+            "scale": 0.0001,
+            "offset_dn": -1000.0,
+            "offset": -0.1
+          },
+          "swir16": {
+            "band_id": "11",
+            "scale": 0.0001,
+            "offset_dn": -1000.0,
+            "offset": -0.1
+          }
+        }
+      },
+      "bands": {
+        "red": {
+          "nodata": 0,
+          "data_type": "uint16",
+          "spatial_resolution": 10,
+          "scale": 0.0001,
+          "offset": -0.1
+        },
+        "nir": {
+          "nodata": 0,
+          "data_type": "uint16",
+          "spatial_resolution": 10,
+          "scale": 0.0001,
+          "offset": -0.1
+        },
+        "swir16": {
+          "nodata": 0,
+          "data_type": "uint16",
+          "spatial_resolution": 20,
+          "scale": 0.0001,
+          "offset": -0.1
+        }
+      }
+    }
+  ],
+  "limitation": "Independent per-product XML/STAC/COG consistency checks; no field radiometric validation or transfer of Paracatu PC calibration approval"
+}
