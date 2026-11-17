@@ -5,6 +5,7 @@
  */
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MODULES = process.env.AQUACLIMA_ARTIFACT_MODULES;
@@ -20,6 +21,7 @@ await fs.mkdir(BUILD, {recursive:true});
 await fs.mkdir(OUT, {recursive:true});
 const evidence = JSON.parse(await fs.readFile(path.join(OUT, 'evidencias-paracatu.json'), 'utf8'));
 const regional = JSON.parse(await fs.readFile(path.join(OUT, 'evidencias-regionais.json'), 'utf8'));
+const comparison = JSON.parse(await fs.readFile(path.join(ROOT, 'docs/evidencias/guadalupe-pi/comparison/provenance.json'), 'utf8'));
 if(evidence.observations !== 256 || evidence.observed_pivot_months !== 141) throw new Error('Frozen evidence mismatch');
 const deck = Presentation.create({slideSize:{width:1280,height:720}});
 const C = {ink:'#173f32', secondary:'#435e50',paper:'#f7f8f2',teal:'#247b75',olive:'#8ca55b',light:'#dce7d5'};
@@ -32,7 +34,7 @@ function text(slide, value, x,y,w,h,size=28,bold=false,color=C.ink){
 function base(title){const s=deck.slides.add();s.background.fill=C.paper;text(s,title,64,42,1152,88,44,true);return s;}
 function foot(s,value){text(s,value,64,648,1152,45,18,false,C.secondary);}
 function note(s,value){s.speakerNotes.text=value;}
-async function picture(s,relative,x,y,w,h){const b=await fs.readFile(path.join(ROOT,relative));s.images.add({blob:b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength),contentType:relative.endsWith('.jpg')?'image/jpeg':'image/png',alt:'Captura autêntica do WebGIS AquaClima, caso Paracatu',fit:'contain',position:{left:x,top:y,width:w,height:h}});}
+async function picture(s,relative,x,y,w,h,alt='Captura autêntica do WebGIS AquaClima, caso Paracatu'){const b=await fs.readFile(path.join(ROOT,relative));s.images.add({blob:b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength),contentType:relative.endsWith('.jpg')?'image/jpeg':'image/png',alt,fit:'contain',position:{left:x,top:y,width:w,height:h}});}
 function table(s,values,position,widths,fontSize=24){
  const t=s.tables.add({rows:values.length,columns:values[0].length,...position,values,columnWidths:widths});
  t.borders.assign({fill:'#c7d5c6',width:1,style:'solid'});
@@ -111,22 +113,28 @@ function table(s,values,position,widths,fontSize=24){
 // 7. Region facts and execution state stay explicitly separated.
 {
  const s=base('Expansão regional: Guadalupe, PI');
- table(s,[['Município','Pivôs ANA'],['Caxias, MA','0'],['Timon, MA','5'],['Guadalupe, PI','12']],{left:64,top:180,width:535,height:264},[365,170],28);
- text(s,'Seleção por evidências',665,170,550,60,32,true);
- text(s,'5 pivôs compactos selecionados\n215,49 km da sede de Caxias\n19/24 meses com candidatos STAC',665,250,550,154,28);
- text(s,regional.slide_text,64,484,1150,126,26);
- foot(s,regional.footer);
- note(s,'Auditoria15/11/2026 docs/selecao-regional-ma-pi.md.10municípios comparados,176pivôs estaduaisMA/PI recuperados,111nos10candidatos. Guadalupe12polígonos,10>=25ha,5amostrados FIDs5795/5797/5798/5802/5804. Nota89.80vsTimon85.26 por fórmula prévia.19meses são catálogo preliminar, não índices válidos. '+regional.notes);
+ text(s,`${regional.pivot_count} pivôs, ${regional.accepted_scenes} cenas e ${regional.accepted_observations} observações aceitas de 30 tentativas`,64,143,1152,48,28);
+ for(const [index,scene] of comparison.scenes.entries()){
+  const relative=`docs/evidencias/guadalupe-pi/comparison/${scene.image}`;
+  const bytes=await fs.readFile(path.join(ROOT,relative));
+  if(createHash('sha256').update(bytes).digest('hex')!==scene.image_sha256)throw new Error('Comparison image hash mismatch');
+  const x=index===0?64:664;
+  await picture(s,relative,x,207,552,350,`Imagem real Sentinel-2 em falsa cor de Guadalupe em ${scene.date}, com os contornos ANA dos cinco pivôs`);
+  text(s,scene.date.split('-').reverse().join('/'),x,574,552,42,28,true);
+ }
+ foot(s,'Falsa cor B08/B04/B11, mesma grade de 20 m. Prova exploratória, sem modelo regional validado.');
+ note(s,'As duas imagens são derivados reais de Sentinel-2B L2A C1 já publicados. Contains modified Copernicus Sentinel data 2023–2024. Composição R=B08/NIR, G=B04/vermelho, B=B11/SWIR1. Mesma grade EPSG:32723, pixel 20 m, forma 178×217, estiramento fixo de reflectância 0–0,6. Contornos e FIDs ANA 2022 dos cinco pivôs. Todos os cinco pivôs possuem 100% de pixels conjuntos válidos nas duas cenas. As cores não diagnosticam irrigação. Fonte local: docs/evidencias/guadalupe-pi/comparison/provenance.json. '+comparison.scenes.map(scene=>`Data ${scene.date}. Cena ${scene.scene_id}. Fonte ${scene.source}. PB ${scene.processing_baseline}. PNG SHA-256 ${scene.image_sha256}. Manifesto SHA-256 ${scene.manifest_sha256}. Recortes SHA-256 ${JSON.stringify(scene.source_crops_sha256)}.`).join(' ')+' Auditoria territorial 15/11/2026: 14 municípios conferidos, 176 pivôs estaduais MA/PI recuperados. A decisão original comparou dez municípios, com 111 polígonos. Caxias/MA é origem e motivação do pesquisador, sem observações processadas. Guadalupe tem 12 polígonos ANA, dez elegíveis ≥25 ha, com FIDs 5795/5797/5798/5802/5804 na amostra. Distância geodésica de 215,49 km entre o grupo e a sede pública de Caxias. Os 19 meses preliminares STAC não são índices aceitos. Grade contínua: 29/115 espaços observados (25,2%), distinta dos 29/30 alvos (96,7%). '+regional.notes);
 }
 // 8. Conclusions and demo link.
 {
  const s=base('Conclusões e demonstração');
- text(s,'Uma metodologia aberta e reproduzível',64,170,1150,70,40,true,C.teal);
- text(s,'Observações, qualidade e proveniência acessíveis no WebGIS.\n\nValidação de campo e avaliação externa regional são\nnecessárias antes de alertas operacionais de irrigação.',64,280,1150,210,31);
+ text(s,'Evidências organizadas para investigação',64,164,1150,70,40,true,C.teal);
+ text(s,'Comparação por pivô com duas observações reais.\nFicha de Evidências A4 com seleção e proveniência.\nLinks com observações e hash do pacote publicado.\nDemonstração guiada e visão territorial do Brasil.',64,257,1150,175,29);
+ text(s,'Validação de campo e avaliação externa regional continuam\nnecessárias antes de alertas operacionais de irrigação.',64,458,1150,78,26);
  const link=text(s,'altaeir-13.github.io/FTL-Final-Project/',64,540,1150,60,32,true);
  link.text.get('altaeir-13.github.io/FTL-Final-Project/').link={uri:'https://altaeir-13.github.io/FTL-Final-Project/',isExternal:true};
- foot(s,'Código e relatório abertos. Protótipo científico aplicado, com perspectiva de continuidade.');
- note(s,'Demonstração aproximada3min:caso territorial,pivô,séries,chuva,lacunas,comparação em meses comuns,proveniência. Roteiro detalhado docs/roteiro-final-ftl.md. Link:https://altaeir-13.github.io/FTL-Final-Project/. Branch regional depende de revisão/merge humano para publicar pela main.');
+ foot(s,'Funcionalidades tecnológicas derivadas dos resultados científicos. Interpretar mudanças exige contexto.');
+ note(s,'Fase 7, referência 16/11/2026. Investigação guiada: território, pivô, duas observações aceitas, deltas assinados B−A de NDVI/NDMI, CHIRPS mensal, qualidade e proveniência. Paracatu usa agregados mensais publicados, Guadalupe usa cenas efetivas. Sem imputação ou diagnóstico causal. Ficha de Evidências: snapshot independente da interface, A4, identificador determinístico SHA-256 sem data de impressão, geração local no navegador. O link preserva região, pivô, observações, índice e hash do pacote. Demonstração manual em cinco passos: problema, Paracatu, investigação, Guadalupe, limites. Escape encerra e restaura estado anterior. Visão territorial distingue Caxias origem, Paracatu estudo concluído e Guadalupe prova exploratória, sem validação nacional. Roteiro detalhado: docs/roteiro-final-ftl.md e docs/investigacao-guiada-ftl.md. URL: https://altaeir-13.github.io/FTL-Final-Project/. As funcionalidades desta revisão dependem de revisão e merge humano para publicação pela main. Não há economia de água, ganho econômico ou falha de irrigação comprovados.');
 }
 
 const candidate=path.join(BUILD,'candidate.pptx');
@@ -136,8 +144,8 @@ for(let i=0;i<deck.slides.items.length;i++){
  await fs.writeFile(path.join(BUILD,`slide-${String(i+1).padStart(2,'0')}.png`),new Uint8Array(await png.arrayBuffer()));
  const layout=await s.export({format:'layout'});await fs.writeFile(path.join(BUILD,`slide-${i+1}.layout.json`),await layout.text());
 }
-const final=path.join(OUT,process.env.AQUACLIMA_DECK_NAME||'aquaclima-ftl.pptx');
-await finalizePresentation({workspaceDir:ROOT,candidatePath:candidate,finalPath:final,pythonExecutable:PYTHON,integrityValidatorPath:path.join(SKILL,'container_tools/inspect_presentation_package_integrity.py'),layoutValidatorPath:path.join(SKILL,'container_tools/inspect_presentation_layout_geometry.py'),layoutArgs:['--expected-slide-size-emu','12192000,6858000','--validate-bullet-geometry','--validate-heading-fit','--require-native-table-slide','6','--require-native-table-slide','7'],explicitTotalSlideCount:8,requiredNativeTableOwnerSlides:[6,7],requiredNativeChartOwnerSlides:[2],materializeLiteralChartWorkbooks:true,fontPolicy:{basis:'design',families:['Arial']},verifyArtifactToolImport:true,receiptPath:path.join(BUILD,path.basename(final)+'.validation.json')});
+const final=path.join(OUT,process.env.AQUACLIMA_DECK_NAME||'aquaclima-ftl-fase7.pptx');
+await finalizePresentation({workspaceDir:ROOT,candidatePath:candidate,finalPath:final,pythonExecutable:PYTHON,integrityValidatorPath:path.join(SKILL,'container_tools/inspect_presentation_package_integrity.py'),layoutValidatorPath:path.join(SKILL,'container_tools/inspect_presentation_layout_geometry.py'),layoutArgs:['--expected-slide-size-emu','12192000,6858000','--validate-bullet-geometry','--validate-heading-fit','--require-native-table-slide','6'],explicitTotalSlideCount:8,requiredNativeTableOwnerSlides:[6],requiredNativeChartOwnerSlides:[2],materializeLiteralChartWorkbooks:true,fontPolicy:{basis:'design',families:['Arial']},verifyArtifactToolImport:true,receiptPath:path.join(BUILD,path.basename(final)+'.validation.json')});
 console.log(JSON.stringify({pptx:final,slides:deck.slides.items.length,previews:BUILD}));
 if(process.env.AQUACLIMA_EXPORT_PDF==='1'){
  // The bundled native PDF exporter lacks a standard-font module on this runtime.

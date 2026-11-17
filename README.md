@@ -2,11 +2,21 @@
 
 O AquaClima investiga se o histórico da vegetação e o contexto meteorológico ajudam a identificar comportamentos espectrais atípicos em áreas irrigadas. O primeiro piloto cruza polígonos de pivôs da ANA, reflectância de superfície Sentinel-2 e precipitação mensal CHIRPS na bacia do rio São Marcos. O projeto integra o Capstone do Future Tech Leaders Brasil.
 
+## Fase 7 — investigação guiada e ficha de evidências
+
+O WebGIS passa a organizar uma investigação por território, pivô e duas observações reais. Em Paracatu, a comparação utiliza os agregados mensais publicados de 2022–2024; em Guadalupe, utiliza as cenas aceitas de 2023–2024. NDVI, NDMI, diferenças assinadas `B − A`, chuva CHIRPS, qualidade, lacunas e proveniência acompanham a seleção. A síntese é determinística e descritiva; nenhuma causa agronômica é atribuída automaticamente.
+
+O botão **Gerar ficha de evidências** abre uma cópia independente da seleção para impressão A4 ou salvamento como PDF no navegador. A ficha inclui fontes, hashes, limitações, data de geração e um identificador científico estável que não depende da data de impressão. As imagens reais de Guadalupe, de 18/07/2023 e 22/07/2024, aparecem somente quando correspondem às observações selecionadas. O contexto visual é o grupo dos cinco pivôs, identificado na legenda.
+
+Links de investigação preservam região, pivô, observações, índice e pacote, mantendo os parâmetros anteriores `pivot`, `indice`, `from` e `to`. O modo **Iniciar demonstração** conduz cinco passos em aproximadamente três minutos, com controle manual e restauração da navegação. A visão territorial distingue Caxias/MA, origem do pesquisador, Paracatu/MG, estudo concluído, e Guadalupe/PI, prova exploratória.
+
+Consulte a [arquitetura, reprodução e capturas da investigação](docs/investigacao-guiada-ftl.md), o [roteiro atualizado da banca](docs/roteiro-final-ftl.md) e a [apresentação editável da Fase 7](docs/apresentacao/aquaclima-ftl-fase7.pptx). São funcionalidades tecnológicas derivadas dos resultados publicados: não houve nova aquisição, treinamento ou alteração científica. A Fase 6 foi integrada pelo [PR #2](https://github.com/Altaeir-13/FTL-Final-Project/pull/2), no commit `ffb7ba41d5286fd58c47acd8007903fd38b799d4`. A publicação da Fase 7 depende da revisão e do merge manual do seu próprio PR; branches experimentais não publicam.
+
 ## Fase 6 — seleção regional e entrega FTL
 
 Paracatu/MG permanece congelado em `2022_2024_recovery_v1`. A auditoria real de 14 municípios MA/PI selecionou **Guadalupe/PI**; a prova exploratória processou cinco pivôs, seis cenas de 2023–2024 e **29 observações aceitas em 30 tentativas**, com CHIRPS e reprodução offline. O calendário completo de 23 meses contém 115 espaços pivô/mês, dos quais 29 são observados. Não há modelos ou métricas de generalização para Guadalupe. Caxias é referência territorial do autor; não é apresentada como município monitorado.
 
-Consulte a [seleção territorial](docs/selecao-regional-ma-pi.md), o [resultado regional e protocolo de reprodução](docs/resultado-regional-guadalupe.md), o [relatório científico final](docs/relatorio-final-ftl.md), a [apresentação editável](docs/apresentacao/aquaclima-ftl.pptx), o [roteiro e perguntas da banca](docs/roteiro-final-ftl.md) e o [checklist de entrega](docs/checklist-entrega-ftl.md). A expansão proposta depende de revisão e merge do PR; a URL pública continua servindo a versão aprovada da `main` até essa integração. Não há publicação automática de branches experimentais.
+Consulte a [seleção territorial](docs/selecao-regional-ma-pi.md), o [resultado regional e protocolo de reprodução](docs/resultado-regional-guadalupe.md), o [relatório científico final](docs/relatorio-final-ftl.md), a [apresentação editável](docs/apresentacao/aquaclima-ftl.pptx), o [roteiro e perguntas da banca](docs/roteiro-final-ftl.md) e o [checklist de entrega](docs/checklist-entrega-ftl.md). A expansão regional foi integrada à `main` pelo PR #2. Não há publicação automática de branches experimentais.
 
 As evidências compactas estão em `data/regions/selection/` e `docs/evidencias/guadalupe-pi/`. Os recortes COG, XML ESA e caches de aquisição permanecem fora do Git. A aquisição é incremental e limitada a 150 MB por execução; os rasters CHIRPS locais já existentes são copiados e verificados antes da nova extração regional.
 
