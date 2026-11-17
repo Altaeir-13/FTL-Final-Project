@@ -4,6 +4,12 @@ import { createMap } from './map.js';
 import { filterMonthly, coverageState, commonComparison, eventContext } from './science.js';
 import { renderSeries, renderPrecipitation, renderCoverage } from './charts.js';
 import { mountStudies } from './regional-ui.js';
+import { createStudies, availableObservations } from './investigation-data.js';
+import { mountInvestigation } from './investigation.js';
+import { mountTerritorialOverview } from './territorial-overview.js';
+import { mountDemoMode } from './demo-mode.js';
+import './territorial-overview.css';
+import './demo-mode.css';
 import mark from './mark.svg';
 
 const icons = {
@@ -26,7 +32,7 @@ const names = { calendar_month_median:'Mediana sazonal', harmonic_ridge:'Ridge h
 const methods = Object.keys(names);
 const repo = 'https://github.com/Altaeir-13/FTL-Final-Project/blob/1440f3e/';
 const $ = id => document.getElementById(id);
-let data, map, showingAllEvents = false;
+let data, map, investigation, studiesUI, showingAllEvents = false, legacyInteraction = false;
 const params = new URLSearchParams(location.search);
 const state = { pivot:params.get('pivot') || '8087', target:params.get('indice') === 'ndmi' ? 'ndmi_median' : 'ndvi_median', from:'2022-01', to:'2024-12' };
 for (const key of ['from','to']) if (/^202[234]-(0[1-9]|1[0-2])$/.test(params.get(key) || '')) state[key] = params.get(key);
@@ -38,7 +44,9 @@ function shell() {
       <a class="brand" href="#estudos" aria-label="AquaClima início"><img src="${mark}" alt=""/><span>AquaClima<small>OBSERVATÓRIO ESPECTRAL</small></span></a>
       <div class="project-label">WORKSPACE DE PESQUISA</div>
       <nav aria-label="Navegação principal">
+        <a class="nav-link" href="#territorio">${icon('map')}<span>Visão territorial</span></a>
         <a class="nav-link" href="#estudos">${icon('layers')}<span>Estudos de caso</span></a>
+        <a class="nav-link" href="#investigacao">${icon('activity')}<span>Investigação espectral</span></a>
         <a class="nav-link active" href="#explorar">${icon('map')}<span>Explorar pivôs</span><span class="nav-count">05</span></a>
         <a class="nav-link" href="#series">${icon('chart')}<span>Séries temporais</span></a>
         <a class="nav-link" href="#cobertura">${icon('grid')}<span>Cobertura e qualidade</span></a>
@@ -50,10 +58,13 @@ function shell() {
       <div class="sidebar-bottom"><div class="science-dot"></div><span>Pesquisa científica<small>5 pivôs de demonstração · Capstone</small></span></div>
     </aside>
     <div class="workspace">
-      <header class="topbar"><span class="breadcrumb">AquaClima <span>/</span> <b>Observatório</b></span><span class="topbar-status">${icon('check')} Base científica congelada <span class="version-label">v1.0</span></span></header>
+      <header class="topbar"><span class="breadcrumb">AquaClima <span>/</span> <b>Investigação</b></span><span class="topbar-status">${icon('check')} Base científica congelada <span class="version-label">v1.1</span></span></header>
       <main id="main">
         <section class="territorial-hero"><div><span class="eyebrow">AQUACLIMA · CIÊNCIA ABERTA PARA OS TERRITÓRIOS</span><h1>Acompanhar a vegetação.<br/>Compreender os limites da evidência.</h1><p>Áreas irrigadas mudam ao longo do tempo. O AquaClima combina satélites, polígonos oficiais e precipitação para investigar essas mudanças, com qualidade e proveniência verificáveis.</p><p class="territorial-origin">De Paracatu, onde o pipeline foi desenvolvido e avaliado, à investigação no Maranhão e no Piauí, motivada pelo vínculo do pesquisador com Caxias, MA.</p></div><aside class="ods-context" aria-label="Relação com os Objetivos de Desenvolvimento Sustentável"><span class="eyebrow">CONTRIBUIÇÃO CIENTÍFICA AOS ODS</span><div><span class="ods-number">06</span><p><strong>Água potável e saneamento</strong><span>Evidências para estudar a vegetação irrigada; consumo e economia de água não foram medidos.</span></p></div><div><span class="ods-number">13</span><p><strong>Ação contra a mudança global do clima</strong><span>Contexto de precipitação e transparência das observações para pesquisas de adaptação.</span></p></div><p class="ods-secondary">ODS 2 e 9: pesquisa aplicada à agricultura e infraestrutura de dados aberta. Perspectiva futura de inteligência hídrica.</p></aside></section>
+        <p class="demo-start"><button id="start-demo" class="primary-button" disabled>Iniciar demonstração</button> <span>FTL · cinco passos no WebGIS real · controle manual</span></p>
+        <section id="territorio" aria-label="Visão territorial do Brasil"></section>
         <section id="estudos" class="studies-section" aria-labelledby="studies-title"><p class="regional-loading" role="status">Carregando catálogo independente de estudos…</p></section>
+        <section id="investigacao" class="investigation-section" aria-labelledby="investigation-title"><p role="status">Preparando investigação sobre os pacotes verificados…</p></section>
         <section id="explorar" class="intro"><div><div class="eyebrow">OBSERVATÓRIO DE PARACATU, MG · 2022–2024</div><h2>Um olhar sobre a vegetação irrigada.</h2><p>Explore os históricos espectrais e a qualidade das observações dos cinco pivôs do estudo concluído.</p></div><a class="secondary-button intro-link" href="#metodologia">Sobre a pesquisa ${icon('arrow')}</a></section>
         <div class="kpi-grid" aria-label="Resumo do estudo">
           <article class="kpi"><span class="kpi-icon">${icon('map')}</span><div><span>Pivôs monitorados</span><strong id="kpi-pivots">—</strong><small>Polígonos reais · ANA</small></div></article>
@@ -95,10 +106,18 @@ function methodology() {
 
 function selectPivot(id, mapSource = false) {
   if (!data.pivots.features.some(f => f.properties.pivot_id === id)) return;
+  legacyInteraction=true;
   state.pivot = id;
+  syncParacatuInvestigation();
   if (!mapSource) map.select(id);
   render();
   $('announcement').textContent = `Pivô ANA ${id} selecionado. Gráficos, cobertura, mudanças e modelos atualizados.`;
+}
+
+function syncParacatuInvestigation() {
+  if (!investigation) return;
+  investigation.setSelection({ region:'paracatu-mg', pivot:state.pivot, index:state.target, package:data.manifest.package_sha256 }, { notify:false });
+  studiesUI?.selectStudy('paracatu-mg');
 }
 
 function render() {
@@ -134,8 +153,16 @@ function render() {
   renderObservationTable(rows,qrows);
   renderEvents();
   renderModels();
-  const search = new URLSearchParams({pivot:state.pivot,indice:state.target === 'ndvi_median'?'ndvi':'ndmi',from:state.from,to:state.to});
+  const search = new URLSearchParams(location.search);
+  if (!investigation || investigation.getSelection().region === 'paracatu-mg') {
+    // Preserve regional investigation keys when the legacy Paracatu controls render.
+    if (!search.has('region') || search.get('region') === 'paracatu-mg') {
+      search.set('pivot',state.pivot); search.set('indice',state.target === 'ndvi_median'?'ndvi':'ndmi');
+    }
+  }
+  search.set('from',state.from); search.set('to',state.to);
   history.replaceState(null,'',`${location.pathname}?${search}${location.hash}`);
+  if (investigation?.getSelection().region === 'paracatu-mg') investigation.setSelection({ pivot:state.pivot, index:state.target }, { notify:false });
 }
 
 function renderObservationTable(rows, qrows) {
@@ -185,7 +212,7 @@ function bind() {
     state.to = b.dataset.year === 'all' ? '2024-12' : `${b.dataset.year}-12`;
     $('period-error').textContent = ''; showingAllEvents = false; render();
   }));
-  document.querySelectorAll('[data-target]').forEach(b => b.addEventListener('click',() => {state.target=b.dataset.target;showingAllEvents=false;render();}));
+  document.querySelectorAll('[data-target]').forEach(b => b.addEventListener('click',() => {legacyInteraction=true;state.target=b.dataset.target;syncParacatuInvestigation();showingAllEvents=false;render();}));
   $('apply-period').addEventListener('click',() => {
     const from = $('from-month').value, to = $('to-month').value;
     if (!/^202[234]-(0[1-9]|1[0-2])$/.test(from) || !/^202[234]-(0[1-9]|1[0-2])$/.test(to) || from > to) { $('period-error').textContent='Escolha um intervalo válido entre 2022-01 e 2024-12.'; return; }
@@ -211,11 +238,77 @@ async function start() {
     $('package-info').innerHTML=`<dt>Pacote científico original</dt><dd>${esc(data.manifest.source_package_sha256 || data.manifest.package_sha256)}</dd><dt>Pacote público derivado</dt><dd>${esc(data.manifest.package_sha256)}</dd><dt>Agregação temporal</dt><dd>Mediana das medianas de cenas aceitas, com pesos iguais.</dd>`;
     map=createMap($('map'),data.pivots,id=>selectPivot(String(id),true));
     bind(); map.select(state.pivot); render();
-    await mountStudies($('estudos'));
-    if (location.hash) requestAnimationFrame(()=>$(location.hash.slice(1))?.scrollIntoView());
+    studiesUI = await mountStudies($('estudos'), {
+      onStudy: region => investigation?.setSelection({ region, pivot:region === 'paracatu-mg' ? state.pivot : undefined, index:region === 'paracatu-mg' ? state.target : 'ndvi', a:undefined, b:undefined }),
+      onPivot: pivot => investigation?.setSelection({ region:'guadalupe-pi', pivot, index:studiesUI?.getState().index }),
+    });
+    const studies = createStudies(data, studiesUI?.loaded);
+    const investigationParams = new URLSearchParams(params);
+    if (!params.has('region') || legacyInteraction) {
+      investigationParams.set('region','paracatu-mg'); investigationParams.set('pivot',state.pivot); investigationParams.set('indice',state.target === 'ndmi_median' ? 'ndmi' : 'ndvi');
+      if (legacyInteraction) {
+        investigationParams.delete('a'); investigationParams.delete('b'); investigationParams.set('package',data.manifest.package_sha256);
+      }
+    }
+    investigation = mountInvestigation($('investigacao'), {
+      studies, search:investigationParams.toString(),
+      onChange: selection => {
+        studiesUI?.selectStudy(selection.region);
+        if (selection.region === 'paracatu-mg') {
+          state.pivot=selection.pivot; state.target=`${selection.index}_median`; map.select(state.pivot); render();
+        } else studiesUI?.selectPivot(selection.pivot, selection.index);
+      },
+    });
+    // Initial callback ran before the controller assignment; synchronize legacy controls once.
+    if (investigation.getSelection().region === 'paracatu-mg' && !investigation.getSelection().packageMismatch) render();
+    mountTerritorialOverview($('territorio'), { onOpenStudy: region => {
+      investigation.setSelection({ region, pivot:undefined, a:undefined, b:undefined, package:undefined });
+      location.hash='investigacao'; $('investigacao').scrollIntoView();
+    } });
+    configureDemo(studies);
+    if (location.hash || params.get('section') === 'investigacao') requestAnimationFrame(()=>$(location.hash ? location.hash.slice(1) : 'investigacao')?.scrollIntoView());
   } catch (error) {
     $('app').innerHTML=`<main class="load-error"><img src="${mark}" alt=""/><h1>Não foi possível abrir o pacote científico.</h1><p>${esc(error.message)}</p><p>Confirme os arquivos do build e sirva a aplicação por HTTP.</p><button onclick="location.reload()">Tentar novamente</button></main>`;
     console.error(error);
   }
 }
 start();
+
+function configureDemo(studies) {
+  const paracatu = studies.find(study => study.id === 'paracatu-mg');
+  const regional = studies.find(study => study.id === 'guadalupe-pi');
+  const mainPivot = paracatu.pivots.features[0].properties.pivot_id;
+  const mainObservations = availableObservations(paracatu, mainPivot);
+  const matchedSeason = mainObservations.filter(row => row.month.endsWith('-07'));
+  const mainPair = matchedSeason.length >= 2 ? [matchedSeason[0],matchedSeason.at(-1)] : [mainObservations[0],mainObservations.at(-1)];
+  const regionalPivot = regional?.pivots.features[0].properties.pivot_id;
+  const visualPair = regional ? availableObservations(regional, regionalPivot).filter(row => row.image) : [];
+  $('start-demo').disabled=false;
+  mountDemoMode({ button:$('start-demo'),
+    captureState: () => ({ exploration:{ ...state }, showingAllEvents, comparison:$('comparison-select').value, investigation:investigation.getSelection(), regional:studiesUI?.getState(), url:location.href, scroll:window.scrollY, mapView:map.getView() }),
+    onStep: step => {
+      if (step.index === 1 || step.index === 2) {
+        state.from='2022-01'; state.to='2024-12';
+        investigation.setSelection({ region:paracatu.id, pivot:mainPivot, a:mainPair[0].id, b:mainPair[1].id, index:'ndvi', package:paracatu.packageHash });
+        if (step.index === 1) { map.setView({ ...map.getView(), polygonsVisible:true }); map.fitAll(); }
+      }
+      if (step.index === 3) {
+        if (!regional || visualPair.length !== 2) throw new Error('Comparação regional real indisponível; consulte o aviso do pacote.');
+        investigation.setSelection({ region:regional.id, pivot:regionalPivot, a:visualPair[0].id, b:visualPair[1].id, index:'ndvi', package:regional.packageHash });
+      }
+      const target = $(({ 2:'analysis-title', 3:'investigation-images', 4:'evidence-conclusion' })[step.index] || step.target);
+      target?.scrollIntoView({ behavior:'instant', block:'start' });
+    },
+    onRestore: saved => {
+      Object.assign(state,saved.exploration); showingAllEvents=saved.showingAllEvents;
+      $('comparison-select').value=saved.comparison;
+      investigation.setSelection(saved.investigation, { notify:false });
+      studiesUI?.selectStudy(saved.regional?.study || 'paracatu-mg');
+      if (saved.regional?.pivot) { studiesUI.selectPivot(saved.regional.pivot, saved.regional.index === 'ndmi_median' ? 'ndmi' : 'ndvi'); studiesUI.selectStudy(saved.regional.study); }
+      studiesUI?.restoreView(saved.regional?.mapView);
+      map.select(state.pivot); render(); map.setView(saved.mapView);
+      history.replaceState(null,'',saved.url);
+      window.scrollTo({ top:saved.scroll, behavior:'instant' });
+    },
+  });
+}
