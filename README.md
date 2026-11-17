@@ -2,6 +2,12 @@
 
 O AquaClima investiga se o histórico da vegetação e o contexto meteorológico ajudam a identificar comportamentos espectrais atípicos em áreas irrigadas. O primeiro piloto cruza polígonos de pivôs da ANA, reflectância de superfície Sentinel-2 e precipitação mensal CHIRPS na bacia do rio São Marcos. O projeto integra o Capstone do Future Tech Leaders Brasil.
 
+## Entrega do Capstone — auditoria de 17/11/2026
+
+A Fase 7 está publicada na [URL oficial](https://altaeir-13.github.io/FTL-Final-Project/), após o merge do [PR #3](https://github.com/Altaeir-13/FTL-Final-Project/pull/3) em `ad107d0c29c63ad9eb9f91a5970d96906676e3df` e o [deployment aprovado](https://github.com/Altaeir-13/FTL-Final-Project/actions/runs/44067496065). Os **25 testes Playwright passaram diretamente no site público**, sem servidor local, em desktop e viewport móvel de 390 px. Os 24 arquivos efetivamente servidos são idênticos ao build validado; `.nojekyll` é um marcador de deployment, sem função de runtime.
+
+O [registro de lançamento](docs/release-final-ftl.md) reúne verificações, hashes e limitações. A [pasta consolidada de entrega](entrega/aquaclima-ftl-2026/README.md) contém relatório científico em PDF, apresentação editável, PDF de apoio, roteiro, fichas exemplificativas e links. A release permanece destinada à revisão, sem submissão oficial pelo agente. O prazo de entrega é **24/11/2026**.
+
 ## Fase 7 — investigação guiada e ficha de evidências
 
 O WebGIS passa a organizar uma investigação por território, pivô e duas observações reais. Em Paracatu, a comparação utiliza os agregados mensais publicados de 2022–2024; em Guadalupe, utiliza as cenas aceitas de 2023–2024. NDVI, NDMI, diferenças assinadas `B − A`, chuva CHIRPS, qualidade, lacunas e proveniência acompanham a seleção. A síntese é determinística e descritiva; nenhuma causa agronômica é atribuída automaticamente.
@@ -10,7 +16,7 @@ O botão **Gerar ficha de evidências** abre uma cópia independente da seleçã
 
 Links de investigação preservam região, pivô, observações, índice e pacote, mantendo os parâmetros anteriores `pivot`, `indice`, `from` e `to`. O modo **Iniciar demonstração** conduz cinco passos em aproximadamente três minutos, com controle manual e restauração da navegação. A visão territorial distingue Caxias/MA, origem do pesquisador, Paracatu/MG, estudo concluído, e Guadalupe/PI, prova exploratória.
 
-Consulte a [arquitetura, reprodução e capturas da investigação](docs/investigacao-guiada-ftl.md), o [roteiro atualizado da banca](docs/roteiro-final-ftl.md) e a [apresentação editável da Fase 7](docs/apresentacao/aquaclima-ftl-fase7.pptx). São funcionalidades tecnológicas derivadas dos resultados publicados: não houve nova aquisição, treinamento ou alteração científica. A Fase 6 foi integrada pelo [PR #2](https://github.com/Altaeir-13/FTL-Final-Project/pull/2), no commit `ffb7ba41d5286fd58c47acd8007903fd38b799d4`. A publicação da Fase 7 depende da revisão e do merge manual do seu próprio PR; branches experimentais não publicam.
+Consulte a [arquitetura, reprodução e capturas da investigação](docs/investigacao-guiada-ftl.md), o [roteiro atualizado da banca](docs/roteiro-final-ftl.md) e a [apresentação editável da Fase 7](docs/apresentacao/aquaclima-ftl-fase7.pptx). São funcionalidades tecnológicas derivadas dos resultados publicados: não houve nova aquisição, treinamento ou alteração científica. A Fase 6 foi integrada pelo [PR #2](https://github.com/Altaeir-13/FTL-Final-Project/pull/2), no commit `ffb7ba41d5286fd58c47acd8007903fd38b799d4`, e a Fase 7 pelo PR #3. Branches experimentais não publicam.
 
 ## Fase 6 — seleção regional e entrega FTL
 

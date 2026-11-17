@@ -1,6 +1,6 @@
 # Apresentação final AquaClima
 
-Versão de revisão da **Fase 7**: [PPTX editável](aquaclima-ftl-fase7.pptx), com oito slides, gráfico nativo com workbook incorporado, tabela nativa de métricas, textos editáveis e notas de fonte. O [PDF da Fase 7](aquaclima-ftl-fase7.pdf) contém as mesmas oito páginas como **backup raster**. O PDF não tem texto selecionável; o PPTX é o documento mestre editável. A [apresentação anterior](aquaclima-ftl.pptx) e seu [PDF](aquaclima-ftl.pdf) permanecem preservados.
+Versão da **Fase 7**, integrada pelo PR #3 e revista para release em 17/11/2026: [PPTX editável](aquaclima-ftl-fase7.pptx), com oito slides, gráfico nativo com workbook incorporado, tabela nativa de métricas, textos editáveis e notas de fonte. O [PDF da Fase 7](aquaclima-ftl-fase7.pdf) contém as mesmas oito páginas como **backup raster**. O PDF não tem texto selecionável; o PPTX é o documento mestre editável. A [apresentação anterior](aquaclima-ftl.pptx) e seu [PDF](aquaclima-ftl.pdf) permanecem preservados.
 
 O conteúdo usa resultados reais do pacote congelado de Paracatu e do [snapshot independente de Guadalupe](../evidencias/guadalupe-pi/manifest.json). A captura de tela do slide 5 é autêntica, já existente no projeto, e mostra o caso concluído. O slide 7 inclui os dois derivados Sentinel-2 reais já publicados, de 18/07/2023 e 22/07/2024, com a mesma grade e parâmetros de falsa cor. O slide 8 apresenta a investigação guiada, a ficha A4, os links reproduzíveis, a demonstração e a visão territorial como funcionalidades derivadas dos resultados científicos. Não foi encontrado template oficial FTL nos arquivos do repositório ou nos anexos locais pesquisados, por isso o material segue a identidade cromática do AquaClima, sem afirmar identidade oficial do programa.
 
@@ -15,7 +15,9 @@ O finalizador aprovou oito slides, integridade estrutural, geometria, fonte Aria
 | PPTX | `ab6ffca022d1dee3d46b16388719781e829d48b04ed17cceea7d235d3882865e` |
 | PDF | `90a780fe14061a9a64da03e1dcc085a4cb00550decff544c3885ae3f2f97e39e` |
 
-As funcionalidades novas aguardam revisão e merge para publicação na `main`. O link da apresentação continua apontando para a URL oficial e não antecipa um deployment da branch.
+Na revisão de 16/11, as funcionalidades ainda aguardavam revisão e merge. Esse estado é histórico: o [PR #3](https://github.com/Altaeir-13/FTL-Final-Project/pull/3) foi integrado à `main` no commit `ad107d0c29c63ad9eb9f91a5970d96906676e3df`, com [publicação aprovada](https://github.com/Altaeir-13/FTL-Final-Project/actions/runs/44067496065). Em 17/11, **25 cenários Playwright passaram na URL pública**, diretamente no Edge, sem servidor local, cenários ignorados, falhas ou instabilidade registradas. O [registro público](../evidencias/release-publica/playwright-publico.json) e a [revisão final da apresentação](../revisao-apresentacao-release.md) documentam essa conferência.
+
+Os binários da apresentação permanecem idênticos aos hashes acima. A revisão de release reabriu as oito páginas do PDF pelo Poppler e conferiu textos, notas, tabela de métricas e imagens incorporadas no ZIP do PPTX contra os pacotes públicos. O [roteiro atualizado](../roteiro-final-ftl.md) descreve a demonstração publicada. As notas do slide 8 datadas de 16/11 preservam o contexto de publicação pendente daquela revisão; o estado atual é o registrado neste parágrafo. PowerPoint nativo, projetor e duração oral ainda dependem de ensaio humano.
 
 ## Geração reproduzível
 
@@ -43,7 +45,7 @@ O finalizador recusa sobrescrever um PPTX existente. Usar um nome novo na variá
 
 `prepare_ftl_evidence.py` lê o pacote público versionado. As figuras científicas de Paracatu são cópias byte a byte do pipeline original. Se o cache privado `data/` estiver ausente, o script usa as cópias versionadas e as tabelas pequenas em `docs/evidencias/guadalupe-pi/`, permitindo repetir os materiais em um clone sem rasters. Os JSONs de evidência registram hashes e denominadores de cobertura.
 
-## Verificações executadas em 15/11/2026
+## Verificações históricas da apresentação anterior em 15/11/2026
 
 O Artifact Tool exportou e reimportou o PPTX. O finalizador aprovou integridade estrutural, oito slides, geometria de texto, fonte Arial, tabelas nativas nos slides 6/7 e gráfico nativo no slide 2, com dados completos e workbook incorporado. Os oito renders foram inspecionados visualmente, incluindo os números da tabela de sete meses e os valores regionais. Isso não equivale a abrir o arquivo no PowerPoint. A preparação de evidências também foi repetida numa cópia contendo somente scripts, pacote público, figuras e snapshot regional, sem pasta `data/`, rasters ou caches privados, reproduzindo os totais de 256 observações/141 espaços em Paracatu e 29 observações em Guadalupe.
 

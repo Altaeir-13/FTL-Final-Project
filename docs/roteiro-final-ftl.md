@@ -1,6 +1,6 @@
 # Roteiro final do AquaClima
 
-Autor: Randerson Sousa de Sá Nunes. Referência: 16/11/2026. Entrega FTL: 24/11/2026. O roteiro usa a versão congelada `2022_2024_recovery_v1` e a prova exploratória de Guadalupe, preservadas na Fase 7. As novas interações organizam evidências já produzidas; não demonstram novas descobertas agronômicas.
+Autor: Randerson Sousa de Sá Nunes. Revisão de release: 17/11/2026, sobre a Fase 7 de 16/11. Entrega FTL: 24/11/2026. O roteiro usa a versão congelada `2022_2024_recovery_v1` e a prova exploratória de Guadalupe, preservadas na Fase 7. As novas interações organizam evidências já produzidas; não demonstram novas descobertas agronômicas. O [PR #3](https://github.com/Altaeir-13/FTL-Final-Project/pull/3) foi integrado à `main` no commit `ad107d0c29c63ad9eb9f91a5970d96906676e3df`; a publicação foi aprovada e a suíte de 25 cenários passou na URL pública em 17/11. A [revisão da apresentação](revisao-apresentacao-release.md) registra os arquivos e limites desta conferência.
 
 ## Apresentação de cinco minutos
 
@@ -10,16 +10,16 @@ Autor: Randerson Sousa de Sá Nunes. Referência: 16/11/2026. Entrega FTL: 24/11
 | 0:30–1:05 | 2. Problema | “Imagens de datas diferentes só ajudam se conhecemos sua qualidade e calibração. Nuvens, meses sem observação e mudanças no processamento podem comprometer uma comparação. Nosso problema é construir uma série rastreável, distinguindo observação, lacuna e interpretação.” |
 | 1:05–1:35 | 3. Relevância e ODS | “A relação com o ODS 6 está no apoio à pesquisa sobre gestão da água. O ODS 13 aparece na capacidade de compreender o contexto climático. Não medimos economia de água. Desenvolvemos uma infraestrutura aberta para organizar evidências, também relacionada aos ODS 2 e 9.” |
 | 1:35–2:20 | 4. Dados e método | “Usamos polígonos ANA de 2022, Sentinel-2 L2A e chuva mensal CHIRPS v3. Aplicamos escala e offset, alinhamos as bandas e mantemos apenas pixels aprovados pela SCL. Uma observação exige pelo menos 70% de pixels válidos. Calculamos a mediana espacial de NDVI e NDMI e a mediana das cenas de cada mês. Lacunas permanecem explícitas.” |
-| 2:20–2:55 | 5. Paracatu | “Paracatu ofereceu pivôs próximos para desenvolver e verificar o pipeline. O estudo concluído tem cinco equipamentos, 256 observações em 57 cenas e 141 dos 180 espaços pivô/mês. São 78,3% de cobertura entre 2022 e 2024. As falhas de cobertura aparecem na própria interface.” |
+| 2:20–2:55 | 5. Paracatu | “Paracatu ofereceu pivôs próximos para desenvolver e verificar o pipeline. O estudo concluído tem cinco equipamentos, 256 observações em 57 cenas e 141 dos 180 espaços pivô/mês. São 78,3% de cobertura entre 2022 e 2024. As lacunas de cobertura aparecem na própria interface.” |
 | 2:55–3:45 | 6. Resultados | “Treinamos com 2022–2023 e avaliamos 2024. A mediana sazonal atende aos critérios nos cinco pivôs. A Ridge atende em dois, pois os outros não representam todos os meses do calendário no treino. A tabela usa os mesmos sete meses para os três métodos. MAE é o erro absoluto médio e RMSE dá maior peso a erros grandes. A Ridge não vence em toda métrica. Esses erros são de índices espectrais, sem avaliação de defeitos de irrigação.” |
-| 3:45–4:25 | 7. Expansão | “Minha ligação com Caxias motivou a investigação do Maranhão e do Piauí. A base ANA não trouxe registros associados a Caxias nessa edição. Selecionamos Guadalupe por critérios explícitos e processamos 29 observações aceitas em cinco pivôs e seis datas, com chuva integrada e reprodução offline. São seis meses amostrados, sem série mensal contínua. A prova demonstra execução do pipeline na amostra, sem validar modelos agronômicos regionais.” |
+| 3:45–4:25 | 7. Expansão | “Minha ligação com Caxias motivou a investigação regional. Selecionamos Guadalupe por critérios oficiais e processamos 29 observações aceitas em cinco pivôs e seis datas. Estas imagens reais de julho de 2023 e julho de 2024 usam a mesma grade e falsa cor. A chuva foi integrada e a reprodução offline preservou os arquivos. Os seis meses amostrados não formam uma série contínua. A prova demonstra execução do pipeline nessa amostra, sem modelo regional validado.” |
 | 4:25–5:00 | 8. Conclusões | “A contribuição é uma cadeia aberta, auditável e reproduzível, com comunicação das limitações. A investigação guiada compara observações reais e gera uma ficha de evidências com fontes e hashes. Para uso operacional, precisamos de dados de campo, culturas e manejo, avaliação geográfica independente e custos medidos. Vou mostrar como o WebGIS liga o polígono, a observação, a qualidade e sua proveniência.” |
 
 Ensaiar em voz alta com cronômetro. A tabela distribui cinco minutos; a velocidade real depende do apresentador. Cortar exemplos antes de reduzir a clareza dos limites científicos.
 
 ## Demonstração de aproximadamente três minutos
 
-Antes da apresentação, abrir o build de produção revisado e o site público. Conferir a versão e o [checklist](checklist-entrega-ftl.md). A Fase 7 só estará na URL pública após revisão, merge manual e deployment aprovado. O preview local compilado pode ser usado como contingência, identificado ao público. Acionar **Iniciar demonstração**; o avanço é manual, sem temporizador obrigatório.
+Antes da apresentação, abrir o [site público](https://altaeir-13.github.io/FTL-Final-Project/) e conferir o [checklist](checklist-entrega-ftl.md). A Fase 7 está publicada pelo [workflow aprovado da `main`](https://github.com/Altaeir-13/FTL-Final-Project/actions/runs/44067496065), após o merge do PR #3. A verificação pública de 17/11 aprovou **25 cenários reais no Edge**, sem iniciar servidor local, sem cenários ignorados e sem falhas ou instabilidade registradas; consulte o [registro](evidencias/release-publica/playwright-publico.json). O preview local compilado continua disponível como contingência, identificado ao público. Acionar **Iniciar demonstração**; o avanço é manual, sem temporizador obrigatório.
 
 | Tempo | Passo no WebGIS | Fala e ação |
 |---|---|---|
@@ -39,7 +39,7 @@ Usar **Avançar**, **Voltar**, **Reiniciar** e **Encerrar**; Escape também ence
 
 **Por que Paracatu?** Foi uma escolha de viabilidade para o desenvolvimento: relevância agrícola e uma amostra compacta de pivôs oficiais na unidade de São Marcos. Isso facilita janelas pequenas e cenas compartilhadas. Não constitui amostra representativa de todos os irrigantes.
 
-**Por que expandir para Maranhão/Piauí?** O autor é de Caxias e deseja investigar um território próximo da sua realidade. A nova região é escolhida por geometrias oficiais, disponibilidade de imagens, qualidade esperada, proximidade e custo. Motivação pessoal não substitui a verificação.
+**Por que expandir para Maranhão/Piauí?** O autor é de Caxias e deseja investigar um território próximo da sua realidade. Guadalupe foi escolhida por geometrias oficiais, disponibilidade de imagens, qualidade esperada, proximidade e custo. Motivação pessoal não substitui a verificação.
 
 **O que os índices medem?** NDVI contrasta vermelho e infravermelho próximo e descreve características espectrais da vegetação. NDMI contrasta infravermelho próximo e SWIR, com sensibilidade à água do dossel. Ambos também respondem a cultura, estágio, solo e mistura de pixels. Não medem diretamente consumo ou vazão.
 

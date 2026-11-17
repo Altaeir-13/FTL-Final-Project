@@ -1,0 +1,108 @@
+{
+  "status": "passed",
+  "checked_at_utc": "2026-11-17T11:24:24.141628+00:00",
+  "source": "Printed exclusively from the deployed AquaClima application through Chromium/Edge; unchanged app DOM and CSS.",
+  "pdf_renderer": "Poppler pdftoppm, 110 dpi",
+  "text_validation": "pypdf 6.21.4 and pdfplumber 0.11.9",
+  "visual_review": "All nine pages inspected. Seven page raster hashes unchanged after final mobile capture refresh; the two timestamp pages were re-inspected.",
+  "reports": [
+    {
+      "pdf": "ficha-evidencias-paracatu.pdf",
+      "sha256": "706ea7be533451e00a82315dc25e9800d1ae455bec9801d176fe0ecaad7545ed",
+      "bytes": 91757,
+      "pages": 5,
+      "embedded_images": 0,
+      "full_values_scene_ids_package_identity_generation_utc": true,
+      "all_pages_selectable": true,
+      "all_pages_a4": true,
+      "no_printed_app_controls": true,
+      "pages_reviewed": [
+        {
+          "page": 1,
+          "width_pt": 594.95996,
+          "height_pt": 841.91998,
+          "selectable_characters": 2128,
+          "render_sha256": "61c685ae1c824a4e70b7913cec09a62494b127b053db91ed7821778d42ec73c9",
+          "visual_review": "inspected: readable; no clipped tables, scene blocks, legends, or identifiers"
+        },
+        {
+          "page": 2,
+          "width_pt": 594.95996,
+          "height_pt": 841.91998,
+          "selectable_characters": 1294,
+          "render_sha256": "0d6c0df7f4a85dc904a6fdbd145197e81bce0b5bf73206614449baf0f5487cfc",
+          "visual_review": "inspected: readable; no clipped tables, scene blocks, legends, or identifiers"
+        },
+        {
+          "page": 3,
+          "width_pt": 594.95996,
+          "height_pt": 841.91998,
+          "selectable_characters": 1943,
+          "render_sha256": "aca828a868ad219f874754cd6082e6779b362c4658078c2553ecdbb403296233",
+          "visual_review": "inspected: readable; no clipped tables, scene blocks, legends, or identifiers"
+        },
+        {
+          "page": 4,
+          "width_pt": 594.95996,
+          "height_pt": 841.91998,
+          "selectable_characters": 2380,
+          "render_sha256": "7546fba335bbaddf9308a1f88d2b10e50cb991c6b873daeace66592453dc09b7",
+          "visual_review": "inspected: readable; no clipped tables, scene blocks, legends, or identifiers"
+        },
+        {
+          "page": 5,
+          "width_pt": 594.95996,
+          "height_pt": 841.91998,
+          "selectable_characters": 1193,
+          "render_sha256": "788b28b29c032357a1e937f6b475e02713ddb0dee9a9835799b8035f03d54368",
+          "visual_review": "inspected: readable; no clipped tables, scene blocks, legends, or identifiers"
+        }
+      ]
+    },
+    {
+      "pdf": "ficha-evidencias-guadalupe.pdf",
+      "sha256": "ae0c167274a9119c226fadcdd615a74c2c72ea0d602545b6a3144179e91022d2",
+      "bytes": 540081,
+      "pages": 4,
+      "embedded_images": 2,
+      "full_values_scene_ids_package_identity_generation_utc": true,
+      "all_pages_selectable": true,
+      "all_pages_a4": true,
+      "no_printed_app_controls": true,
+      "pages_reviewed": [
+        {
+          "page": 1,
+          "width_pt": 594.95996,
+          "height_pt": 841.91998,
+          "selectable_characters": 2148,
+          "render_sha256": "f143d13548b9b60005619ac92f3a430e09dcd94e42a07da70ed22bc5285d9fb1",
+          "visual_review": "inspected: readable; no clipped tables, scene blocks, legends, or identifiers"
+        },
+        {
+          "page": 2,
+          "width_pt": 594.95996,
+          "height_pt": 841.91998,
+          "selectable_characters": 1359,
+          "render_sha256": "f157d0613c41bc53174092311b1642aa2933b1cb89af0af52319eb707215bb51",
+          "visual_review": "inspected: readable; no clipped tables, scene blocks, legends, or identifiers"
+        },
+        {
+          "page": 3,
+          "width_pt": 594.95996,
+          "height_pt": 841.91998,
+          "selectable_characters": 2187,
+          "render_sha256": "11f550a244a1e5b1aa502b8583829e6d7d5c6864a0d226abce3b3c4617b562c2",
+          "visual_review": "inspected: readable; no clipped tables, scene blocks, legends, or identifiers"
+        },
+        {
+          "page": 4,
+          "width_pt": 594.95996,
+          "height_pt": 841.91998,
+          "selectable_characters": 2594,
+          "render_sha256": "711737c09d58bf9c90a3e45f3a5128254ed851eee78442442f72bb1943158967",
+          "visual_review": "inspected: readable; no clipped tables, scene blocks, legends, or identifiers"
+        }
+      ]
+    }
+  ]
+}

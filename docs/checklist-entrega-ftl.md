@@ -1,17 +1,20 @@
 # Checklist de entrega FTL
 
-Referência: 16/11/2026, fuso America/Sao_Paulo. Prazo oficial: **24/11/2026**. Os itens abertos são ações de entrega/validação pendentes, não declarações de execução. A Fase 6 foi integrada pelo PR #2 em `ffb7ba41d5286fd58c47acd8007903fd38b799d4`.
+Referência: **17/11/2026**, fuso America/Sao_Paulo. Prazo oficial: **24/11/2026**. Os itens abertos dependem de revisão ou atuação do responsável. A Fase 7 está na `main` em `ad107d0c29c63ad9eb9f91a5970d96906676e3df`, com [deployment 44067496065 aprovado](https://github.com/Altaeir-13/FTL-Final-Project/actions/runs/44067496065). Consulte o [registro de lançamento](release-final-ftl.md).
 
 ## Materiais
 
-- [x] [Relatório científico em Markdown](relatorio-final-ftl.md), estruturado para exportação posterior.
+- [x] [Relatório científico em Markdown](relatorio-final-ftl.md), preservando os resultados congelados.
 - [x] [Roteiro de cinco minutos, demonstração de três minutos e perguntas da banca](roteiro-final-ftl.md).
 - [x] Atualizar o roteiro para investigação guiada, ficha de evidências e os cinco passos do modo demonstração; manter problema, ODS, metodologia, resultados e conclusão nos slides.
 - [x] Resultados concluídos de Paracatu, fontes, limitações e 2025 excluído da avaliação.
 - [x] Consolidar a seção regional do relatório e o slide 7: Guadalupe, 29 observações, cinco pivôs, seis datas e reprodução offline.
 - [x] Conferir o PPTX editável e os oito slides renderizados pelo Artifact Tool.
 - [ ] Confirmar instruções oficiais de envio e eventuais regras do template FTL. Nenhum template oficial foi encontrado no repositório ou nos anexos locais pesquisados nesta fase.
-- [x] PDF de apresentação produzido como backup raster e conferido: oito páginas renderizadas pelo Poppler. O PPTX mantém a edição. O relatório científico permanece em Markdown para exportação posterior.
+- [x] PDF de apresentação produzido como backup raster e conferido: oito páginas renderizadas pelo Poppler. O PPTX mantém a edição.
+- [x] [Relatório científico em PDF](relatorio-final-ftl.pdf): 13 páginas A4, texto selecionável, seis figuras incorporadas, seis tabelas completas, 22 seções e referências clicáveis; todas as páginas renderizadas e inspecionadas.
+- [x] Revisar os oito slides e o roteiro contra dados públicos; apresentação preservada byte a byte, com os dois derivados reais Sentinel-2 conferidos por hash.
+- [x] Gerar pelo site público e revisar as duas fichas exemplificativas A4: Paracatu em cinco páginas e Guadalupe em quatro, com datas de geração próprias e identidade científica estável.
 
 ## Integridade e revisão
 
@@ -22,8 +25,11 @@ Referência: 16/11/2026, fuso America/Sao_Paulo. Prazo oficial: **24/11/2026**. 
 - [x] Validação histórica da `main` anterior: 12 cenários aprovados, registrada na Fase 6. Não substitui a validação da versão atual.
 - [x] PR #2 regional integrado à `main`; workflow de publicação aprovado, conforme estado informado no início da Fase 7.
 - [x] Conferir o registro final da [Fase 7](investigacao-guiada-ftl.md): 216 Python, 60 frontend, cinco de política e 25 Playwright aprovados; build e SHA-256 idêntico em clone limpo; hashes científicos preservados.
-- [ ] Revisar o PR da Fase 7 e decidir o merge manual. Não há merge automático ou publicação pela branch de investigação.
-- [ ] Após o merge, validar a Fase 7 efetivamente publicada com a suíte completa de navegador e registrar o deployment.
+- [x] PR #3 revisado e integrado pelo responsável em `ad107d0`; nenhum merge automático foi feito nesta auditoria.
+- [x] Validar a Fase 7 publicada com os **25 testes Playwright**, sem servidor local: 25 aprovados, zero falhas, zero instabilidades, 57,011 s.
+- [x] Conferir desktop e viewport móvel de 390 px, duas regiões, investigação, imagens, URLs, ficha A4, território e demonstração na URL pública.
+- [x] Comparar os **24 arquivos servidos** byte a byte com o build íntegro. O marcador `.nojekyll` foi conferido separadamente: 404 público, sem dependência de runtime.
+- [x] Confirmar pacotes científicos, fontes, imagens e workflow preservados; nenhum defeito funcional foi encontrado que exigisse alteração do aplicativo.
 
 ## Investigação e ficha — revisão funcional da Fase 7
 
@@ -41,9 +47,11 @@ Referência: 16/11/2026, fuso America/Sao_Paulo. Prazo oficial: **24/11/2026**. 
 - [ ] Ensaiar cinco minutos de slides e três minutos de demonstração.
 - [x] Preparar preview local compilado para contingência de conexão, identificando quando usado.
 - [ ] Conferir legibilidade no projetor e testar abertura do PPTX em um editor compatível.
-- [ ] Concluir funcionalidades até **20/11**; depois, corrigir apenas defeitos e revisar os materiais.
+- [x] Funcionalidades concluídas e publicadas até **17/11**, antes do limite de 20/11; não iniciar novas funcionalidades ou experimentos.
 - [ ] Congelar a versão de entrega em **23/11** e registrar o commit final.
-- [ ] Guardar cópia dos materiais finais e dos links públicos.
+- [x] Preparar a [pasta consolidada](../entrega/aquaclima-ftl-2026/README.md) e o ZIP com 27 arquivos, links públicos, fichas reais, registro de versão, checksums individuais e verificador independente.
+- [ ] Guardar uma cópia pessoal externa do pacote revisado e dos links antes da submissão.
+- [ ] Revisar e aprovar a release preparada; decidir a publicação da release e o merge dos materiais de finalização.
 - [ ] Realizar o envio oficial em **24/11** e guardar o comprovante.
 
 ## Marcos e critérios de parada
@@ -58,4 +66,4 @@ Referência: 16/11/2026, fuso America/Sao_Paulo. Prazo oficial: **24/11/2026**. 
 | 23/11 | Congelamento final |
 | 24/11 | Entrega oficial |
 
-A prova regional existente conserva seu caráter exploratório. Nenhum resultado científico é alterado para sustentar as novas interações. Em caso de risco ao prazo, priorizar investigação guiada, ficha, demonstração, visão territorial e polimentos, nessa ordem. Não iniciar novas aquisições ou treinamentos. O aplicativo publicado só recebe a Fase 7 após revisão e merge manual.
+A prova regional conserva seu caráter exploratório. Não houve alteração científica, aquisição nova ou treinamento nesta finalização. A Fase 7 já está publicada após o merge manual autorizado e o deployment aprovado. A preparação da pasta e da release para revisão não equivale à submissão oficial do Capstone.
