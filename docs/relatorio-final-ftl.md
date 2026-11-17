@@ -1,6 +1,6 @@
 # AquaClima: monitoramento espectral reproduzível de áreas agrícolas irrigadas
 
-**Autor:** Randerson Sousa de Sá Nunes. **Programa:** Future Tech Leaders Brasil, Capstone. **Origem territorial:** Caxias, Maranhão. **Data de referência:** 16 de novembro de 2026. **Entrega:** 24 de novembro de 2026.
+**Autor:** Randerson Sousa de Sá Nunes. **Programa:** Future Tech Leaders Brasil, Capstone. **Origem territorial:** Caxias, Maranhão. **Data de referência:** 17 de novembro de 2026. **Entrega:** 24 de novembro de 2026.
 
 **Código aberto:** [FTL-Final-Project](https://github.com/Altaeir-13/FTL-Final-Project). **Demonstração:** [WebGIS AquaClima](https://altaeir-13.github.io/FTL-Final-Project/). **Versão científica de Paracatu:** `2022_2024_recovery_v1`, congelada no commit `1440f3e5b28736d12ded226d6baa6b5ca9005262`. Este documento distingue esse resultado concluído da investigação territorial MA/PI.
 
@@ -221,7 +221,7 @@ npm run test:browser
 npm run verify:dist
 ```
 
-Cada comando só constitui evidência de aprovação quando executado com resultado registrado. A Fase 6 foi integrada pelo PR #2 no commit `ffb7ba41d5286fd58c47acd8007903fd38b799d4`. A publicação da Fase 7 continua condicionada ao seu merge humano na `main`, com CI e deployment aprovados. Nenhuma branch experimental publica automaticamente.
+Cada comando só constitui evidência de aprovação quando executado com resultado registrado. A Fase 6 foi integrada pelo PR #2 no commit `ffb7ba41d5286fd58c47acd8007903fd38b799d4`. A Fase 7 foi integrada pelo [PR #3](https://github.com/Altaeir-13/FTL-Final-Project/pull/3) na `main`, no commit `ad107d0c29c63ad9eb9f91a5970d96906676e3df`, com [publicação aprovada no workflow 44067496065](https://github.com/Altaeir-13/FTL-Final-Project/actions/runs/44067496065). Em 17/11/2026, os 25 cenários Playwright foram aprovados diretamente no [site público](https://altaeir-13.github.io/FTL-Final-Project/), via Edge, sem servidor local: zero testes omitidos, falhas ou testes instáveis, em 57,011 s. Essa verificação cobre o funcionamento da aplicação publicada, sem alterar ou revalidar agronomicamente os resultados. Nenhuma branch experimental publica automaticamente.
 
 ## 19. Limitações
 

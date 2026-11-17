@@ -1,6 +1,6 @@
 # Investigação guiada e fichas de evidências — Fase 7
 
-Referência: **16/11/2026**, America/Sao_Paulo. Sistema frontend **1.1.0**. Base de implementação: `main`, merge do PR #2, commit `ffb7ba41d5286fd58c47acd8007903fd38b799d4`. A branch `codex/aquaclima-investigacao-ftl` aguarda revisão e merge manual. Nenhuma publicação ou nova aquisição científica faz parte desta fase.
+Registro de implementação de **16/11/2026**, America/Sao_Paulo. Sistema frontend **1.1.0**. Base de implementação: `main`, merge do PR #2, commit `ffb7ba41d5286fd58c47acd8007903fd38b799d4`. **Atualização de 17/11:** o PR #3 foi integrado em `ad107d0c29c63ad9eb9f91a5970d96906676e3df`, com deployment 44067496065 aprovado. A [auditoria final pública](release-final-ftl.md) confirma 25 testes aprovados diretamente no GitHub Pages. Os resultados abaixo preservam o registro da implementação; nenhuma nova aquisição científica foi feita.
 
 ## Experiência entregue
 
@@ -147,4 +147,4 @@ O registro JSON complementa esta documentação com o digest final do artefato, 
 
 A fase entrega engenharia de exploração e comunicação de evidências, sem descoberta agronômica nova ou validação operacional. Uma cena não publicada visualmente continua sem imagem. A prova regional não valida modelos e a referência a Caxias não constitui monitoramento. A versão de impressão foi verificada em Chromium/Edge; outros navegadores podem paginar com pequenas diferenças e devem usar A4.
 
-Não foram alterados workflow, modelos, métricas, limiares científicos, pacotes ou resultados de 2025. O PR exige revisão humana. Depois do merge autorizado e do deployment main-only, deve-se executar a suíte contra a URL publicada antes de afirmar validação pública da Fase 7. A prioridade permanece concluir correções e integração até 20/11, reservar 21–22/11 para ensaio, congelar em 23/11 e submeter em 24/11.
+Não foram alterados workflow, modelos, métricas, limiares científicos, pacotes ou resultados de 2025. A revisão humana e o merge do PR #3 foram concluídos, seguidos de deployment main-only e validação pública em 17/11, registrados na auditoria final. A prioridade permanece limitar os dias seguintes a correções demonstradas e revisão dos materiais, reservar 21–22/11 para ensaio, congelar em 23/11 e submeter em 24/11 pelo responsável.

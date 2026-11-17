@@ -1,0 +1,348 @@
+{
+  "qa_version": "1.0.0",
+  "started_at_utc": "2026-11-17T11:23:00.600Z",
+  "public_url": "https://altaeir-13.github.io/FTL-Final-Project/",
+  "scope": "Published site only; no local server and no scientific or interface data substitution.",
+  "reference_main_commit": "ad107d0",
+  "reference_deployment_run": "44067496065",
+  "browser": "Microsoft Edge / Chromium headless",
+  "desktop_viewport": {
+    "width": 1440,
+    "height": 1100
+  },
+  "mobile_viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "console_errors": [],
+  "runtime_errors": [],
+  "blocked_requests": [],
+  "failed_responses": [],
+  "requests": [
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/?region=paracatu-mg&pivot=8087&a=2023-07&b=2024-07&indice=ndvi&package=7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d",
+      "resource_type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/assets/index-CPx1It4s.js",
+      "resource_type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/assets/index-BxUGZ2VJ.css",
+      "resource_type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/data/manifest.json",
+      "resource_type": "fetch"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/assets/mark-DDvZw0zz.svg",
+      "resource_type": "other"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/data/packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/events.csv",
+      "resource_type": "fetch"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/data/packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/model_parameters.json",
+      "resource_type": "fetch"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/data/packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/model_predictions.csv",
+      "resource_type": "fetch"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/data/packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/models.csv",
+      "resource_type": "fetch"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/data/packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/monthly.csv",
+      "resource_type": "fetch"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/data/packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/observations.csv",
+      "resource_type": "fetch"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/data/packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/pivots.geojson",
+      "resource_type": "fetch"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/data/packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/precipitation.csv",
+      "resource_type": "fetch"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/data/packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/provenance.json",
+      "resource_type": "fetch"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/data/packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/quality.csv",
+      "resource_type": "fetch"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/data/packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/schemas.json",
+      "resource_type": "fetch"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/data/packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/common_month_metrics.csv",
+      "resource_type": "fetch"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/data/packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/common_month_predictions.csv",
+      "resource_type": "fetch"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/data/packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/comparison_report.json",
+      "resource_type": "fetch"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/data/packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/publication.json",
+      "resource_type": "fetch"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/regions/catalog.json",
+      "resource_type": "fetch"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/assets/mark-DDvZw0zz.svg",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/assets/mark-DDvZw0zz.svg",
+      "resource_type": "other"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/regions/packages/8d7a54f09174e5890f8a8babf153df855699c727d639b7868a94a658a7495131/regional.json",
+      "resource_type": "fetch"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/regions/images/false-colour-2023-07-18.png",
+      "resource_type": "fetch"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/regions/images/false-colour-2024-07-22.png",
+      "resource_type": "fetch"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/assets/mark-DDvZw0zz.svg",
+      "resource_type": "other"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/assets/mark-DDvZw0zz.svg",
+      "resource_type": "other"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/assets/mark-DDvZw0zz.svg",
+      "resource_type": "other"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/assets/mark-DDvZw0zz.svg",
+      "resource_type": "other"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/assets/mark-DDvZw0zz.svg",
+      "resource_type": "other"
+    },
+    {
+      "method": "GET",
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/assets/mark-DDvZw0zz.svg",
+      "resource_type": "other"
+    }
+  ],
+  "public_sources": [
+    {
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/data/manifest.json",
+      "bytes": 5836,
+      "sha256": "69fb2f8083daaf2cc8bcb4b062bb922d36b40ea849468b778d3397aae1ae49b8"
+    },
+    {
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/data/packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/monthly.csv",
+      "bytes": 205823,
+      "sha256": "ddffa80c402fc089f20d7c3cab52f678b3239335487ee9cdaea0c2c061832fb4"
+    },
+    {
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/data/packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/observations.csv",
+      "bytes": 307783,
+      "sha256": "f1f49735587af9c8509326b5613954211d03d2a8b3585706ba76d600b45bd2bf"
+    },
+    {
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/data/packages/7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d/quality.csv",
+      "bytes": 78826,
+      "sha256": "6c1babab57b73c400ed3e8a0cd38260a265096606368305ff4eaa785aa9e1ef8"
+    },
+    {
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/regions/catalog.json",
+      "bytes": 1332,
+      "sha256": "afda1abd42ddc472c83db3f6b3953f18e86b19dea954200731f7fb4e70b7384b"
+    },
+    {
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/regions/packages/8d7a54f09174e5890f8a8babf153df855699c727d639b7868a94a658a7495131/regional.json",
+      "bytes": 199553,
+      "sha256": "8d7a54f09174e5890f8a8babf153df855699c727d639b7868a94a658a7495131"
+    },
+    {
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/regions/images/false-colour-2023-07-18.png",
+      "bytes": 233573,
+      "sha256": "2ab53e38fa0f3a10d553aaeee227ff9dc650d8a79584bf5a44fc8514766bd9e9"
+    },
+    {
+      "url": "https://altaeir-13.github.io/FTL-Final-Project/regions/images/false-colour-2024-07-22.png",
+      "bytes": 232181,
+      "sha256": "34ed3a23e801cc78baf9ee927f84de8e2c240650baaeda247e1f30b1614b2303"
+    }
+  ],
+  "investigations": [
+    {
+      "region": "paracatu-mg",
+      "pivot": "8087",
+      "a": "2023-07",
+      "b": "2024-07",
+      "package_sha256": "7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d",
+      "investigation_id": "AQ-e321eb15483ec2443cb199d15a6c7e7a54fe4f764e71fb78024bb14f1ac33816",
+      "generation_utc": "2026-11-17T11:23:02.744Z",
+      "public_investigation_url": "https://altaeir-13.github.io/FTL-Final-Project/?from=2022-01&to=2024-12&region=paracatu-mg&pivot=8087&a=2023-07&b=2024-07&indice=ndvi&section=investigacao&package=7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d#investigacao",
+      "values": {
+        "ndvi_a": 0.17535946518182755,
+        "ndvi_b": 0.8977416753768921,
+        "delta_ndvi": 0.7223822101950645,
+        "ndmi_a": -0.190386600792408,
+        "ndmi_b": 0.5054254531860352,
+        "delta_ndmi": 0.6958120539784431,
+        "precip_mm_a": 3.01786470413208,
+        "precip_mm_b": 1.833648920059204,
+        "valid_pixel_pct_a": 100,
+        "valid_pixel_pct_b": 100
+      },
+      "scene_ids": [
+        "S2A_T23KKA_20230703T132237_L2A",
+        "S2A_T23KKA_20230713T132606_L2A",
+        "S2B_T23KKA_20240702T132236_L2A",
+        "S2B_T23KKA_20240712T132654_L2A"
+      ],
+      "matching_images": 0,
+      "output_pdf": "ficha-evidencias-paracatu.pdf"
+    },
+    {
+      "region": "guadalupe-pi",
+      "pivot": "PI:5795",
+      "a": "2023-07-18",
+      "b": "2024-07-22",
+      "package_sha256": "8d7a54f09174e5890f8a8babf153df855699c727d639b7868a94a658a7495131",
+      "investigation_id": "AQ-154c628f69b4b01c9dc2a951c97f6667a9ff940d8d2212c124d3a25494c28608",
+      "generation_utc": "2026-11-17T11:23:03.352Z",
+      "public_investigation_url": "https://altaeir-13.github.io/FTL-Final-Project/?from=2022-01&to=2024-12&region=guadalupe-pi&pivot=PI%3A5795&a=2023-07-18&b=2024-07-22&indice=ndvi&section=investigacao&package=8d7a54f09174e5890f8a8babf153df855699c727d639b7868a94a658a7495131#investigacao",
+      "values": {
+        "ndvi_a": 0.7748987674713135,
+        "ndvi_b": 0.9256554245948792,
+        "delta_ndvi": 0.15075665712356567,
+        "ndmi_a": 0.24148201942443848,
+        "ndmi_b": 0.45643532276153564,
+        "delta_ndmi": 0.21495330333709717,
+        "precip_mm_a": 1.9466725587844849,
+        "precip_mm_b": 2.0847935676574707,
+        "valid_pixel_pct_a": 100,
+        "valid_pixel_pct_b": 100
+      },
+      "scene_ids": [
+        "S2B_T23MPN_20230718T132238_L2A",
+        "S2B_T23MPN_20240722T132235_L2A"
+      ],
+      "matching_images": 2,
+      "output_pdf": "ficha-evidencias-guadalupe.pdf"
+    }
+  ],
+  "outputs": [
+    {
+      "file": "territorio-desktop.png",
+      "bytes": 93794,
+      "sha256": "c7bf610a079d9b038e8974a54c6b9e633cb13076ee32342b94616ce98b6b241c"
+    },
+    {
+      "file": "investigacao-paracatu-desktop.png",
+      "bytes": 134100,
+      "sha256": "883a696ec6b51a806f1c4c7a58ec25aaaf03373370f37df99c87c137351ab3a9"
+    },
+    {
+      "file": "investigacao-guadalupe-desktop.png",
+      "bytes": 526092,
+      "sha256": "e19d575765671545cace2599189f31ebf061bfd064926b81fa844b8ccf4d7f85"
+    },
+    {
+      "file": "ficha-guadalupe-previa.png",
+      "bytes": 146638,
+      "sha256": "8a6142e06d191bb16636de646639e1c4c47ad6d959234b9abcd70bed560a9b26"
+    },
+    {
+      "file": "demonstracao-publica-desktop.png",
+      "bytes": 502161,
+      "sha256": "88ad32c25b76fe83cfb45f328a0ed98ebb9714413dc03475aae046dc04251f87"
+    },
+    {
+      "file": "territorio-mobile.png",
+      "bytes": 72029,
+      "sha256": "b8bc9d336cbdbced15b28557cbb9f3323242425612420478544cc3df3eb10309"
+    },
+    {
+      "file": "investigacao-guadalupe-mobile.png",
+      "bytes": 38040,
+      "sha256": "619b6fdd768af422a1912c9143823a996ae162d04f8da1b87f14690b6996e0c8"
+    },
+    {
+      "file": "investigacao-guadalupe-mobile-imagens.png",
+      "bytes": 204531,
+      "sha256": "1e7796acca06c6f48f9126b29be0006e02a8624e592dea667f8f41f7d0f0e2c6"
+    },
+    {
+      "file": "ficha-evidencias-paracatu.pdf",
+      "bytes": 91757,
+      "sha256": "706ea7be533451e00a82315dc25e9800d1ae455bec9801d176fe0ecaad7545ed"
+    },
+    {
+      "file": "ficha-evidencias-guadalupe.pdf",
+      "bytes": 540081,
+      "sha256": "ae0c167274a9119c226fadcdd615a74c2c72ea0d602545b6a3144179e91022d2"
+    }
+  ],
+  "browser_version": "157.0.4341.60",
+  "scientific_packages": {
+    "paracatu": "7a072a6e29688039b5b775663262ecf6338b35c41386264e75ee789f93068a4d",
+    "guadalupe": "8d7a54f09174e5890f8a8babf153df855699c727d639b7868a94a658a7495131"
+  },
+  "public_assets": [
+    "https://altaeir-13.github.io/FTL-Final-Project/assets/index-CPx1It4s.js",
+    "https://altaeir-13.github.io/FTL-Final-Project/assets/index-BxUGZ2VJ.css"
+  ],
+  "completed_at_utc": "2026-11-17T11:23:04.371Z",
+  "status": "passed"
+}

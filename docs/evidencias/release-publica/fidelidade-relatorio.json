@@ -1,0 +1,226 @@
+{
+  "source": "docs/relatorio-final-ftl.md",
+  "source_sha256": "24eab96045df06832ee95a4c3361af2a0d0c833bec17488bf195e07c7fba4e5c",
+  "output": "docs/relatorio-final-ftl.pdf",
+  "pdf_sha256": "cd771484662b9833aac8ba314da8c33cc8a6a0adefdd36bfe107cc529f96a813",
+  "pages": 13,
+  "page_format": "A4 portrait",
+  "font": "Arial",
+  "selectable_text": true,
+  "text_blocks_checked": 235,
+  "missing_text_blocks": 0,
+  "tables": [
+    {
+      "header": "Fonte",
+      "columns": 3,
+      "rows": 4,
+      "body_rows": 3
+    },
+    {
+      "header": "Método",
+      "columns": 3,
+      "rows": 4,
+      "body_rows": 3
+    },
+    {
+      "header": "Evidência congelada",
+      "columns": 2,
+      "rows": 11,
+      "body_rows": 10
+    },
+    {
+      "header": "Pivô",
+      "columns": 5,
+      "rows": 13,
+      "body_rows": 12
+    },
+    {
+      "header": "Data",
+      "columns": 4,
+      "rows": 7,
+      "body_rows": 6
+    },
+    {
+      "header": "18/07/2023",
+      "columns": 2,
+      "rows": 2,
+      "body_rows": 1
+    }
+  ],
+  "figures": [
+    {
+      "path": "apresentacao/figuras/rain_context.png",
+      "sha256": "2e8df82e9cfccb10554f20bef97a21bedc8e1e2cd2b66c43642e702d19815d3b",
+      "pixels": [
+        1575,
+        645
+      ],
+      "display_points": [
+        493.228346456693,
+        201.98875140607427
+      ]
+    },
+    {
+      "path": "apresentacao/figuras/temporal_pivots.png",
+      "sha256": "bf51ef31f3547df050517d97f402a0d500819b7cd94afa0402cc413e7e4f31cc",
+      "pixels": [
+        1950,
+        1500
+      ],
+      "display_points": [
+        493.228346456693,
+        379.4064203513023
+      ]
+    },
+    {
+      "path": "apresentacao/figuras/seasonal_heatmap.png",
+      "sha256": "6d569581114dfdc8cb9c170c00f1d48d05e8d29c78852512928bcf92ddd78b8b",
+      "pixels": [
+        1782,
+        855
+      ],
+      "display_points": [
+        493.228346456693,
+        236.64996420901934
+      ]
+    },
+    {
+      "path": "apresentacao/figuras/guadalupe-sampled-indices.png",
+      "sha256": "979e6a681b974b823228a11ce052129e1c2af975553cfeb0f47bb80a72d764fd",
+      "pixels": [
+        1760,
+        1280
+      ],
+      "display_points": [
+        493.22834645669303,
+        358.71152469577675
+      ]
+    },
+    {
+      "path": "evidencias/guadalupe-pi/comparison/false-colour-2023-07-18.png",
+      "sha256": "2ab53e38fa0f3a10d553aaeee227ff9dc650d8a79584bf5a44fc8514766bd9e9",
+      "pixels": [
+        1200,
+        900
+      ],
+      "display_points": [
+        234.6141732283465,
+        175.96062992125988
+      ]
+    },
+    {
+      "path": "evidencias/guadalupe-pi/comparison/false-colour-2024-07-22.png",
+      "sha256": "34ed3a23e801cc78baf9ee927f84de8e2c240650baaeda247e1f30b1614b2303",
+      "pixels": [
+        1200,
+        900
+      ],
+      "display_points": [
+        234.6141732283465,
+        175.96062992125988
+      ]
+    }
+  ],
+  "links": [
+    "https://altaeir-13.github.io/FTL-Final-Project/",
+    "https://chc.ucsb.edu/data/chirps3",
+    "https://data.chc.ucsb.edu/products/CHIRPS/v3.0/monthly/latam/tifs/",
+    "https://doi.org/10.1016/0034-4257(79)90013-0",
+    "https://doi.org/10.1016/S0034-4257(96)00067-3",
+    "https://doi.org/10.1038/s41597-026-07096-4",
+    "https://doi.org/10.15780/G2JQ0P",
+    "https://earth-search.aws.element84.com/v1",
+    "https://github.com/Altaeir-13/FTL-Final-Project",
+    "https://github.com/Altaeir-13/FTL-Final-Project/actions/runs/44067496065",
+    "https://github.com/Altaeir-13/FTL-Final-Project/blob/ad107d0c29c63ad9eb9f91a5970d96906676e3df/docs/apresentacao/evidencias-paracatu.json",
+    "https://github.com/Altaeir-13/FTL-Final-Project/blob/ad107d0c29c63ad9eb9f91a5970d96906676e3df/docs/contratos-webgis.md",
+    "https://github.com/Altaeir-13/FTL-Final-Project/blob/ad107d0c29c63ad9eb9f91a5970d96906676e3df/docs/evidencias/guadalupe-pi/comparison/provenance.json",
+    "https://github.com/Altaeir-13/FTL-Final-Project/blob/ad107d0c29c63ad9eb9f91a5970d96906676e3df/docs/evidencias/guadalupe-pi/manifest.json",
+    "https://github.com/Altaeir-13/FTL-Final-Project/blob/ad107d0c29c63ad9eb9f91a5970d96906676e3df/docs/evidencias/guadalupe-pi/scene-summary.csv",
+    "https://github.com/Altaeir-13/FTL-Final-Project/blob/ad107d0c29c63ad9eb9f91a5970d96906676e3df/docs/execucao-fase6.md",
+    "https://github.com/Altaeir-13/FTL-Final-Project/blob/ad107d0c29c63ad9eb9f91a5970d96906676e3df/docs/finalizacao-webgis.md",
+    "https://github.com/Altaeir-13/FTL-Final-Project/blob/ad107d0c29c63ad9eb9f91a5970d96906676e3df/docs/investigacao-guiada-ftl.md",
+    "https://github.com/Altaeir-13/FTL-Final-Project/blob/ad107d0c29c63ad9eb9f91a5970d96906676e3df/docs/modelagem-recuperada.md",
+    "https://github.com/Altaeir-13/FTL-Final-Project/blob/ad107d0c29c63ad9eb9f91a5970d96906676e3df/docs/radiometria.md",
+    "https://github.com/Altaeir-13/FTL-Final-Project/blob/ad107d0c29c63ad9eb9f91a5970d96906676e3df/docs/recuperacao-2022.md",
+    "https://github.com/Altaeir-13/FTL-Final-Project/blob/ad107d0c29c63ad9eb9f91a5970d96906676e3df/docs/resultado-regional-guadalupe.md",
+    "https://github.com/Altaeir-13/FTL-Final-Project/blob/ad107d0c29c63ad9eb9f91a5970d96906676e3df/docs/selecao-regional-ma-pi.md",
+    "https://github.com/Altaeir-13/FTL-Final-Project/pull/3",
+    "https://github.com/Element84/earth-search",
+    "https://ntrs.nasa.gov/citations/19780024582",
+    "https://portal1.snirh.gov.br/server/rest/services/SFI/PIVOS_2022_SNIRH/MapServer/0",
+    "https://sdgs.un.org/goals/goal13",
+    "https://sdgs.un.org/goals/goal6",
+    "https://www.usgs.gov/landsat-missions/normalized-difference-moisture-index"
+  ],
+  "link_annotations": 48,
+  "public_commit": "ad107d0c29c63ad9eb9f91a5970d96906676e3df",
+  "visual_review": "All 13 Poppler page renders inspected; no clipped content or broken table rows observed.",
+  "page_renders": [
+    {
+      "page": 1,
+      "sha256": "a225a55da0cc9266c5cfe547199cb3d78678b93f28246020118e5bbe7162df82",
+      "reviewed": true
+    },
+    {
+      "page": 2,
+      "sha256": "b262e460aa3aef859172ba97a0976b35edfbd9c86f19c01c56098a512b8e9e1e",
+      "reviewed": true
+    },
+    {
+      "page": 3,
+      "sha256": "b8872dbdd5d64ad76eb29a9a9db5c3e87e623d926421f1998763ad1e3a0c1281",
+      "reviewed": true
+    },
+    {
+      "page": 4,
+      "sha256": "5c93481fb699571e52ff545751b4850eadcfce4d51470f4ef370b1ff9cf595d7",
+      "reviewed": true
+    },
+    {
+      "page": 5,
+      "sha256": "f4bf04efdbbb622c337c228a27b252ab7487a2d26e4b15c2e3801b8b11ca25a2",
+      "reviewed": true
+    },
+    {
+      "page": 6,
+      "sha256": "16f3160b38c5932f8479354c821669e054c1a8130cf142935bf287dddf64a2da",
+      "reviewed": true
+    },
+    {
+      "page": 7,
+      "sha256": "bf4af4e8233da35647201c1883c292586f7b67ec3b0862ecc0d344b32bb308de",
+      "reviewed": true
+    },
+    {
+      "page": 8,
+      "sha256": "b23c9c7fa1bf5e766a0e841d680b3f82156cf63f6e55257f725ace2576a786a1",
+      "reviewed": true
+    },
+    {
+      "page": 9,
+      "sha256": "fdd2b332f4b80312973b4d5a2c39f2226a3116c6bc434598e849993c8d147660",
+      "reviewed": true
+    },
+    {
+      "page": 10,
+      "sha256": "32c6e7f98d16939bdd49d6ef4c48635bc328b1e71878bd4bb8d3b8a06906c794",
+      "reviewed": true
+    },
+    {
+      "page": 11,
+      "sha256": "0a7d494db8e770bcfde600ed57ad97fc6778e7b93e279e410fa8af18e23a1b07",
+      "reviewed": true
+    },
+    {
+      "page": 12,
+      "sha256": "cbdc3cceb1f1bd1c742bac0ab1230da7337d31649edefce5acb24eee44c3e2ad",
+      "reviewed": true
+    },
+    {
+      "page": 13,
+      "sha256": "362b9c05f3144162b084615e9f68fe87e4435d93c3008cac840c9eea6572be86",
+      "reviewed": true
+    }
+  ]
+}

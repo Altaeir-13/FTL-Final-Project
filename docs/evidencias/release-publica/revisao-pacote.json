@@ -1,0 +1,19 @@
+{
+  "reference_date": "2026-11-17",
+  "status": "passed",
+  "review": "Independent read-only review after final assembly",
+  "zip": "entrega/aquaclima-ftl-2026.zip",
+  "bytes": 4779172,
+  "sha256": "053eb47265998dbf8a6100619bb5f8a5141ce2e15fe880c47686109d51a60551",
+  "files": 27,
+  "zip_members": 27,
+  "sha256_entries": 26,
+  "payload_manifest_entries": 25,
+  "binary_sources_identical": 5,
+  "markdown_links_checked": 44,
+  "broken_links": 0,
+  "private_paths_or_credentials_found": false,
+  "human_tasks_preserved": true,
+  "official_submission": false,
+  "scope": "External audit record; kept outside the ZIP to avoid circular hashing."
+}
